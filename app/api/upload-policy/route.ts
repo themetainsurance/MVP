@@ -11,6 +11,8 @@ const ALLOWED_TYPES = [
   "image/png",
 ];
 
+const ALLOWED_CATEGORIES = ["motor", "property"];
+
 export async function POST(request: Request) {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -18,17 +20,40 @@ export async function POST(request: Request) {
 
     if (!supabaseUrl || !supabaseSecretKey) {
       return NextResponse.json(
-        { error: "Server configuration is missing." },
+        {
+          success: false,
+          error: "Server configuration is missing.",
+        },
         { status: 500 }
       );
     }
 
     const formData = await request.formData();
+
     const file = formData.get("file");
+    const categoryValue = formData.get("category");
 
     if (!(file instanceof File)) {
       return NextResponse.json(
-        { error: "No file was provided." },
+        {
+          success: false,
+          error: "No file was provided.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const category =
+      typeof categoryValue === "string"
+        ? categoryValue.toLowerCase()
+        : "motor";
+
+    if (!ALLOWED_CATEGORIES.includes(category)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Invalid insurance category.",
+        },
         { status: 400 }
       );
     }
@@ -36,6 +61,7 @@ export async function POST(request: Request) {
     if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json(
         {
+          success: false,
           error: "Only PDF, JPG, JPEG and PNG files are allowed.",
         },
         { status: 400 }
@@ -45,6 +71,7 @@ export async function POST(request: Request) {
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
         {
+          success: false,
           error: "Maximum file size is 10 MB.",
         },
         { status: 400 }
@@ -65,8 +92,13 @@ export async function POST(request: Request) {
     const extension =
       file.name.split(".").pop()?.toLowerCase() || "file";
 
+    const safeExtension =
+      extension === "jpeg"
+        ? "jpg"
+        : extension;
+
     const filePath =
-      `motor/${Date.now()}-${crypto.randomUUID()}.${extension}`;
+      `${category}/${Date.now()}-${crypto.randomUUID()}.${safeExtension}`;
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
@@ -82,20 +114,27 @@ export async function POST(request: Request) {
       console.error("Supabase upload error:", error);
 
       return NextResponse.json(
-        { error: "Unable to upload policy document." },
+        {
+          success: false,
+          error: "Unable to upload policy document.",
+        },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
       success: true,
+      category,
       path: filePath,
     });
   } catch (error) {
     console.error("Upload error:", error);
 
     return NextResponse.json(
-      { error: "Unexpected upload error." },
+      {
+        success: false,
+        error: "Unexpected upload error.",
+      },
       { status: 500 }
     );
   }
