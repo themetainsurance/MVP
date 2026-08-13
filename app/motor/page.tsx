@@ -10,9 +10,252 @@ const ALLOWED_TYPES = [
   "image/png",
 ];
 
+type MotorForm = {
+  make: string;
+  model: string;
+  year: string;
+  registrationCountry: string;
+  fuelType: string;
+  enginePower: string;
+  currentInsurer: string;
+  currentPremium: string;
+  deductible: string;
+  coverageType: string;
+
+  fullName: string;
+  email: string;
+  phone: string;
+  preferredContact: string;
+};
+
 export default function MotorInsurancePage() {
-  const [mode, setMode] = useState<"manual" | "upload">("manual");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [mode, setMode] =
+    useState<"manual" | "upload">("manual");
+
+  const [selectedFile, setSelectedFile] =
+    useState<File | null>(null);
+
+  const [policyPath, setPolicyPath] =
+    useState<string | null>(null);
+
+  const [form, setForm] = useState<MotorForm>({
+    make: "",
+    model: "",
+    year: "",
+    registrationCountry: "",
+    fuelType: "",
+    enginePower: "",
+    currentInsurer: "",
+    currentPremium: "",
+    deductible: "",
+    coverageType: "",
+
+    fullName: "",
+    email: "",
+    phone: "",
+    preferredContact: "",
+  });
+
+  const [consent, setConsent] = useState(false);
+
+  const [uploading, setUploading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const [uploadMessage, setUploadMessage] = useState("");
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  function updateField(
+    field: keyof MotorForm,
+    value: string
+  ) {
+    setForm((current) => ({
+      ...current,
+      [field]: value,
+    }));
+  }
+
+  function handleFile(file: File | null) {
+    setError("");
+    setUploadMessage("");
+    setPolicyPath(null);
+
+    if (!file) {
+      setSelectedFile(null);
+      return;
+    }
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      setSelectedFile(null);
+      setError(
+        "Please upload a PDF, JPG, JPEG or PNG file."
+      );
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      setSelectedFile(null);
+      setError(
+        "Maximum allowed file size is 10 MB."
+      );
+      return;
+    }
+
+    setSelectedFile(file);
+  }
+
+  async function uploadPolicy() {
+    if (!selectedFile) return;
+
+    try {
+      setUploading(true);
+      setError("");
+      setUploadMessage("");
+
+      const formData = new FormData();
+
+      formData.append("file", selectedFile);
+      formData.append("category", "motor");
+
+      const response = await fetch(
+        "/api/upload-policy",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.error ||
+            "Unable to upload the policy."
+        );
+      }
+
+      setPolicyPath(result.path);
+
+      setUploadMessage(
+        "Policy uploaded successfully."
+      );
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to upload the policy."
+      );
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function submitLead() {
+    setError("");
+    setSuccess("");
+
+    if (!form.fullName.trim()) {
+      setError("Please enter your full name.");
+      return;
+    }
+
+    if (
+      !form.email.trim() &&
+      !form.phone.trim()
+    ) {
+      setError(
+        "Please enter an email address or phone number."
+      );
+      return;
+    }
+
+    if (mode === "upload" && !policyPath) {
+      setError(
+        "Please upload your policy before submitting the request."
+      );
+      return;
+    }
+
+    if (!consent) {
+      setError(
+        "Please confirm your consent before submitting."
+      );
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          insurance_type: "motor",
+
+          full_name: form.fullName,
+          email: form.email,
+          phone: form.phone,
+          preferred_contact:
+            form.preferredContact,
+
+          consent: true,
+
+          policy_document_path:
+            policyPath || null,
+
+          details: {
+            request_method: mode,
+
+            vehicle_make: form.make,
+            vehicle_model: form.model,
+            vehicle_year: form.year,
+
+            registration_country:
+              form.registrationCountry,
+
+            fuel_type: form.fuelType,
+            engine_power: form.enginePower,
+
+            current_insurer:
+              form.currentInsurer,
+
+            current_annual_premium:
+              form.currentPremium,
+
+            current_deductible:
+              form.deductible,
+
+            coverage_type:
+              form.coverageType,
+          },
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.error ||
+            "Unable to submit your request."
+        );
+      }
+
+      setSuccess(
+        "Your motor insurance request has been submitted successfully."
+      );
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <main
@@ -20,10 +263,10 @@ export default function MotorInsurancePage() {
         minHeight: "100vh",
         background: "#f8fafc",
         color: "#0f172a",
-        fontFamily: "Arial, Helvetica, sans-serif",
+        fontFamily:
+          "Arial, Helvetica, sans-serif",
       }}
     >
-      {/* HEADER */}
       <header
         style={{
           height: "72px",
@@ -32,7 +275,8 @@ export default function MotorInsurancePage() {
           alignItems: "center",
           justifyContent: "space-between",
           background: "#ffffff",
-          borderBottom: "1px solid #e2e8f0",
+          borderBottom:
+            "1px solid #e2e8f0",
         }}
       >
         <a
@@ -59,7 +303,6 @@ export default function MotorInsurancePage() {
         </a>
       </header>
 
-      {/* HERO */}
       <section
         style={{
           background:
@@ -92,7 +335,7 @@ export default function MotorInsurancePage() {
               margin: "0 0 18px",
             }}
           >
-            Find better cover for your vehicle.
+            Find the right cover for your vehicle.
           </h1>
 
           <p
@@ -103,14 +346,14 @@ export default function MotorInsurancePage() {
               lineHeight: 1.6,
             }}
           >
-            Enter your vehicle details manually or upload your current policy
-            to request a factual comparison of price, coverage and benefits
+            Enter your vehicle information
+            manually or upload your existing
+            policy and request a comparison
             from licensed insurance partners.
           </p>
         </div>
       </section>
 
-      {/* MAIN CARD */}
       <section
         style={{
           maxWidth: "1100px",
@@ -122,249 +365,417 @@ export default function MotorInsurancePage() {
           style={{
             background: "#ffffff",
             borderRadius: "22px",
-            boxShadow: "0 20px 50px rgba(15,23,42,0.12)",
+            boxShadow:
+              "0 20px 50px rgba(15,23,42,0.12)",
             overflow: "hidden",
           }}
         >
-          {/* MODE SWITCH */}
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
-              borderBottom: "1px solid #e2e8f0",
+              borderBottom:
+                "1px solid #e2e8f0",
             }}
           >
-            <button
-              type="button"
-              onClick={() => setMode("manual")}
-              style={{
-                padding: "24px",
-                border: "none",
-                cursor: "pointer",
-                background: mode === "manual" ? "#e0f2fe" : "#ffffff",
-                color: "#0f172a",
-                fontWeight: 800,
-                fontSize: "16px",
-              }}
+            <ModeButton
+              active={mode === "manual"}
+              onClick={() =>
+                setMode("manual")
+              }
             >
               🚗 Enter vehicle details
-            </button>
+            </ModeButton>
 
-            <button
-              type="button"
-              onClick={() => setMode("upload")}
-              style={{
-                padding: "24px",
-                border: "none",
-                cursor: "pointer",
-                background: mode === "upload" ? "#e0f2fe" : "#ffffff",
-                color: "#0f172a",
-                fontWeight: 800,
-                fontSize: "16px",
-              }}
+            <ModeButton
+              active={mode === "upload"}
+              onClick={() =>
+                setMode("upload")
+              }
             >
               📄 Upload current policy
-            </button>
+            </ModeButton>
           </div>
 
           <div style={{ padding: "38px" }}>
             {mode === "manual" ? (
-              <ManualMotorForm />
+              <>
+                <h2 style={{ marginTop: 0 }}>
+                  Tell us about your vehicle
+                </h2>
+
+                <p
+                  style={{
+                    color: "#64748b",
+                    lineHeight: 1.6,
+                  }}
+                >
+                  Enter your vehicle and current
+                  insurance information.
+                </p>
+
+                <div style={gridStyle}>
+                  <Field
+                    label="Vehicle make"
+                    value={form.make}
+                    placeholder="e.g. BMW"
+                    onChange={(value) =>
+                      updateField("make", value)
+                    }
+                  />
+
+                  <Field
+                    label="Vehicle model"
+                    value={form.model}
+                    placeholder="e.g. 320d"
+                    onChange={(value) =>
+                      updateField("model", value)
+                    }
+                  />
+
+                  <Field
+                    label="Year"
+                    value={form.year}
+                    placeholder="e.g. 2021"
+                    onChange={(value) =>
+                      updateField("year", value)
+                    }
+                  />
+
+                  <Field
+                    label="Registration country"
+                    value={
+                      form.registrationCountry
+                    }
+                    placeholder="e.g. North Macedonia"
+                    onChange={(value) =>
+                      updateField(
+                        "registrationCountry",
+                        value
+                      )
+                    }
+                  />
+
+                  <Field
+                    label="Fuel type"
+                    value={form.fuelType}
+                    placeholder="Diesel / Petrol / Electric"
+                    onChange={(value) =>
+                      updateField(
+                        "fuelType",
+                        value
+                      )
+                    }
+                  />
+
+                  <Field
+                    label="Engine / Power"
+                    value={form.enginePower}
+                    placeholder="e.g. 140 kW"
+                    onChange={(value) =>
+                      updateField(
+                        "enginePower",
+                        value
+                      )
+                    }
+                  />
+
+                  <Field
+                    label="Current insurer"
+                    value={
+                      form.currentInsurer
+                    }
+                    placeholder="Optional"
+                    onChange={(value) =>
+                      updateField(
+                        "currentInsurer",
+                        value
+                      )
+                    }
+                  />
+
+                  <Field
+                    label="Current annual premium"
+                    value={
+                      form.currentPremium
+                    }
+                    placeholder="e.g. €450"
+                    onChange={(value) =>
+                      updateField(
+                        "currentPremium",
+                        value
+                      )
+                    }
+                  />
+
+                  <Field
+                    label="Current deductible"
+                    value={form.deductible}
+                    placeholder="e.g. €300"
+                    onChange={(value) =>
+                      updateField(
+                        "deductible",
+                        value
+                      )
+                    }
+                  />
+
+                  <Field
+                    label="Coverage type"
+                    value={form.coverageType}
+                    placeholder="Third party / Comprehensive"
+                    onChange={(value) =>
+                      updateField(
+                        "coverageType",
+                        value
+                      )
+                    }
+                  />
+                </div>
+              </>
             ) : (
-              <UploadPolicy
-                selectedFile={selectedFile}
-                setSelectedFile={setSelectedFile}
-              />
+              <>
+                <h2 style={{ marginTop: 0 }}>
+                  Upload your current motor policy
+                </h2>
+
+                <p
+                  style={{
+                    color: "#64748b",
+                    lineHeight: 1.6,
+                  }}
+                >
+                  Upload your existing policy in
+                  PDF or image format.
+                </p>
+
+                <label
+                  style={{
+                    display: "block",
+                    border:
+                      "2px dashed #94a3b8",
+                    borderRadius: "16px",
+                    padding: "50px 25px",
+                    textAlign: "center",
+                    cursor: "pointer",
+                    background: "#f8fafc",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "42px",
+                    }}
+                  >
+                    📄
+                  </div>
+
+                  <h3>
+                    Select your current policy
+                  </h3>
+
+                  <p
+                    style={{
+                      color: "#64748b",
+                    }}
+                  >
+                    PDF, JPG, JPEG or PNG —
+                    maximum 10 MB
+                  </p>
+
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    style={{
+                      display: "none",
+                    }}
+                    onChange={(event) =>
+                      handleFile(
+                        event.target.files?.[0] ||
+                          null
+                      )
+                    }
+                  />
+                </label>
+
+                {selectedFile && (
+                  <div style={successBox}>
+                    ✓ {selectedFile.name}
+                  </div>
+                )}
+
+                {uploadMessage && (
+                  <div style={successBox}>
+                    ✓ {uploadMessage}
+                  </div>
+                )}
+
+                <button
+                  type="button"
+                  disabled={
+                    !selectedFile || uploading
+                  }
+                  onClick={uploadPolicy}
+                  style={{
+                    ...primaryButton,
+                    background:
+                      !selectedFile || uploading
+                        ? "#cbd5e1"
+                        : "#0284c7",
+                  }}
+                >
+                  {uploading
+                    ? "Uploading..."
+                    : policyPath
+                    ? "Policy uploaded ✓"
+                    : "Upload policy"}
+                </button>
+              </>
             )}
-          </div>
-        </div>
 
-        {/* HOW COMPARISON WORKS */}
-        <div
-          style={{
-            marginTop: "40px",
-            display: "grid",
-            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-            gap: "20px",
-          }}
-        >
-          <InfoCard
-            icon="🔍"
-            title="Compare your current cover"
-            text="Your existing policy can be factually compared against offers supplied by licensed insurance partners."
-          />
+            <Divider />
 
-          <InfoCard
-            icon="➕"
-            title="See what you gain"
-            text="Clearly see higher limits, additional coverage, lower deductibles and extra benefits."
-          />
+            <h3>Contact information</h3>
 
-          <InfoCard
-            icon="➖"
-            title="See what changes"
-            text="Any reduced cover, exclusions or increased deductibles can be displayed clearly alongside the new offer."
-          />
-        </div>
+            <div style={gridStyle}>
+              <Field
+                label="Full name"
+                value={form.fullName}
+                placeholder="Your full name"
+                onChange={(value) =>
+                  updateField(
+                    "fullName",
+                    value
+                  )
+                }
+              />
 
-        {/* EXAMPLE COMPARISON */}
-        <div
-          style={{
-            marginTop: "55px",
-            background: "#ffffff",
-            border: "1px solid #e2e8f0",
-            borderRadius: "18px",
-            padding: "32px",
-          }}
-        >
-          <div
-            style={{
-              color: "#0284c7",
-              fontSize: "12px",
-              fontWeight: 900,
-              marginBottom: "10px",
-            }}
-          >
-            HOW YOUR COMPARISON WILL LOOK
-          </div>
+              <Field
+                label="Email address"
+                value={form.email}
+                placeholder="you@example.com"
+                onChange={(value) =>
+                  updateField("email", value)
+                }
+              />
 
-          <h2
-            style={{
-              marginTop: 0,
-              fontSize: "28px",
-            }}
-          >
-            Current policy vs new offer
-          </h2>
+              <Field
+                label="Phone number"
+                value={form.phone}
+                placeholder="+389..."
+                onChange={(value) =>
+                  updateField("phone", value)
+                }
+              />
 
-          <p
-            style={{
-              color: "#64748b",
-              lineHeight: 1.6,
-              marginBottom: "28px",
-            }}
-          >
-            The platform is designed to show factual differences clearly,
-            rather than hiding them inside complicated policy wording.
-          </p>
+              <SelectField
+                label="Preferred contact"
+                value={
+                  form.preferredContact
+                }
+                options={[
+                  "Email",
+                  "Phone",
+                  "WhatsApp",
+                ]}
+                onChange={(value) =>
+                  updateField(
+                    "preferredContact",
+                    value
+                  )
+                }
+              />
+            </div>
 
-          <div
-            style={{
-              overflowX: "auto",
-            }}
-          >
-            <table
+            <label
               style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                minWidth: "650px",
-              }}
-            >
-              <thead>
-                <tr>
-                  <TableHeader>Coverage</TableHeader>
-                  <TableHeader>Current policy</TableHeader>
-                  <TableHeader>New offer</TableHeader>
-                  <TableHeader>Difference</TableHeader>
-                </tr>
-              </thead>
-
-              <tbody>
-                <ComparisonRow
-                  name="Annual premium"
-                  current="€420"
-                  offer="€420"
-                  difference="Same price"
-                />
-
-                <ComparisonRow
-                  name="Glass cover"
-                  current="€500"
-                  offer="€1,000"
-                  difference="+ €500"
-                />
-
-                <ComparisonRow
-                  name="Roadside assistance"
-                  current="Not included"
-                  offer="Included"
-                  difference="+ Added"
-                />
-
-                <ComparisonRow
-                  name="Personal accident"
-                  current="€10,000"
-                  offer="€25,000"
-                  difference="+ €15,000"
-                />
-
-                <ComparisonRow
-                  name="Deductible"
-                  current="€300"
-                  offer="€200"
-                  difference="€100 lower"
-                />
-              </tbody>
-            </table>
-          </div>
-
-          <div
-            style={{
-              marginTop: "28px",
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "16px",
-            }}
-          >
-            <div
-              style={{
-                background: "#ecfdf5",
-                border: "1px solid #bbf7d0",
-                padding: "20px",
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "12px",
+                marginTop: "28px",
+                background: "#f8fafc",
+                padding: "18px",
                 borderRadius: "12px",
+                border:
+                  "1px solid #e2e8f0",
               }}
             >
-              <strong style={{ color: "#166534" }}>
-                + Example improvements
-              </strong>
-
-              <ul
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(event) =>
+                  setConsent(
+                    event.target.checked
+                  )
+                }
                 style={{
-                  color: "#166534",
-                  lineHeight: 1.8,
-                  paddingLeft: "20px",
+                  width: "18px",
+                  height: "18px",
+                }}
+              />
+
+              <span
+                style={{
+                  color: "#475569",
+                  lineHeight: 1.6,
+                  fontSize: "14px",
                 }}
               >
-                <li>Higher glass cover</li>
-                <li>Roadside assistance added</li>
-                <li>Higher personal accident limit</li>
-                <li>Lower deductible</li>
-              </ul>
-            </div>
+                I agree that my information may
+                be processed for this insurance
+                request and shared with relevant
+                licensed insurance partners where
+                applicable.
+              </span>
+            </label>
 
             <div
               style={{
-                background: "#fff7ed",
-                border: "1px solid #fed7aa",
-                padding: "20px",
+                marginTop: "18px",
+                background: "#fffbeb",
+                border:
+                  "1px solid #fde68a",
+                padding: "18px",
                 borderRadius: "12px",
+                color: "#92400e",
+                lineHeight: 1.6,
+                fontSize: "14px",
               }}
             >
-              <strong style={{ color: "#9a3412" }}>
-                Important
-              </strong>
-
-              <p
-                style={{
-                  color: "#9a3412",
-                  lineHeight: 1.7,
-                  marginBottom: 0,
-                }}
-              >
-                Final terms, eligibility, recommendations and insurance advice
-                are provided by the relevant licensed insurance partner.
-              </p>
+              The Meta Insurance operates as a
+              technology and referral platform.
+              Insurance offers, regulated advice
+              and final recommendations are
+              provided by licensed insurance
+              partners.
             </div>
+
+            {error && (
+              <div style={errorBox}>
+                {error}
+              </div>
+            )}
+
+            {success && (
+              <div style={successBox}>
+                ✓ {success}
+              </div>
+            )}
+
+            <button
+              type="button"
+              disabled={submitting}
+              onClick={submitLead}
+              style={{
+                ...primaryButton,
+                background: submitting
+                  ? "#94a3b8"
+                  : "#0284c7",
+              }}
+            >
+              {submitting
+                ? "Submitting request..."
+                : "Request motor insurance offers →"}
+            </button>
           </div>
         </div>
       </section>
@@ -372,615 +783,169 @@ export default function MotorInsurancePage() {
   );
 }
 
-function ManualMotorForm() {
-  return (
-    <div>
-      <h2
-        style={{
-          fontSize: "28px",
-          marginTop: 0,
-        }}
-      >
-        Tell us about your vehicle
-      </h2>
-
-      <p
-        style={{
-          color: "#64748b",
-          marginBottom: "30px",
-          lineHeight: 1.6,
-        }}
-      >
-        Enter the basic vehicle and insurance information required to request
-        offers from licensed insurance partners.
-      </p>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-          gap: "18px",
-        }}
-      >
-        <Field
-          label="Vehicle make"
-          placeholder="e.g. BMW"
-        />
-
-        <Field
-          label="Vehicle model"
-          placeholder="e.g. 320d"
-        />
-
-        <Field
-          label="Year"
-          placeholder="e.g. 2021"
-        />
-
-        <Field
-          label="Registration country"
-          placeholder="e.g. North Macedonia"
-        />
-
-        <Field
-          label="Fuel type"
-          placeholder="Petrol / Diesel / Hybrid / Electric"
-        />
-
-        <Field
-          label="Engine / Power"
-          placeholder="e.g. 140 kW"
-        />
-
-        <Field
-          label="Current insurer"
-          placeholder="Optional"
-        />
-
-        <Field
-          label="Current annual premium"
-          placeholder="e.g. €450"
-        />
-
-        <Field
-          label="Current deductible"
-          placeholder="e.g. €300"
-        />
-
-        <Field
-          label="Coverage type"
-          placeholder="Third party / Comprehensive"
-        />
-      </div>
-
-      <div
-        style={{
-          marginTop: "25px",
-          background: "#f8fafc",
-          border: "1px solid #e2e8f0",
-          borderRadius: "12px",
-          padding: "18px",
-          color: "#475569",
-          fontSize: "14px",
-          lineHeight: 1.6,
-        }}
-      >
-        The Meta Insurance operates as a technology and referral platform.
-        Insurance offers, regulated advice and final policy recommendations
-        are provided by licensed insurance partners.
-      </div>
-
-      <button
-        type="button"
-        style={{
-          width: "100%",
-          marginTop: "28px",
-          background: "#0284c7",
-          color: "#ffffff",
-          border: "none",
-          borderRadius: "10px",
-          padding: "16px",
-          fontSize: "16px",
-          fontWeight: 800,
-          cursor: "pointer",
-        }}
-      >
-        Request insurance offers →
-      </button>
-    </div>
-  );
-}
-
-function UploadPolicy({
-  selectedFile,
-  setSelectedFile,
+function ModeButton({
+  active,
+  onClick,
+  children,
 }: {
-  selectedFile: File | null;
-  setSelectedFile: (file: File | null) => void;
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
 }) {
-  const [uploading, setUploading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
-
-  function handleFile(file: File | null) {
-    setMessage("");
-    setError("");
-
-    if (!file) {
-      setSelectedFile(null);
-      return;
-    }
-
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      setSelectedFile(null);
-      setError(
-        "Unsupported file type. Please upload a PDF, JPG, JPEG or PNG file."
-      );
-      return;
-    }
-
-    if (file.size > MAX_FILE_SIZE) {
-      setSelectedFile(null);
-      setError("The file is too large. Maximum allowed size is 10 MB.");
-      return;
-    }
-
-    setSelectedFile(file);
-  }
-
-  async function uploadPolicy() {
-    if (!selectedFile) {
-      return;
-    }
-
-    try {
-      setUploading(true);
-      setMessage("");
-      setError("");
-
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-
-      const response = await fetch("/api/upload-policy", {
-        method: "POST",
-        body: formData,
-      });
-
-      let result: {
-        success?: boolean;
-        path?: string;
-        error?: string;
-      };
-
-      try {
-        result = await response.json();
-      } catch {
-        throw new Error(
-          "The server returned an invalid response. Please try again."
-        );
-      }
-
-      if (!response.ok || !result.success) {
-        throw new Error(
-          result.error || "The policy could not be uploaded."
-        );
-      }
-
-      setMessage(
-        "Policy uploaded successfully. Your document is ready to be submitted for comparison."
-      );
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Something went wrong while uploading the policy."
-      );
-    } finally {
-      setUploading(false);
-    }
-  }
-
   return (
-    <div>
-      <h2
-        style={{
-          fontSize: "28px",
-          marginTop: 0,
-        }}
-      >
-        Upload your current motor policy
-      </h2>
-
-      <p
-        style={{
-          color: "#64748b",
-          lineHeight: 1.6,
-          marginBottom: "28px",
-        }}
-      >
-        Upload your existing policy and request a factual comparison with
-        insurance offers provided by licensed insurance partners.
-      </p>
-
-      <label
-        style={{
-          display: "block",
-          border: "2px dashed #94a3b8",
-          borderRadius: "16px",
-          padding: "55px 25px",
-          textAlign: "center",
-          cursor: "pointer",
-          background: "#f8fafc",
-        }}
-      >
-        <div
-          style={{
-            fontSize: "42px",
-            marginBottom: "14px",
-          }}
-        >
-          📄
-        </div>
-
-        <div
-          style={{
-            fontWeight: 800,
-            fontSize: "18px",
-            marginBottom: "8px",
-          }}
-        >
-          Upload current policy
-        </div>
-
-        <div
-          style={{
-            color: "#64748b",
-            marginBottom: "8px",
-          }}
-        >
-          PDF, JPG, JPEG or PNG
-        </div>
-
-        <div
-          style={{
-            color: "#64748b",
-            fontSize: "13px",
-            marginBottom: "10px",
-          }}
-        >
-          Maximum file size: 10 MB
-        </div>
-
-        <div
-          style={{
-            color: "#0284c7",
-            fontWeight: 700,
-          }}
-        >
-          Click to choose a file
-        </div>
-
-        <input
-          type="file"
-          accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
-          style={{
-            display: "none",
-          }}
-          onChange={(event) => {
-            const file = event.target.files?.[0] || null;
-            handleFile(file);
-          }}
-        />
-      </label>
-
-      {selectedFile && (
-        <div
-          style={{
-            marginTop: "20px",
-            background: "#ecfdf5",
-            border: "1px solid #a7f3d0",
-            padding: "16px",
-            borderRadius: "10px",
-            color: "#065f46",
-          }}
-        >
-          <div
-            style={{
-              fontWeight: 800,
-              marginBottom: "5px",
-            }}
-          >
-            ✓ File selected
-          </div>
-
-          <div>
-            {selectedFile.name}
-          </div>
-
-          <div
-            style={{
-              marginTop: "5px",
-              fontSize: "13px",
-            }}
-          >
-            {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-          </div>
-        </div>
-      )}
-
-      {message && (
-        <div
-          style={{
-            marginTop: "20px",
-            background: "#ecfdf5",
-            border: "1px solid #86efac",
-            padding: "17px",
-            borderRadius: "10px",
-            color: "#166534",
-            fontWeight: 700,
-          }}
-        >
-          ✓ {message}
-        </div>
-      )}
-
-      {error && (
-        <div
-          style={{
-            marginTop: "20px",
-            background: "#fef2f2",
-            border: "1px solid #fecaca",
-            padding: "17px",
-            borderRadius: "10px",
-            color: "#b91c1c",
-            fontWeight: 700,
-          }}
-        >
-          {error}
-        </div>
-      )}
-
-      <div
-        style={{
-          marginTop: "24px",
-          background: "#f1f5f9",
-          borderRadius: "12px",
-          padding: "18px",
-          color: "#475569",
-          fontSize: "14px",
-          lineHeight: 1.7,
-        }}
-      >
-        <strong style={{ color: "#0f172a" }}>
-          Your document is stored privately.
-        </strong>
-        <br />
-        Uploaded policies can contain personal information, so documents are
-        sent through our server and stored in private storage rather than
-        being exposed through a public file URL.
-      </div>
-
-      <div
-        style={{
-          marginTop: "16px",
-          background: "#fffbeb",
-          border: "1px solid #fde68a",
-          borderRadius: "12px",
-          padding: "18px",
-          color: "#92400e",
-          fontSize: "14px",
-          lineHeight: 1.7,
-        }}
-      >
-        The Meta Insurance is a technology and referral platform. Any
-        insurance recommendation, final offer or regulated insurance advice is
-        provided by the relevant licensed insurance partner.
-      </div>
-
-      <button
-        type="button"
-        disabled={!selectedFile || uploading}
-        onClick={uploadPolicy}
-        style={{
-          width: "100%",
-          marginTop: "24px",
-          background:
-            selectedFile && !uploading
-              ? "#0284c7"
-              : "#cbd5e1",
-          color: "#ffffff",
-          border: "none",
-          borderRadius: "10px",
-          padding: "16px",
-          fontSize: "16px",
-          fontWeight: 800,
-          cursor:
-            selectedFile && !uploading
-              ? "pointer"
-              : "not-allowed",
-        }}
-      >
-        {uploading
-          ? "Uploading policy..."
-          : "Upload & request comparison →"}
-      </button>
-
-      {selectedFile && !uploading && (
-        <button
-          type="button"
-          onClick={() => {
-            setSelectedFile(null);
-            setMessage("");
-            setError("");
-          }}
-          style={{
-            width: "100%",
-            marginTop: "10px",
-            background: "transparent",
-            color: "#64748b",
-            border: "none",
-            padding: "10px",
-            fontWeight: 700,
-            cursor: "pointer",
-          }}
-        >
-          Remove selected file
-        </button>
-      )}
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        padding: "24px",
+        border: "none",
+        cursor: "pointer",
+        background: active
+          ? "#e0f2fe"
+          : "#ffffff",
+        fontWeight: 800,
+        fontSize: "16px",
+      }}
+    >
+      {children}
+    </button>
   );
 }
 
 function Field({
   label,
+  value,
   placeholder,
+  onChange,
 }: {
   label: string;
+  value: string;
   placeholder: string;
+  onChange: (value: string) => void;
 }) {
   return (
     <label>
-      <div
-        style={{
-          fontSize: "13px",
-          fontWeight: 800,
-          marginBottom: "7px",
-        }}
-      >
+      <div style={labelStyle}>
         {label}
       </div>
 
       <input
+        value={value}
         placeholder={placeholder}
-        style={{
-          width: "100%",
-          boxSizing: "border-box",
-          border: "1px solid #cbd5e1",
-          borderRadius: "9px",
-          padding: "13px",
-          fontSize: "14px",
-          outline: "none",
-        }}
+        onChange={(event) =>
+          onChange(event.target.value)
+        }
+        style={inputStyle}
       />
     </label>
   );
 }
 
-function InfoCard({
-  icon,
-  title,
-  text,
+function SelectField({
+  label,
+  value,
+  options,
+  onChange,
 }: {
-  icon: string;
-  title: string;
-  text: string;
+  label: string;
+  value: string;
+  options: string[];
+  onChange: (value: string) => void;
 }) {
+  return (
+    <label>
+      <div style={labelStyle}>
+        {label}
+      </div>
+
+      <select
+        value={value}
+        onChange={(event) =>
+          onChange(event.target.value)
+        }
+        style={inputStyle}
+      >
+        <option value="">
+          Select an option
+        </option>
+
+        {options.map((option) => (
+          <option
+            key={option}
+            value={option}
+          >
+            {option}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
+function Divider() {
   return (
     <div
       style={{
-        background: "#ffffff",
-        border: "1px solid #e2e8f0",
-        borderRadius: "14px",
-        padding: "24px",
+        margin: "32px 0",
+        borderTop:
+          "1px solid #e2e8f0",
       }}
-    >
-      <div
-        style={{
-          fontSize: "28px",
-        }}
-      >
-        {icon}
-      </div>
-
-      <h3>{title}</h3>
-
-      <p
-        style={{
-          color: "#64748b",
-          lineHeight: 1.6,
-          marginBottom: 0,
-        }}
-      >
-        {text}
-      </p>
-    </div>
+    />
   );
 }
 
-function TableHeader({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <th
-      style={{
-        textAlign: "left",
-        padding: "14px",
-        borderBottom: "2px solid #e2e8f0",
-        color: "#475569",
-        fontSize: "13px",
-      }}
-    >
-      {children}
-    </th>
-  );
-}
+const gridStyle = {
+  display: "grid",
+  gridTemplateColumns:
+    "repeat(2, minmax(0, 1fr))",
+  gap: "18px",
+};
 
-function ComparisonRow({
-  name,
-  current,
-  offer,
-  difference,
-}: {
-  name: string;
-  current: string;
-  offer: string;
-  difference: string;
-}) {
-  return (
-    <tr>
-      <td
-        style={{
-          padding: "15px 14px",
-          borderBottom: "1px solid #e2e8f0",
-          fontWeight: 700,
-        }}
-      >
-        {name}
-      </td>
+const labelStyle = {
+  fontSize: "13px",
+  fontWeight: 800,
+  marginBottom: "7px",
+};
 
-      <td
-        style={{
-          padding: "15px 14px",
-          borderBottom: "1px solid #e2e8f0",
-          color: "#64748b",
-        }}
-      >
-        {current}
-      </td>
+const inputStyle = {
+  width: "100%",
+  boxSizing: "border-box" as const,
+  border: "1px solid #cbd5e1",
+  borderRadius: "9px",
+  padding: "13px",
+  fontSize: "14px",
+  outline: "none",
+  background: "#ffffff",
+};
 
-      <td
-        style={{
-          padding: "15px 14px",
-          borderBottom: "1px solid #e2e8f0",
-          color: "#0f172a",
-          fontWeight: 700,
-        }}
-      >
-        {offer}
-      </td>
+const primaryButton = {
+  width: "100%",
+  marginTop: "24px",
+  color: "#ffffff",
+  border: "none",
+  borderRadius: "10px",
+  padding: "16px",
+  fontSize: "16px",
+  fontWeight: 800,
+  cursor: "pointer",
+};
 
-      <td
-        style={{
-          padding: "15px 14px",
-          borderBottom: "1px solid #e2e8f0",
-          color: "#0284c7",
-          fontWeight: 800,
-        }}
-      >
-        {difference}
-      </td>
-    </tr>
-  );
-}
+const successBox = {
+  marginTop: "18px",
+  background: "#ecfdf5",
+  border: "1px solid #86efac",
+  color: "#166534",
+  padding: "16px",
+  borderRadius: "10px",
+  fontWeight: 700,
+};
+
+const errorBox = {
+  marginTop: "18px",
+  background: "#fef2f2",
+  border: "1px solid #fecaca",
+  color: "#b91c1c",
+  padding: "16px",
+  borderRadius: "10px",
+  fontWeight: 700,
+};
