@@ -10,9 +10,141 @@ const ALLOWED_TYPES = [
   "image/png",
 ];
 
+type PropertyForm = {
+  propertyType: string;
+  propertyUse: string;
+  country: string;
+  city: string;
+  yearBuilt: string;
+  propertySize: string;
+  buildingValue: string;
+  contentsValue: string;
+  currentInsurer: string;
+  currentPremium: string;
+  deductible: string;
+  coverageType: string;
+
+  fullName: string;
+  email: string;
+  phone: string;
+  preferredContact: string;
+};
+
 export default function PropertyInsurancePage() {
   const [mode, setMode] = useState<"manual" | "upload">("manual");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [policyPath, setPolicyPath] = useState<string | null>(null);
+
+  const [form, setForm] = useState<PropertyForm>({
+    propertyType: "",
+    propertyUse: "",
+    country: "",
+    city: "",
+    yearBuilt: "",
+    propertySize: "",
+    buildingValue: "",
+    contentsValue: "",
+    currentInsurer: "",
+    currentPremium: "",
+    deductible: "",
+    coverageType: "",
+
+    fullName: "",
+    email: "",
+    phone: "",
+    preferredContact: "",
+  });
+
+  const [consent, setConsent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  function updateField(field: keyof PropertyForm, value: string) {
+    setForm((current) => ({
+      ...current,
+      [field]: value,
+    }));
+  }
+
+  async function submitLead() {
+    setError("");
+    setSuccess("");
+
+    if (!form.fullName.trim()) {
+      setError("Please enter your full name.");
+      return;
+    }
+
+    if (!form.email.trim() && !form.phone.trim()) {
+      setError("Please enter an email address or phone number.");
+      return;
+    }
+
+    if (mode === "upload" && !policyPath) {
+      setError("Please upload your policy before submitting the request.");
+      return;
+    }
+
+    if (!consent) {
+      setError("Please confirm your consent before submitting.");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          insurance_type: "property",
+          full_name: form.fullName,
+          email: form.email,
+          phone: form.phone,
+          preferred_contact: form.preferredContact,
+          consent: true,
+          policy_document_path:
+            mode === "upload" ? policyPath : null,
+          details: {
+            request_method: mode,
+            property_type: form.propertyType,
+            property_use: form.propertyUse,
+            country: form.country,
+            city: form.city,
+            year_built: form.yearBuilt,
+            property_size: form.propertySize,
+            estimated_building_value: form.buildingValue,
+            estimated_contents_value: form.contentsValue,
+            current_insurer: form.currentInsurer,
+            current_annual_premium: form.currentPremium,
+            current_deductible: form.deductible,
+            coverage_type: form.coverageType,
+          },
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.error || "Unable to submit your request."
+        );
+      }
+
+      setSuccess(
+        "Your property insurance request has been submitted successfully."
+      );
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Something went wrong."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <main
@@ -165,13 +297,166 @@ export default function PropertyInsurancePage() {
 
           <div style={{ padding: "38px" }}>
             {mode === "manual" ? (
-              <ManualPropertyForm />
+              <ManualPropertyForm
+                form={form}
+                updateField={updateField}
+              />
             ) : (
               <UploadPolicy
                 selectedFile={selectedFile}
                 setSelectedFile={setSelectedFile}
+                policyPath={policyPath}
+                setPolicyPath={setPolicyPath}
               />
             )}
+
+            <div
+              style={{
+                margin: "32px 0",
+                borderTop: "1px solid #e2e8f0",
+              }}
+            />
+
+            <h3>Contact information</h3>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                gap: "18px",
+              }}
+            >
+              <Field
+                label="Full name"
+                value={form.fullName}
+                placeholder="Your full name"
+                onChange={(value) => updateField("fullName", value)}
+              />
+
+              <Field
+                label="Email address"
+                value={form.email}
+                placeholder="you@example.com"
+                onChange={(value) => updateField("email", value)}
+              />
+
+              <Field
+                label="Phone number"
+                value={form.phone}
+                placeholder="+389..."
+                onChange={(value) => updateField("phone", value)}
+              />
+
+              <SelectField
+                label="Preferred contact"
+                value={form.preferredContact}
+                options={["Email", "Phone", "WhatsApp"]}
+                onChange={(value) => updateField("preferredContact", value)}
+              />
+            </div>
+
+            <label
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "12px",
+                marginTop: "28px",
+                background: "#f8fafc",
+                padding: "18px",
+                borderRadius: "12px",
+                border: "1px solid #e2e8f0",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(event) => setConsent(event.target.checked)}
+                style={{ width: "18px", height: "18px" }}
+              />
+
+              <span
+                style={{
+                  color: "#475569",
+                  lineHeight: 1.6,
+                  fontSize: "14px",
+                }}
+              >
+                I agree that my information may be processed for this
+                insurance request and shared with relevant licensed insurance
+                partners where applicable.
+              </span>
+            </label>
+
+            <div
+              style={{
+                marginTop: "18px",
+                background: "#fffbeb",
+                border: "1px solid #fde68a",
+                padding: "18px",
+                borderRadius: "12px",
+                color: "#92400e",
+                lineHeight: 1.6,
+                fontSize: "14px",
+              }}
+            >
+              The Meta Insurance operates as a technology and referral
+              platform. Insurance offers, regulated advice and final
+              recommendations are provided by licensed insurance partners.
+            </div>
+
+            {error && (
+              <div
+                style={{
+                  marginTop: "18px",
+                  background: "#fef2f2",
+                  border: "1px solid #fecaca",
+                  color: "#b91c1c",
+                  padding: "16px",
+                  borderRadius: "10px",
+                  fontWeight: 700,
+                }}
+              >
+                {error}
+              </div>
+            )}
+
+            {success && (
+              <div
+                style={{
+                  marginTop: "18px",
+                  background: "#ecfdf5",
+                  border: "1px solid #86efac",
+                  color: "#166534",
+                  padding: "16px",
+                  borderRadius: "10px",
+                  fontWeight: 700,
+                }}
+              >
+                ✓ {success}
+              </div>
+            )}
+
+            <button
+              type="button"
+              disabled={submitting}
+              onClick={submitLead}
+              style={{
+                width: "100%",
+                marginTop: "24px",
+                background: submitting ? "#94a3b8" : "#16a34a",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: "10px",
+                padding: "16px",
+                fontSize: "16px",
+                fontWeight: 800,
+                cursor: submitting ? "not-allowed" : "pointer",
+              }}
+            >
+              {submitting
+                ? "Submitting request..."
+                : "Request property insurance offers →"}
+            </button>
           </div>
         </div>
 
@@ -371,7 +656,13 @@ export default function PropertyInsurancePage() {
   );
 }
 
-function ManualPropertyForm() {
+function ManualPropertyForm({
+  form,
+  updateField,
+}: {
+  form: PropertyForm;
+  updateField: (field: keyof PropertyForm, value: string) => void;
+}) {
   return (
     <div>
       <h2 style={{ fontSize: "28px", marginTop: 0 }}>
@@ -397,99 +688,88 @@ function ManualPropertyForm() {
       >
         <Field
           label="Property type"
+          value={form.propertyType}
           placeholder="House / Apartment / Commercial"
+          onChange={(value) => updateField("propertyType", value)}
         />
 
         <Field
           label="Property use"
+          value={form.propertyUse}
           placeholder="Primary home / Rental / Holiday"
+          onChange={(value) => updateField("propertyUse", value)}
         />
 
         <Field
           label="Country"
+          value={form.country}
           placeholder="e.g. North Macedonia"
+          onChange={(value) => updateField("country", value)}
         />
 
         <Field
           label="City"
+          value={form.city}
           placeholder="e.g. Skopje"
+          onChange={(value) => updateField("city", value)}
         />
 
         <Field
           label="Year built"
+          value={form.yearBuilt}
           placeholder="e.g. 2015"
+          onChange={(value) => updateField("yearBuilt", value)}
         />
 
         <Field
           label="Property size"
+          value={form.propertySize}
           placeholder="e.g. 120 m²"
+          onChange={(value) => updateField("propertySize", value)}
         />
 
         <Field
           label="Estimated building value"
+          value={form.buildingValue}
           placeholder="e.g. €150,000"
+          onChange={(value) => updateField("buildingValue", value)}
         />
 
         <Field
           label="Estimated contents value"
+          value={form.contentsValue}
           placeholder="e.g. €30,000"
+          onChange={(value) => updateField("contentsValue", value)}
         />
 
         <Field
           label="Current insurer"
+          value={form.currentInsurer}
           placeholder="Optional"
+          onChange={(value) => updateField("currentInsurer", value)}
         />
 
         <Field
           label="Current annual premium"
+          value={form.currentPremium}
           placeholder="e.g. €220"
+          onChange={(value) => updateField("currentPremium", value)}
         />
 
         <Field
           label="Current deductible"
+          value={form.deductible}
           placeholder="e.g. €250"
+          onChange={(value) => updateField("deductible", value)}
         />
 
         <Field
           label="Current coverage"
+          value={form.coverageType}
           placeholder="Building / Contents / Combined"
+          onChange={(value) => updateField("coverageType", value)}
         />
       </div>
-
-      <div
-        style={{
-          marginTop: "25px",
-          background: "#f8fafc",
-          border: "1px solid #e2e8f0",
-          borderRadius: "12px",
-          padding: "18px",
-          color: "#475569",
-          fontSize: "14px",
-          lineHeight: 1.6,
-        }}
-      >
-        The Meta Insurance operates as a technology and referral platform.
-        Insurance offers, regulated advice and final recommendations are
-        provided by licensed insurance partners.
-      </div>
-
-      <button
-        type="button"
-        style={{
-          width: "100%",
-          marginTop: "28px",
-          background: "#16a34a",
-          color: "#ffffff",
-          border: "none",
-          borderRadius: "10px",
-          padding: "16px",
-          fontSize: "16px",
-          fontWeight: 800,
-          cursor: "pointer",
-        }}
-      >
-        Request property insurance offers →
-      </button>
     </div>
   );
 }
@@ -497,9 +777,13 @@ function ManualPropertyForm() {
 function UploadPolicy({
   selectedFile,
   setSelectedFile,
+  policyPath,
+  setPolicyPath,
 }: {
   selectedFile: File | null;
   setSelectedFile: (file: File | null) => void;
+  policyPath: string | null;
+  setPolicyPath: (path: string | null) => void;
 }) {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
@@ -508,6 +792,7 @@ function UploadPolicy({
   function handleFile(file: File | null) {
     setMessage("");
     setError("");
+    setPolicyPath(null);
 
     if (!file) {
       setSelectedFile(null);
@@ -570,11 +855,13 @@ function UploadPolicy({
         );
       }
 
-      if (!response.ok || !result.success) {
+      if (!response.ok || !result.success || !result.path) {
         throw new Error(
           result.error || "The property policy could not be uploaded."
         );
       }
+
+      setPolicyPath(result.path);
 
       setMessage(
         "Property policy uploaded successfully. Your document is ready to be submitted for comparison."
@@ -778,7 +1065,9 @@ function UploadPolicy({
       >
         {uploading
           ? "Uploading property policy..."
-          : "Upload & request comparison →"}
+          : policyPath
+          ? "Property policy uploaded ✓"
+          : "Upload property policy"}
       </button>
 
       {selectedFile && !uploading && (
@@ -786,6 +1075,7 @@ function UploadPolicy({
           type="button"
           onClick={() => {
             setSelectedFile(null);
+            setPolicyPath(null);
             setMessage("");
             setError("");
           }}
@@ -809,10 +1099,14 @@ function UploadPolicy({
 
 function Field({
   label,
+  value,
   placeholder,
+  onChange,
 }: {
   label: string;
+  value: string;
   placeholder: string;
+  onChange: (value: string) => void;
 }) {
   return (
     <label>
@@ -827,7 +1121,9 @@ function Field({
       </div>
 
       <input
+        value={value}
         placeholder={placeholder}
+        onChange={(event) => onChange(event.target.value)}
         style={{
           width: "100%",
           boxSizing: "border-box",
@@ -838,6 +1134,55 @@ function Field({
           outline: "none",
         }}
       />
+    </label>
+  );
+}
+
+function SelectField({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  options: string[];
+  onChange: (value: string) => void;
+}) {
+  return (
+    <label>
+      <div
+        style={{
+          fontSize: "13px",
+          fontWeight: 800,
+          marginBottom: "7px",
+        }}
+      >
+        {label}
+      </div>
+
+      <select
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        style={{
+          width: "100%",
+          boxSizing: "border-box",
+          border: "1px solid #cbd5e1",
+          borderRadius: "9px",
+          padding: "13px",
+          fontSize: "14px",
+          outline: "none",
+          background: "#ffffff",
+        }}
+      >
+        <option value="">Select an option</option>
+
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </label>
   );
 }
