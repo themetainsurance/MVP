@@ -2,9 +2,163 @@
 
 import { useState } from "react";
 
+type FormData = {
+  countryOfResidence: string;
+  destination: string;
+  departureDate: string;
+  returnDate: string;
+  purpose: string;
+  coverageArea: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  preferredContact: string;
+};
+
 export default function TravelInsurancePage() {
   const [tripType, setTripType] = useState<"single" | "annual">("single");
   const [travelers, setTravelers] = useState(1);
+  const [ages, setAges] = useState<string[]>([""]);
+
+  const [coverage, setCoverage] = useState<string[]>([]);
+
+  const [formData, setFormData] = useState<FormData>({
+    countryOfResidence: "",
+    destination: "",
+    departureDate: "",
+    returnDate: "",
+    purpose: "",
+    coverageArea: "",
+    fullName: "",
+    email: "",
+    phone: "",
+    preferredContact: "",
+  });
+
+  const [consent, setConsent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  function updateField(field: keyof FormData, value: string) {
+    setFormData((current) => ({
+      ...current,
+      [field]: value,
+    }));
+  }
+
+  function changeTravelers(amount: number) {
+    const next = Math.min(10, Math.max(1, travelers + amount));
+
+    setTravelers(next);
+
+    setAges((current) => {
+      const copy = [...current];
+
+      while (copy.length < next) {
+        copy.push("");
+      }
+
+      return copy.slice(0, next);
+    });
+  }
+
+  function updateAge(index: number, value: string) {
+    setAges((current) => {
+      const copy = [...current];
+      copy[index] = value;
+      return copy;
+    });
+  }
+
+  function toggleCoverage(item: string) {
+    setCoverage((current) =>
+      current.includes(item)
+        ? current.filter((value) => value !== item)
+        : [...current, item]
+    );
+  }
+
+  async function submitLead() {
+    setError("");
+    setSuccess("");
+
+    if (!formData.fullName.trim()) {
+      setError("Please enter your full name.");
+      return;
+    }
+
+    if (!formData.email.trim() && !formData.phone.trim()) {
+      setError("Please enter an email address or phone number.");
+      return;
+    }
+
+    if (!formData.destination.trim()) {
+      setError("Please enter your destination.");
+      return;
+    }
+
+    if (!consent) {
+      setError(
+        "Please confirm that you agree to your information being used to process your insurance request."
+      );
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          insurance_type: "travel",
+
+          full_name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          preferred_contact: formData.preferredContact,
+
+          consent: true,
+
+          details: {
+            trip_type: tripType,
+            country_of_residence: formData.countryOfResidence,
+            destination: formData.destination,
+            departure_date: formData.departureDate,
+            return_date: formData.returnDate,
+            purpose_of_travel: formData.purpose,
+            coverage_area: formData.coverageArea,
+            travelers,
+            traveler_ages: ages,
+            requested_coverage: coverage,
+          },
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.error || "Unable to submit your insurance request."
+        );
+      }
+
+      setSuccess(
+        "Your travel insurance request has been submitted successfully."
+      );
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <main
@@ -42,7 +196,7 @@ export default function TravelInsurancePage() {
           href="/"
           style={{
             textDecoration: "none",
-            color: "#0369a1",
+            color: "#2563eb",
             fontWeight: 700,
           }}
         >
@@ -94,8 +248,8 @@ export default function TravelInsurancePage() {
             }}
           >
             Tell us where you are travelling, when you are going and who is
-            travelling. We will use your information to request relevant
-            insurance offers from licensed insurance partners.
+            travelling. Your request can then be forwarded to licensed
+            insurance partners.
           </p>
         </div>
       </section>
@@ -115,13 +269,7 @@ export default function TravelInsurancePage() {
             padding: "38px",
           }}
         >
-          <h2
-            style={{
-              fontSize: "28px",
-              marginTop: 0,
-              marginBottom: "8px",
-            }}
-          >
+          <h2 style={{ fontSize: "28px", marginTop: 0 }}>
             Tell us about your trip
           </h2>
 
@@ -129,78 +277,34 @@ export default function TravelInsurancePage() {
             style={{
               color: "#64748b",
               marginBottom: "32px",
-              lineHeight: 1.6,
             }}
           >
-            Enter your travel details to request travel insurance offers.
+            Enter your travel details to request insurance offers.
           </p>
+
+          <SectionTitle>Trip type</SectionTitle>
 
           <div
             style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "10px",
               marginBottom: "28px",
             }}
           >
-            <div
-              style={{
-                fontSize: "13px",
-                fontWeight: 800,
-                marginBottom: "9px",
-              }}
+            <ChoiceButton
+              active={tripType === "single"}
+              onClick={() => setTripType("single")}
             >
-              Trip type
-            </div>
+              ✈️ Single trip
+            </ChoiceButton>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "10px",
-              }}
+            <ChoiceButton
+              active={tripType === "annual"}
+              onClick={() => setTripType("annual")}
             >
-              <button
-                type="button"
-                onClick={() => setTripType("single")}
-                style={{
-                  padding: "15px",
-                  borderRadius: "10px",
-                  border:
-                    tripType === "single"
-                      ? "2px solid #2563eb"
-                      : "1px solid #cbd5e1",
-                  background:
-                    tripType === "single"
-                      ? "#eff6ff"
-                      : "#ffffff",
-                  color: "#0f172a",
-                  fontWeight: 800,
-                  cursor: "pointer",
-                }}
-              >
-                ✈️ Single trip
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setTripType("annual")}
-                style={{
-                  padding: "15px",
-                  borderRadius: "10px",
-                  border:
-                    tripType === "annual"
-                      ? "2px solid #2563eb"
-                      : "1px solid #cbd5e1",
-                  background:
-                    tripType === "annual"
-                      ? "#eff6ff"
-                      : "#ffffff",
-                  color: "#0f172a",
-                  fontWeight: 800,
-                  cursor: "pointer",
-                }}
-              >
-                🌍 Annual multi-trip
-              </button>
-            </div>
+              🌍 Annual multi-trip
+            </ChoiceButton>
           </div>
 
           <div
@@ -212,24 +316,36 @@ export default function TravelInsurancePage() {
           >
             <Field
               label="Country of residence"
+              value={formData.countryOfResidence}
               placeholder="e.g. North Macedonia"
+              onChange={(value) =>
+                updateField("countryOfResidence", value)
+              }
             />
 
             <Field
               label="Destination"
+              value={formData.destination}
               placeholder="e.g. Italy"
+              onChange={(value) => updateField("destination", value)}
             />
 
             <DateField
               label="Departure date"
+              value={formData.departureDate}
+              onChange={(value) => updateField("departureDate", value)}
             />
 
             <DateField
               label="Return date"
+              value={formData.returnDate}
+              onChange={(value) => updateField("returnDate", value)}
             />
 
             <SelectField
               label="Purpose of travel"
+              value={formData.purpose}
+              onChange={(value) => updateField("purpose", value)}
               options={[
                 "Holiday",
                 "Business",
@@ -242,6 +358,8 @@ export default function TravelInsurancePage() {
 
             <SelectField
               label="Coverage area"
+              value={formData.coverageArea}
+              onChange={(value) => updateField("coverageArea", value)}
               options={[
                 "Europe",
                 "Worldwide excluding USA & Canada",
@@ -250,189 +368,184 @@ export default function TravelInsurancePage() {
             />
           </div>
 
+          <Divider />
+
+          <h3>Travellers</h3>
+
           <div
             style={{
-              marginTop: "30px",
-              paddingTop: "28px",
-              borderTop: "1px solid #e2e8f0",
+              display: "flex",
+              alignItems: "center",
+              gap: "18px",
+              marginBottom: "22px",
             }}
           >
-            <h3
-              style={{
-                fontSize: "21px",
-                marginTop: 0,
-              }}
-            >
-              Travellers
-            </h3>
+            <CounterButton onClick={() => changeTravelers(-1)}>
+              −
+            </CounterButton>
 
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "18px",
-                marginBottom: "20px",
-              }}
-            >
-              <button
-                type="button"
-                onClick={() =>
-                  setTravelers((current) =>
-                    Math.max(1, current - 1)
-                  )
-                }
+            <strong>
+              {travelers} {travelers === 1 ? "traveller" : "travellers"}
+            </strong>
+
+            <CounterButton onClick={() => changeTravelers(1)}>
+              +
+            </CounterButton>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+              gap: "18px",
+            }}
+          >
+            {ages.map((age, index) => (
+              <Field
+                key={index}
+                label={`Traveller ${index + 1} age`}
+                value={age}
+                placeholder="e.g. 34"
+                onChange={(value) => updateAge(index, value)}
+              />
+            ))}
+          </div>
+
+          <Divider />
+
+          <h3>Coverage preferences</h3>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+              gap: "12px",
+            }}
+          >
+            {[
+              "Emergency medical expenses",
+              "Trip cancellation",
+              "Lost or delayed baggage",
+              "Flight delay",
+              "Personal liability",
+              "Winter sports",
+              "Adventure sports",
+              "Rental car excess",
+            ].map((item) => (
+              <label
+                key={item}
                 style={{
-                  width: "42px",
-                  height: "42px",
-                  borderRadius: "50%",
-                  border: "1px solid #cbd5e1",
-                  background: "#ffffff",
-                  fontSize: "20px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  border: "1px solid #e2e8f0",
+                  padding: "14px",
+                  borderRadius: "10px",
                   cursor: "pointer",
                 }}
               >
-                −
-              </button>
-
-              <div
-                style={{
-                  minWidth: "90px",
-                  textAlign: "center",
-                  fontWeight: 800,
-                }}
-              >
-                {travelers}{" "}
-                {travelers === 1 ? "traveller" : "travellers"}
-              </div>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setTravelers((current) =>
-                    Math.min(10, current + 1)
-                  )
-                }
-                style={{
-                  width: "42px",
-                  height: "42px",
-                  borderRadius: "50%",
-                  border: "1px solid #cbd5e1",
-                  background: "#ffffff",
-                  fontSize: "20px",
-                  cursor: "pointer",
-                }}
-              >
-                +
-              </button>
-            </div>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                gap: "18px",
-              }}
-            >
-              {Array.from({ length: travelers }).map((_, index) => (
-                <Field
-                  key={index}
-                  label={`Traveller ${index + 1} age`}
-                  placeholder="e.g. 34"
+                <input
+                  type="checkbox"
+                  checked={coverage.includes(item)}
+                  onChange={() => toggleCoverage(item)}
                 />
-              ))}
-            </div>
+
+                <span style={{ fontWeight: 700, fontSize: "14px" }}>
+                  {item}
+                </span>
+              </label>
+            ))}
           </div>
+
+          <Divider />
+
+          <h3>Contact information</h3>
 
           <div
             style={{
-              marginTop: "30px",
-              paddingTop: "28px",
-              borderTop: "1px solid #e2e8f0",
+              display: "grid",
+              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+              gap: "18px",
             }}
           >
-            <h3
-              style={{
-                fontSize: "21px",
-                marginTop: 0,
-                marginBottom: "18px",
-              }}
-            >
-              Coverage preferences
-            </h3>
+            <Field
+              label="Full name"
+              value={formData.fullName}
+              placeholder="Your full name"
+              onChange={(value) => updateField("fullName", value)}
+            />
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                gap: "12px",
-              }}
-            >
-              <CheckOption label="Emergency medical expenses" />
-              <CheckOption label="Trip cancellation" />
-              <CheckOption label="Lost or delayed baggage" />
-              <CheckOption label="Flight delay" />
-              <CheckOption label="Personal liability" />
-              <CheckOption label="Winter sports" />
-              <CheckOption label="Adventure sports" />
-              <CheckOption label="Rental car excess" />
-            </div>
+            <Field
+              label="Email address"
+              value={formData.email}
+              placeholder="you@example.com"
+              onChange={(value) => updateField("email", value)}
+            />
+
+            <Field
+              label="Phone number"
+              value={formData.phone}
+              placeholder="+389..."
+              onChange={(value) => updateField("phone", value)}
+            />
+
+            <SelectField
+              label="Preferred contact"
+              value={formData.preferredContact}
+              onChange={(value) =>
+                updateField("preferredContact", value)
+              }
+              options={["Email", "Phone", "WhatsApp"]}
+            />
           </div>
 
-          <div
+          <label
             style={{
-              marginTop: "30px",
-              paddingTop: "28px",
-              borderTop: "1px solid #e2e8f0",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "21px",
-                marginTop: 0,
-              }}
-            >
-              Contact information
-            </h3>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                gap: "18px",
-              }}
-            >
-              <Field
-                label="Full name"
-                placeholder="Your full name"
-              />
-
-              <Field
-                label="Email address"
-                placeholder="you@example.com"
-              />
-
-              <Field
-                label="Phone number"
-                placeholder="+389..."
-              />
-
-              <Field
-                label="Preferred contact"
-                placeholder="Email / Phone / WhatsApp"
-              />
-            </div>
-          </div>
-
-          <div
-            style={{
-              marginTop: "26px",
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "12px",
+              marginTop: "28px",
               background: "#f8fafc",
-              border: "1px solid #e2e8f0",
-              borderRadius: "12px",
               padding: "18px",
-              color: "#475569",
+              borderRadius: "12px",
+              border: "1px solid #e2e8f0",
+              cursor: "pointer",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(event) => setConsent(event.target.checked)}
+              style={{
+                marginTop: "3px",
+                width: "18px",
+                height: "18px",
+              }}
+            />
+
+            <span
+              style={{
+                color: "#475569",
+                lineHeight: 1.6,
+                fontSize: "14px",
+              }}
+            >
+              I agree that my information may be processed for the purpose of
+              handling this insurance request and, where applicable, shared
+              with relevant licensed insurance partners.
+            </span>
+          </label>
+
+          <div
+            style={{
+              marginTop: "18px",
+              background: "#fffbeb",
+              border: "1px solid #fde68a",
+              padding: "18px",
+              borderRadius: "12px",
+              color: "#92400e",
+              lineHeight: 1.6,
               fontSize: "14px",
-              lineHeight: 1.7,
             }}
           >
             The Meta Insurance operates as a technology and referral platform.
@@ -440,50 +553,59 @@ export default function TravelInsurancePage() {
             provided by licensed insurance partners.
           </div>
 
+          {error && (
+            <div
+              style={{
+                marginTop: "20px",
+                background: "#fef2f2",
+                border: "1px solid #fecaca",
+                color: "#b91c1c",
+                padding: "16px",
+                borderRadius: "10px",
+                fontWeight: 700,
+              }}
+            >
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div
+              style={{
+                marginTop: "20px",
+                background: "#ecfdf5",
+                border: "1px solid #86efac",
+                color: "#166534",
+                padding: "16px",
+                borderRadius: "10px",
+                fontWeight: 700,
+              }}
+            >
+              ✓ {success}
+            </div>
+          )}
+
           <button
             type="button"
+            disabled={submitting}
+            onClick={submitLead}
             style={{
               width: "100%",
               marginTop: "26px",
-              background: "#2563eb",
+              background: submitting ? "#94a3b8" : "#2563eb",
               color: "#ffffff",
               border: "none",
               borderRadius: "10px",
               padding: "17px",
               fontSize: "16px",
               fontWeight: 800,
-              cursor: "pointer",
+              cursor: submitting ? "not-allowed" : "pointer",
             }}
           >
-            Request travel insurance offers →
+            {submitting
+              ? "Submitting request..."
+              : "Request travel insurance offers →"}
           </button>
-        </div>
-
-        <div
-          style={{
-            marginTop: "40px",
-            display: "grid",
-            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-            gap: "20px",
-          }}
-        >
-          <InfoCard
-            icon="🌍"
-            title="Travel worldwide"
-            text="Choose European or worldwide travel insurance depending on your destination."
-          />
-
-          <InfoCard
-            icon="🏥"
-            title="Medical protection"
-            text="Compare emergency medical expense limits and assistance benefits."
-          />
-
-          <InfoCard
-            icon="🧳"
-            title="Trip protection"
-            text="Compare cancellation, baggage, delay and other available travel benefits."
-          />
         </div>
       </section>
     </main>
@@ -492,34 +614,24 @@ export default function TravelInsurancePage() {
 
 function Field({
   label,
+  value,
   placeholder,
+  onChange,
 }: {
   label: string;
+  value: string;
   placeholder: string;
+  onChange: (value: string) => void;
 }) {
   return (
     <label>
-      <div
-        style={{
-          fontSize: "13px",
-          fontWeight: 800,
-          marginBottom: "7px",
-        }}
-      >
-        {label}
-      </div>
+      <SectionTitle>{label}</SectionTitle>
 
       <input
+        value={value}
         placeholder={placeholder}
-        style={{
-          width: "100%",
-          boxSizing: "border-box",
-          border: "1px solid #cbd5e1",
-          borderRadius: "9px",
-          padding: "13px",
-          fontSize: "14px",
-          outline: "none",
-        }}
+        onChange={(event) => onChange(event.target.value)}
+        style={inputStyle}
       />
     </label>
   );
@@ -527,33 +639,22 @@ function Field({
 
 function DateField({
   label,
+  value,
+  onChange,
 }: {
   label: string;
+  value: string;
+  onChange: (value: string) => void;
 }) {
   return (
     <label>
-      <div
-        style={{
-          fontSize: "13px",
-          fontWeight: 800,
-          marginBottom: "7px",
-        }}
-      >
-        {label}
-      </div>
+      <SectionTitle>{label}</SectionTitle>
 
       <input
         type="date"
-        style={{
-          width: "100%",
-          boxSizing: "border-box",
-          border: "1px solid #cbd5e1",
-          borderRadius: "9px",
-          padding: "13px",
-          fontSize: "14px",
-          outline: "none",
-          background: "#ffffff",
-        }}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        style={inputStyle}
       />
     </label>
   );
@@ -561,44 +662,28 @@ function DateField({
 
 function SelectField({
   label,
+  value,
   options,
+  onChange,
 }: {
   label: string;
+  value: string;
   options: string[];
+  onChange: (value: string) => void;
 }) {
   return (
     <label>
-      <div
-        style={{
-          fontSize: "13px",
-          fontWeight: 800,
-          marginBottom: "7px",
-        }}
-      >
-        {label}
-      </div>
+      <SectionTitle>{label}</SectionTitle>
 
       <select
-        style={{
-          width: "100%",
-          boxSizing: "border-box",
-          border: "1px solid #cbd5e1",
-          borderRadius: "9px",
-          padding: "13px",
-          fontSize: "14px",
-          outline: "none",
-          background: "#ffffff",
-        }}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        style={inputStyle}
       >
-        <option value="">
-          Select an option
-        </option>
+        <option value="">Select an option</option>
 
         {options.map((option) => (
-          <option
-            value={option}
-            key={option}
-          >
+          <option key={option} value={option}>
             {option}
           </option>
         ))}
@@ -607,76 +692,97 @@ function SelectField({
   );
 }
 
-function CheckOption({
-  label,
+function SectionTitle({
+  children,
 }: {
-  label: string;
-}) {
-  return (
-    <label
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "10px",
-        border: "1px solid #e2e8f0",
-        padding: "14px",
-        borderRadius: "10px",
-        cursor: "pointer",
-      }}
-    >
-      <input
-        type="checkbox"
-        style={{
-          width: "18px",
-          height: "18px",
-        }}
-      />
-
-      <span
-        style={{
-          fontSize: "14px",
-          fontWeight: 700,
-        }}
-      >
-        {label}
-      </span>
-    </label>
-  );
-}
-
-function InfoCard({
-  icon,
-  title,
-  text,
-}: {
-  icon: string;
-  title: string;
-  text: string;
+  children: React.ReactNode;
 }) {
   return (
     <div
       style={{
-        background: "#ffffff",
-        border: "1px solid #e2e8f0",
-        borderRadius: "14px",
-        padding: "24px",
+        fontSize: "13px",
+        fontWeight: 800,
+        marginBottom: "7px",
       }}
     >
-      <div style={{ fontSize: "28px" }}>
-        {icon}
-      </div>
-
-      <h3>{title}</h3>
-
-      <p
-        style={{
-          color: "#64748b",
-          lineHeight: 1.6,
-          marginBottom: 0,
-        }}
-      >
-        {text}
-      </p>
+      {children}
     </div>
   );
 }
+
+function ChoiceButton({
+  children,
+  active,
+  onClick,
+}: {
+  children: React.ReactNode;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        padding: "15px",
+        borderRadius: "10px",
+        border: active
+          ? "2px solid #2563eb"
+          : "1px solid #cbd5e1",
+        background: active ? "#eff6ff" : "#ffffff",
+        fontWeight: 800,
+        cursor: "pointer",
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+function CounterButton({
+  children,
+  onClick,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        width: "42px",
+        height: "42px",
+        borderRadius: "50%",
+        border: "1px solid #cbd5e1",
+        background: "#ffffff",
+        fontSize: "20px",
+        cursor: "pointer",
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+function Divider() {
+  return (
+    <div
+      style={{
+        margin: "30px 0",
+        borderTop: "1px solid #e2e8f0",
+      }}
+    />
+  );
+}
+
+const inputStyle = {
+  width: "100%",
+  boxSizing: "border-box" as const,
+  border: "1px solid #cbd5e1",
+  borderRadius: "9px",
+  padding: "13px",
+  fontSize: "14px",
+  outline: "none",
+  background: "#ffffff",
+};
