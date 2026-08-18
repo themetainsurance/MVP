@@ -4,6 +4,25 @@ export const metadata: Metadata = {
   title: "Motor Insurance Coverage Explained | The Meta Insurance",
   description:
     "Learn how motor insurance coverage works, including liability, collision, comprehensive cover, deductibles, glass, theft, roadside assistance and exclusions.",
+
+  alternates: {
+    canonical: "/blog/motor-insurance-guide",
+  },
+
+  openGraph: {
+    title: "Motor Insurance Coverage Explained | The Meta Insurance",
+    description:
+      "Learn how motor insurance coverage works, including liability, collision, comprehensive cover, deductibles, glass, theft, roadside assistance and exclusions.",
+    url: "/blog/motor-insurance-guide",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary",
+    title: "Motor Insurance Coverage Explained | The Meta Insurance",
+    description:
+      "Learn about common motor insurance coverage, deductibles, optional protection and exclusions.",
+  },
 };
 
 export default function MotorInsuranceGuidePage() {

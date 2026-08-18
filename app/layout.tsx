@@ -12,6 +12,10 @@ export const metadata: Metadata = {
 
   description: siteDescription,
 
+  alternates: {
+    canonical: "/",
+  },
+
   applicationName: siteName,
 
   keywords: [
@@ -44,6 +48,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName,
+    url: "/",
     title: "The Meta Insurance | Travel, Motor & Property Insurance",
     description: siteDescription,
   },

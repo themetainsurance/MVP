@@ -4,6 +4,25 @@ export const metadata: Metadata = {
   title: "How to Compare Insurance Policies | The Meta Insurance",
   description:
     "Learn how to compare insurance policies using premiums, coverage limits, deductibles, exclusions, additional benefits and policy terms.",
+
+  alternates: {
+    canonical: "/blog/how-to-compare-insurance-policies",
+  },
+
+  openGraph: {
+    title: "How to Compare Insurance Policies | The Meta Insurance",
+    description:
+      "Learn how to compare insurance policies using premiums, coverage limits, deductibles, exclusions, additional benefits and policy terms.",
+    url: "/blog/how-to-compare-insurance-policies",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary",
+    title: "How to Compare Insurance Policies | The Meta Insurance",
+    description:
+      "Learn how to compare premiums, coverage limits, deductibles, exclusions and policy terms.",
+  },
 };
 
 export default function CompareInsurancePoliciesPage() {

@@ -4,6 +4,25 @@ export const metadata: Metadata = {
   title: "What Does Travel Insurance Cover? | The Meta Insurance",
   description:
     "Learn what travel insurance commonly covers, including emergency medical expenses, trip cancellation, baggage, delays and important exclusions.",
+
+  alternates: {
+    canonical: "/blog/travel-insurance-guide",
+  },
+
+  openGraph: {
+    title: "What Does Travel Insurance Cover? | The Meta Insurance",
+    description:
+      "Learn what travel insurance commonly covers, including emergency medical expenses, trip cancellation, baggage, delays and important exclusions.",
+    url: "/blog/travel-insurance-guide",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary",
+    title: "What Does Travel Insurance Cover? | The Meta Insurance",
+    description:
+      "Learn about common travel insurance coverage, exclusions and policy details.",
+  },
 };
 
 export default function TravelInsuranceGuidePage() {

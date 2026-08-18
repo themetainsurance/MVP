@@ -4,6 +4,25 @@ export const metadata: Metadata = {
   title: "Property Insurance Explained Simply | The Meta Insurance",
   description:
     "Learn how property insurance works, including building cover, contents insurance, liability, flood, earthquake, deductibles, exclusions and policy comparisons.",
+
+  alternates: {
+    canonical: "/blog/property-insurance-guide",
+  },
+
+  openGraph: {
+    title: "Property Insurance Explained Simply | The Meta Insurance",
+    description:
+      "Learn how property insurance works, including building cover, contents insurance, liability, flood, earthquake, deductibles, exclusions and policy comparisons.",
+    url: "/blog/property-insurance-guide",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary",
+    title: "Property Insurance Explained Simply | The Meta Insurance",
+    description:
+      "Learn about building cover, contents insurance, liability, deductibles and common exclusions.",
+  },
 };
 
 export default function PropertyInsuranceGuidePage() {

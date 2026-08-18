@@ -3,7 +3,26 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Insurance Guides | The Meta Insurance",
   description:
-    "Simple guides about travel, motor and property insurance. Learn how coverage, limits, deductibles and exclusions work.",
+    "Simple insurance guides about travel, motor and property insurance, policy comparison, coverage limits, deductibles, exclusions and renewals.",
+
+  alternates: {
+    canonical: "/blog",
+  },
+
+  openGraph: {
+    title: "Insurance Guides | The Meta Insurance",
+    description:
+      "Simple insurance guides about travel, motor and property insurance, policy comparison, coverage limits, deductibles, exclusions and renewals.",
+    url: "/blog",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary",
+    title: "Insurance Guides | The Meta Insurance",
+    description:
+      "Simple guides explaining travel, motor and property insurance, comparisons and renewals.",
+  },
 };
 
 type Guide = {

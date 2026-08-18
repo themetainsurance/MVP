@@ -4,6 +4,25 @@ export const metadata: Metadata = {
   title: "What to Check Before Renewing Your Insurance | The Meta Insurance",
   description:
     "A practical insurance renewal checklist covering premiums, coverage limits, deductibles, exclusions, benefits and important policy changes.",
+
+  alternates: {
+    canonical: "/blog/insurance-renewal-checklist",
+  },
+
+  openGraph: {
+    title: "What to Check Before Renewing Your Insurance | The Meta Insurance",
+    description:
+      "A practical insurance renewal checklist covering premiums, coverage limits, deductibles, exclusions, benefits and important policy changes.",
+    url: "/blog/insurance-renewal-checklist",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary",
+    title: "What to Check Before Renewing Your Insurance | The Meta Insurance",
+    description:
+      "Review premiums, limits, deductibles, exclusions, benefits and policy changes before renewal.",
+  },
 };
 
 export default function InsuranceRenewalGuidePage() {
