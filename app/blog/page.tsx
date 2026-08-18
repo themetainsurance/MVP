@@ -29,6 +29,7 @@ const guides: Guide[] = [
     title: "How to Understand Motor Insurance Coverage",
     description:
       "Learn about common motor insurance coverage, deductibles, liability, vehicle damage and optional protection.",
+    href: "/blog/motor-insurance-guide",
   },
   {
     category: "PROPERTY",
