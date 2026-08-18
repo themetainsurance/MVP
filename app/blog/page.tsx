@@ -48,12 +48,13 @@ const guides: Guide[] = [
   href: "/blog/how-to-compare-insurance-policies",
 },
   {
-    category: "RENEWAL",
-    icon: "🔄",
-    title: "What to Check Before Renewing Your Insurance",
-    description:
-      "A practical checklist of information to review before renewing an existing insurance policy.",
-  },
+  category: "RENEWAL",
+  icon: "🔄",
+  title: "What to Check Before Renewing Your Insurance",
+  description:
+    "A practical checklist of information to review before renewing an existing insurance policy.",
+  href: "/blog/insurance-renewal-checklist",
+},
 ];
 
 export default function BlogPage() {
