@@ -37,6 +37,7 @@ const guides: Guide[] = [
     title: "Property Insurance Explained Simply",
     description:
       "A simple introduction to building cover, contents insurance, liability, deductibles and common exclusions.",
+    href: "/blog/property-insurance-guide",
   },
   {
     category: "COMPARISON",
