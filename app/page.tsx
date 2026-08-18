@@ -1,3 +1,21 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "The Meta Insurance | Travel, Motor & Property Insurance",
+  description:
+    "Compare travel, motor and property insurance, understand coverage differences and submit your insurance request to relevant licensed insurance partners.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "The Meta Insurance | Travel, Motor & Property Insurance",
+    description:
+      "Compare travel, motor and property insurance, understand coverage differences and submit your insurance request to relevant licensed insurance partners.",
+    url: "/",
+    type: "website",
+  },
+};
+
 const insuranceTypes = [
   {
     icon: "✈️",
