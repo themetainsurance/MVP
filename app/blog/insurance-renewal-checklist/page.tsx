@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "What to Check Before Renewing Your Insurance | The Meta Insurance",
   description:
-    "Use this practical insurance renewal checklist to review premiums, coverage limits, deductibles, exclusions, personal details and policy changes before renewal.",
+    "A practical insurance renewal checklist covering premiums, coverage limits, deductibles, exclusions, benefits and important policy changes.",
 };
 
 export default function InsuranceRenewalGuidePage() {
@@ -130,7 +130,7 @@ export default function InsuranceRenewalGuidePage() {
             }}
           >
             A practical checklist for reviewing your existing insurance policy
-            before the next renewal date.
+            and understanding what may have changed before renewal.
           </p>
         </div>
       </section>
@@ -147,14 +147,15 @@ export default function InsuranceRenewalGuidePage() {
         }}
       >
         <p>
-          Insurance renewal is a useful opportunity to review whether the
-          information, limits, deductibles and other terms shown on an existing
-          policy are still accurate.
+          An insurance renewal is a useful opportunity to review your existing
+          policy and compare it with the terms offered for the next policy
+          period.
         </p>
 
         <p>
-          Circumstances can change during the policy year, and a renewal offer
-          may also contain changes compared with the previous policy period.
+          The premium may change, but other parts of the policy can also change,
+          including coverage limits, deductibles, exclusions and additional
+          benefits.
         </p>
 
         <ArticleHeading>
@@ -162,51 +163,37 @@ export default function InsuranceRenewalGuidePage() {
         </ArticleHeading>
 
         <p>
-          Compare the new annual premium with the amount paid during the
-          previous policy period.
+          Start by comparing the new annual premium with the amount paid during
+          the previous policy period.
         </p>
 
         <p>
-          If the price has changed, reviewing the rest of the policy terms can
-          help identify whether coverage has also changed.
+          If the price is different, reviewing the rest of the policy terms can
+          help identify whether coverage has changed as well.
         </p>
 
         <InfoBox>
-          A premium increase or decrease does not necessarily mean that the
-          coverage has changed in the same direction.
+          A higher or lower premium does not necessarily mean that coverage has
+          improved or reduced by the same amount.
         </InfoBox>
 
         <ArticleHeading>
-          2. Check your personal information
+          2. Check your policy information
         </ArticleHeading>
 
         <p>
-          Make sure the personal information shown on the policy remains
-          accurate.
+          Review the information shown on the renewal documents and make sure
+          it remains accurate.
         </p>
 
         <p>
-          Depending on the insurance type, this can include your name, address,
-          contact information and other relevant details.
+          Depending on the type of insurance, this may include your contact
+          details, insured address, vehicle information, property details or
+          other relevant information.
         </p>
 
         <ArticleHeading>
-          3. Review the insured asset or trip information
-        </ArticleHeading>
-
-        <p>
-          Check whether the information relating to what is being insured is
-          still correct.
-        </p>
-
-        <ul style={{ paddingLeft: "24px" }}>
-          <li>Vehicle details for motor insurance.</li>
-          <li>Property information for home or property insurance.</li>
-          <li>Travel dates and destinations for travel insurance.</li>
-        </ul>
-
-        <ArticleHeading>
-          4. Review coverage limits
+          3. Review coverage limits
         </ArticleHeading>
 
         <p>
@@ -215,63 +202,79 @@ export default function InsuranceRenewalGuidePage() {
         </p>
 
         <p>
-          Compare the renewal limits with the previous policy and check whether
-          they still reflect the insured property, vehicle, belongings or other
-          relevant exposure.
+          Compare the renewal limits with the previous policy and identify any
+          increases or reductions.
         </p>
 
         <ArticleHeading>
-          5. Review the deductible
+          4. Review the deductible
         </ArticleHeading>
 
         <p>
-          The deductible or excess is the amount the insured person may need to
-          pay toward an eligible claim.
+          The deductible, sometimes called an excess, is the amount the insured
+          person may need to pay toward an eligible claim.
         </p>
 
         <p>
-          Check whether the deductible has changed compared with the existing
-          policy.
+          Check whether the renewal policy has the same deductible as the
+          current policy.
         </p>
 
         <ArticleHeading>
-          6. Check included benefits
+          5. Check included benefits
         </ArticleHeading>
 
         <p>
-          Review the benefits included in the renewal offer and compare them
-          with your current policy.
+          Benefits included in an existing policy may not always remain
+          identical at renewal.
         </p>
 
-        <p>Examples may include:</p>
+        <p>
+          Depending on the insurance category, examples can include:
+        </p>
 
         <ul style={{ paddingLeft: "24px" }}>
           <li>Roadside assistance.</li>
-          <li>Glass cover.</li>
+          <li>Glass or windscreen protection.</li>
           <li>Replacement vehicle.</li>
           <li>Flood protection.</li>
           <li>Earthquake protection.</li>
           <li>Alternative accommodation.</li>
-          <li>Baggage cover.</li>
           <li>Travel delay benefits.</li>
+          <li>Baggage protection.</li>
         </ul>
+
+        <ArticleHeading>
+          6. Check for removed benefits
+        </ArticleHeading>
+
+        <p>
+          A renewal policy can sometimes remove or restrict a benefit that was
+          available during the previous policy period.
+        </p>
+
+        <p>
+          Comparing benefits line by line can make these changes easier to
+          identify.
+        </p>
 
         <ArticleHeading>
           7. Review exclusions
         </ArticleHeading>
 
         <p>
-          Exclusions describe situations and events that are not covered.
+          Exclusions describe situations or events that are not covered by an
+          insurance policy.
         </p>
 
         <p>
-          Renewal documents should be reviewed for changes to exclusions,
-          restrictions or special conditions.
+          Review whether the renewal documents contain new exclusions or
+          changes to existing exclusions.
         </p>
 
         <InfoBox>
-          Do not compare only the premium. A change in exclusions can materially
-          affect the actual scope of coverage.
+          Comparing only the premium can hide important changes in exclusions
+          or restrictions.
         </InfoBox>
 
         <ArticleHeading>
@@ -279,88 +282,94 @@ export default function InsuranceRenewalGuidePage() {
         </ArticleHeading>
 
         <p>
-          For some types of insurance, the geographical area in which the
-          policy applies is important.
+          Some insurance policies apply only within specific countries,
+          territories or geographical regions.
         </p>
 
         <p>
-          Check whether territorial limits have changed, especially for motor
-          and travel insurance.
-        </p>
-
-        <ArticleHeading>
-          9. Check optional cover
-        </ArticleHeading>
-
-        <p>
-          Optional benefits may have been added, removed or repriced at
-          renewal.
-        </p>
-
-        <p>
-          It can be useful to separate the base coverage from optional
-          additions when comparing the old and new policy.
+          This can be particularly important for motor and travel insurance.
         </p>
 
         <ArticleHeading>
-          10. Check the renewal date
+          9. Check special conditions
         </ArticleHeading>
 
         <p>
-          Make sure you know when the existing policy expires and when the
-          renewal policy is scheduled to start.
+          Policies can contain specific conditions that must be followed for
+          coverage to apply.
         </p>
 
         <p>
-          This helps avoid an unintended gap in insurance coverage where
-          continuous coverage is required.
+          Examples can include security requirements, reporting deadlines,
+          approved repair networks or documentation requirements.
         </p>
 
         <ArticleHeading>
-          Compare the existing policy with the renewal
+          10. Check the policy dates
         </ArticleHeading>
 
         <p>
-          A simple factual comparison can make renewal changes easier to
-          understand.
+          Review the expiration date of the existing policy and the start date
+          of the renewal policy.
         </p>
 
-        <RenewalTable />
-
         <p>
-          This type of comparison shows the differences without determining
-          whether a particular policy is appropriate for an individual
-          customer.
+          This is important where continuous insurance coverage is required.
         </p>
 
         <ArticleHeading>
-          Documents worth keeping
+          Example: current policy vs renewal
         </ArticleHeading>
 
         <p>
-          Keeping copies of previous and current policy documents can make
-          future comparisons easier.
+          A factual comparison can help show exactly what has changed.
+        </p>
+
+        <RenewalComparison />
+
+        <p>
+          In this example, the renewal premium is €35 higher and the liability
+          limit has increased, while roadside assistance has been removed.
+        </p>
+
+        <p>
+          This does not determine whether the renewal is appropriate for the
+          customer. It simply identifies the factual differences between the
+          two policy periods.
+        </p>
+
+        <ArticleHeading>
+          What should you compare before renewal?
+        </ArticleHeading>
+
+        <RenewalChecklist />
+
+        <ArticleHeading>
+          Keep your existing policy document
+        </ArticleHeading>
+
+        <p>
+          Keeping a copy of the current insurance policy can make future
+          comparisons significantly easier.
+        </p>
+
+        <p>
+          Useful documents may include:
         </p>
 
         <ul style={{ paddingLeft: "24px" }}>
           <li>Current insurance policy.</li>
-          <li>Renewal notice.</li>
           <li>Policy schedule.</li>
           <li>Coverage summary.</li>
+          <li>Renewal notice.</li>
           <li>Previous premium information.</li>
-          <li>Relevant claims information.</li>
         </ul>
 
-        <ArticleHeading>
-          Before accepting a renewal
-        </ArticleHeading>
-
         <p>
-          Reviewing the following items can help you understand the factual
-          differences between the current policy and the renewal:
+          For Motor and Property insurance, The Meta Insurance can also collect
+          an existing policy document as part of an insurance request where the
+          upload option is available.
         </p>
-
-        <ChecklistTable />
 
         {/* CTA */}
         <div
@@ -383,8 +392,8 @@ export default function InsuranceRenewalGuidePage() {
           </h2>
 
           <p style={{ marginTop: 0 }}>
-            Choose an insurance category, enter your information or upload an
-            existing policy where available.
+            Choose an insurance category, enter your details or upload an
+            existing Motor or Property policy where available.
           </p>
 
           <div
@@ -519,7 +528,7 @@ function InfoBox({
   );
 }
 
-function RenewalTable() {
+function RenewalComparison() {
   const rows = [
     ["Annual premium", "€450", "€485", "+ €35"],
     ["Deductible", "€500", "€500", "Same"],
@@ -529,7 +538,12 @@ function RenewalTable() {
   ];
 
   return (
-    <div style={{ overflowX: "auto", margin: "28px 0" }}>
+    <div
+      style={{
+        overflowX: "auto",
+        margin: "28px 0",
+      }}
+    >
       <table
         style={{
           width: "100%",
@@ -552,8 +566,11 @@ function RenewalTable() {
               <td style={tdStyle}>
                 <strong>{feature}</strong>
               </td>
+
               <td style={tdStyle}>{current}</td>
+
               <td style={tdStyle}>{renewal}</td>
+
               <td style={tdStyle}>
                 <strong>{difference}</strong>
               </td>
@@ -565,19 +582,25 @@ function RenewalTable() {
   );
 }
 
-function ChecklistTable() {
+function RenewalChecklist() {
   const rows = [
-    ["Premium", "Has the price changed?"],
-    ["Coverage limits", "Are the insured limits the same?"],
-    ["Deductible", "Has the amount changed?"],
+    ["Premium", "Has the annual price changed?"],
+    ["Coverage limits", "Are the insured limits different?"],
+    ["Deductible", "Has the deductible increased or decreased?"],
     ["Benefits", "Have any benefits been added or removed?"],
     ["Exclusions", "Are there new or changed exclusions?"],
-    ["Personal details", "Is all policy information still accurate?"],
-    ["Dates", "Are the expiry and renewal dates correct?"],
+    ["Territory", "Has geographical coverage changed?"],
+    ["Policy details", "Is the insured information still correct?"],
+    ["Policy dates", "Are the expiry and renewal dates correct?"],
   ];
 
   return (
-    <div style={{ overflowX: "auto", margin: "28px 0" }}>
+    <div
+      style={{
+        overflowX: "auto",
+        margin: "28px 0",
+      }}
+    >
       <table
         style={{
           width: "100%",
@@ -598,6 +621,7 @@ function ChecklistTable() {
               <td style={tdStyle}>
                 <strong>{check}</strong>
               </td>
+
               <td style={tdStyle}>{question}</td>
             </tr>
           ))}
