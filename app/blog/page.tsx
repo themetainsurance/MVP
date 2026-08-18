@@ -6,13 +6,22 @@ export const metadata: Metadata = {
     "Simple guides about travel, motor and property insurance. Learn how coverage, limits, deductibles and exclusions work.",
 };
 
-const guides = [
+type Guide = {
+  category: string;
+  icon: string;
+  title: string;
+  description: string;
+  href?: string;
+};
+
+const guides: Guide[] = [
   {
     category: "TRAVEL",
     icon: "✈️",
     title: "What Does Travel Insurance Cover?",
     description:
       "Understand common travel insurance coverage including medical expenses, cancellations, baggage and delays.",
+    href: "/blog/travel-insurance-guide",
   },
   {
     category: "MOTOR",
@@ -217,67 +226,135 @@ export default function BlogPage() {
               gap: "22px",
             }}
           >
-            {guides.map((guide) => (
-              <article
-                key={guide.title}
-                style={{
-                  background: "#ffffff",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "16px",
-                  padding: "30px",
-                }}
-              >
-                <div
+            {guides.map((guide) =>
+              guide.href ? (
+                <a
+                  key={guide.title}
+                  href={guide.href}
                   style={{
-                    fontSize: "34px",
-                    marginBottom: "20px",
+                    background: "#ffffff",
+                    border: "1px solid #e2e8f0",
+                    borderRadius: "16px",
+                    padding: "30px",
+                    textDecoration: "none",
+                    color: "#0f172a",
+                    display: "block",
+                    cursor: "pointer",
                   }}
                 >
-                  {guide.icon}
-                </div>
+                  <div
+                    style={{
+                      fontSize: "34px",
+                      marginBottom: "20px",
+                    }}
+                  >
+                    {guide.icon}
+                  </div>
 
-                <div
-                  style={{
-                    color: "#0284c7",
-                    fontSize: "11px",
-                    fontWeight: 900,
-                    marginBottom: "10px",
-                  }}
-                >
-                  {guide.category}
-                </div>
+                  <div
+                    style={{
+                      color: "#0284c7",
+                      fontSize: "11px",
+                      fontWeight: 900,
+                      marginBottom: "10px",
+                    }}
+                  >
+                    {guide.category}
+                  </div>
 
-                <h2
-                  style={{
-                    fontSize: "21px",
-                    lineHeight: 1.35,
-                    margin: "0 0 14px",
-                  }}
-                >
-                  {guide.title}
-                </h2>
+                  <h2
+                    style={{
+                      fontSize: "21px",
+                      lineHeight: 1.35,
+                      margin: "0 0 14px",
+                      color: "#0f172a",
+                    }}
+                  >
+                    {guide.title}
+                  </h2>
 
-                <p
-                  style={{
-                    color: "#64748b",
-                    lineHeight: 1.65,
-                    marginBottom: "24px",
-                  }}
-                >
-                  {guide.description}
-                </p>
+                  <p
+                    style={{
+                      color: "#64748b",
+                      lineHeight: 1.65,
+                      marginBottom: "24px",
+                    }}
+                  >
+                    {guide.description}
+                  </p>
 
-                <div
+                  <div
+                    style={{
+                      color: "#0284c7",
+                      fontWeight: 800,
+                      fontSize: "14px",
+                    }}
+                  >
+                    Read guide →
+                  </div>
+                </a>
+              ) : (
+                <article
+                  key={guide.title}
                   style={{
-                    color: "#94a3b8",
-                    fontWeight: 700,
-                    fontSize: "14px",
+                    background: "#ffffff",
+                    border: "1px solid #e2e8f0",
+                    borderRadius: "16px",
+                    padding: "30px",
                   }}
                 >
-                  Guide coming next
-                </div>
-              </article>
-            ))}
+                  <div
+                    style={{
+                      fontSize: "34px",
+                      marginBottom: "20px",
+                    }}
+                  >
+                    {guide.icon}
+                  </div>
+
+                  <div
+                    style={{
+                      color: "#0284c7",
+                      fontSize: "11px",
+                      fontWeight: 900,
+                      marginBottom: "10px",
+                    }}
+                  >
+                    {guide.category}
+                  </div>
+
+                  <h2
+                    style={{
+                      fontSize: "21px",
+                      lineHeight: 1.35,
+                      margin: "0 0 14px",
+                    }}
+                  >
+                    {guide.title}
+                  </h2>
+
+                  <p
+                    style={{
+                      color: "#64748b",
+                      lineHeight: 1.65,
+                      marginBottom: "24px",
+                    }}
+                  >
+                    {guide.description}
+                  </p>
+
+                  <div
+                    style={{
+                      color: "#94a3b8",
+                      fontWeight: 700,
+                      fontSize: "14px",
+                    }}
+                  >
+                    Guide coming next
+                  </div>
+                </article>
+              )
+            )}
           </div>
         </div>
       </section>
@@ -404,9 +481,7 @@ export default function BlogPage() {
             The Meta Insurance
           </strong>
 
-          <span>
-            Insurance made simpler.
-          </span>
+          <span>Insurance made simpler.</span>
         </div>
       </footer>
     </main>
