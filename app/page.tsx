@@ -495,14 +495,17 @@ export default function Home() {
               </h2>
             </div>
 
-            <span
+            <a
+              href="/blog"
               style={{
-                color: "#64748b",
+                color: "#0284c7",
                 fontSize: "14px",
+                fontWeight: 800,
+                textDecoration: "none",
               }}
             >
-              Full insurance blog coming next.
-            </span>
+              View all insurance guides →
+            </a>
           </div>
 
           <div
@@ -516,16 +519,19 @@ export default function Home() {
             <BlogCard
               category="TRAVEL"
               title="What does travel insurance actually cover?"
+              href="/blog/travel-insurance-guide"
             />
 
             <BlogCard
               category="MOTOR"
               title="How to understand motor insurance coverage"
+              href="/blog/motor-insurance-guide"
             />
 
             <BlogCard
               category="PROPERTY"
               title="Property insurance explained simply"
+              href="/blog/property-insurance-guide"
             />
           </div>
         </div>
@@ -817,17 +823,24 @@ function Step({
 function BlogCard({
   category,
   title,
+  href,
 }: {
   category: string;
   title: string;
+  href: string;
 }) {
   return (
-    <article
+    <a
+      href={href}
       style={{
         background: "white",
         border: "1px solid #e2e8f0",
         borderRadius: "15px",
         padding: "28px",
+        textDecoration: "none",
+        color: "#0f172a",
+        display: "block",
+        cursor: "pointer",
       }}
     >
       <div
@@ -845,6 +858,7 @@ function BlogCard({
         style={{
           fontSize: "20px",
           lineHeight: 1.4,
+          color: "#0f172a",
         }}
       >
         {title}
@@ -853,13 +867,13 @@ function BlogCard({
       <div
         style={{
           marginTop: "25px",
-          fontWeight: 700,
-          color: "#64748b",
+          fontWeight: 800,
+          color: "#0284c7",
         }}
       >
-        Guide coming soon
+        Read guide →
       </div>
-    </article>
+    </a>
   );
 }
 
