@@ -77,7 +77,7 @@ export default function Home() {
             How it works
           </NavLink>
 
-          <NavLink href="#blog">
+          <NavLink href="/blog">
             Blog
           </NavLink>
 
@@ -614,7 +614,7 @@ export default function Home() {
               AI Assistant
             </FooterLink>
 
-            <FooterLink href="#blog">
+            <FooterLink href="/blog">
               Blog
             </FooterLink>
           </div>
