@@ -40,12 +40,13 @@ const guides: Guide[] = [
     href: "/blog/property-insurance-guide",
   },
   {
-    category: "COMPARISON",
-    icon: "⚖️",
-    title: "How to Compare Insurance Policies",
-    description:
-      "Learn how to compare premiums, coverage limits, deductibles, exclusions and additional benefits.",
-  },
+  category: "COMPARISON",
+  icon: "⚖️",
+  title: "How to Compare Insurance Policies",
+  description:
+    "Learn how to compare premiums, coverage limits, deductibles, exclusions and additional benefits.",
+  href: "/blog/how-to-compare-insurance-policies",
+},
   {
     category: "RENEWAL",
     icon: "🔄",
