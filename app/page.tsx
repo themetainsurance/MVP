@@ -81,7 +81,7 @@ export default function Home() {
             Blog
           </NavLink>
 
-          <NavLink href="#ai-assistant">
+          <NavLink href="/ai-assistant">
             AI Assistant
           </NavLink>
 
@@ -355,7 +355,7 @@ export default function Home() {
             <Step
               number="01"
               title="Tell us what you need"
-              description="Enter your insurance requirements manually or upload an existing policy where available."
+              description="Enter your insurance requirements manually, use our assistant, or upload an existing policy where available."
             />
 
             <Step
@@ -424,23 +424,27 @@ export default function Home() {
                 fontSize: "17px",
               }}
             >
-              Our upcoming AI assistant will help collect the information
-              required for your insurance request without making regulated
-              insurance recommendations.
+              Use our assistant to answer a few simple questions instead of
+              completing the full insurance form manually. It will collect the
+              information needed to submit your request to relevant licensed
+              insurance partners.
             </p>
           </div>
 
-          <div
+          <a
+            href="/ai-assistant"
             style={{
               background: "#ffffff",
               color: "#0f172a",
               padding: "16px 24px",
               borderRadius: "10px",
               fontWeight: 800,
+              textDecoration: "none",
+              whiteSpace: "nowrap",
             }}
           >
-            AI Assistant — Coming next
-          </div>
+            Ask AI Assistant →
+          </a>
         </div>
       </section>
 
@@ -606,6 +610,10 @@ export default function Home() {
               Property
             </FooterLink>
 
+            <FooterLink href="/ai-assistant">
+              AI Assistant
+            </FooterLink>
+
             <FooterLink href="#blog">
               Blog
             </FooterLink>
@@ -653,9 +661,7 @@ function InsuranceTab({
       href={href}
       style={{
         border: "none",
-        background: active
-          ? "#e0f2fe"
-          : "transparent",
+        background: active ? "#e0f2fe" : "transparent",
         color: "#0f172a",
         padding: "12px 18px",
         borderRadius: "9px",
