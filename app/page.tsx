@@ -4,21 +4,21 @@ const insuranceTypes = [
     title: "Travel Insurance",
     description:
       "Compare travel insurance for single trips, multiple trips and worldwide cover.",
-    href: "#travel",
+    href: "/travel",
   },
   {
     icon: "🚗",
     title: "Motor Insurance",
     description:
       "Find motor insurance based on your vehicle and coverage requirements.",
-    href: "#motor",
+    href: "/motor",
   },
   {
     icon: "🏠",
     title: "Property Insurance",
     description:
       "Protect your home, apartment or property with the right level of cover.",
-    href: "#property",
+    href: "/property",
   },
 ];
 
@@ -35,41 +35,60 @@ export default function Home() {
       {/* HEADER */}
       <header
         style={{
-          height: "72px",
+          minHeight: "72px",
           padding: "0 7%",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          gap: "30px",
           borderBottom: "1px solid #e5e7eb",
           background: "#ffffff",
+          flexWrap: "wrap",
         }}
       >
-        <div
+        <a
+          href="/"
           style={{
             fontSize: "22px",
             fontWeight: 800,
             letterSpacing: "-0.5px",
+            textDecoration: "none",
+            color: "#0f172a",
           }}
         >
           The Meta Insurance
-        </div>
+        </a>
 
         <nav
           style={{
             display: "flex",
-            gap: "28px",
+            gap: "24px",
             alignItems: "center",
             fontSize: "14px",
             fontWeight: 600,
+            flexWrap: "wrap",
           }}
         >
-          <span>Insurance</span>
-          <span>How it works</span>
-          <span>Blog</span>
-          <span>AI Assistant</span>
+          <NavLink href="#insurance">
+            Insurance
+          </NavLink>
 
-          <button
+          <NavLink href="#how-it-works">
+            How it works
+          </NavLink>
+
+          <NavLink href="#blog">
+            Blog
+          </NavLink>
+
+          <NavLink href="#ai-assistant">
+            AI Assistant
+          </NavLink>
+
+          <a
+            href="#insurance"
             style={{
+              textDecoration: "none",
               border: "none",
               background: "#0f172a",
               color: "white",
@@ -79,7 +98,7 @@ export default function Home() {
             }}
           >
             Get insured
-          </button>
+          </a>
         </nav>
       </header>
 
@@ -133,15 +152,15 @@ export default function Home() {
                 fontSize: "19px",
                 lineHeight: 1.6,
                 color: "#e0f2fe",
-                maxWidth: "620px",
+                maxWidth: "650px",
               }}
             >
-              Compare insurance options, understand your coverage and find
-              protection that fits your needs.
+              Compare insurance options, understand your coverage and submit
+              your request to relevant licensed insurance partners.
             </p>
           </div>
 
-          {/* SEARCH / INSURANCE BOX */}
+          {/* QUICK START BOX */}
           <div
             style={{
               background: "white",
@@ -160,23 +179,51 @@ export default function Home() {
                 flexWrap: "wrap",
               }}
             >
-              <InsuranceTab icon="✈️" title="Travel" active />
-              <InsuranceTab icon="🚗" title="Motor" />
-              <InsuranceTab icon="🏠" title="Property" />
+              <InsuranceTab
+                icon="✈️"
+                title="Travel"
+                href="/travel"
+                active
+              />
+
+              <InsuranceTab
+                icon="🚗"
+                title="Motor"
+                href="/motor"
+              />
+
+              <InsuranceTab
+                icon="🏠"
+                title="Property"
+                href="/property"
+              />
             </div>
 
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "1.4fr 1fr 1fr 0.8fr",
+                gridTemplateColumns:
+                  "repeat(auto-fit, minmax(170px, 1fr))",
                 gap: "8px",
               }}
             >
-              <SearchField label="Destination" value="Where are you going?" />
-              <SearchField label="Start date" value="Select date" />
-              <SearchField label="End date" value="Select date" />
+              <SearchField
+                label="Destination"
+                value="Where are you going?"
+              />
 
-              <button
+              <SearchField
+                label="Start date"
+                value="Select date"
+              />
+
+              <SearchField
+                label="End date"
+                value="Select date"
+              />
+
+              <a
+                href="/travel"
                 style={{
                   background: "#0284c7",
                   color: "white",
@@ -185,10 +232,15 @@ export default function Home() {
                   fontWeight: 800,
                   fontSize: "15px",
                   cursor: "pointer",
+                  textDecoration: "none",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  minHeight: "56px",
                 }}
               >
                 Compare
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -196,9 +248,11 @@ export default function Home() {
 
       {/* INSURANCE TYPES */}
       <section
+        id="insurance"
         style={{
           padding: "90px 7%",
           background: "#f8fafc",
+          scrollMarginTop: "80px",
         }}
       >
         <div
@@ -233,7 +287,8 @@ export default function Home() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
+              gridTemplateColumns:
+                "repeat(auto-fit, minmax(260px, 1fr))",
               gap: "22px",
             }}
           >
@@ -243,6 +298,7 @@ export default function Home() {
                 icon={insurance.icon}
                 title={insurance.title}
                 description={insurance.description}
+                href={insurance.href}
               />
             ))}
           </div>
@@ -251,8 +307,10 @@ export default function Home() {
 
       {/* HOW IT WORKS */}
       <section
+        id="how-it-works"
         style={{
           padding: "95px 7%",
+          scrollMarginTop: "80px",
         }}
       >
         <div
@@ -261,7 +319,12 @@ export default function Home() {
             margin: "0 auto",
           }}
         >
-          <div style={{ textAlign: "center", marginBottom: "55px" }}>
+          <div
+            style={{
+              textAlign: "center",
+              marginBottom: "55px",
+            }}
+          >
             <h2
               style={{
                 fontSize: "38px",
@@ -277,33 +340,34 @@ export default function Home() {
                 fontSize: "17px",
               }}
             >
-              No complicated forms. No confusing insurance language.
+              A simple way to submit your insurance requirements.
             </p>
           </div>
 
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
+              gridTemplateColumns:
+                "repeat(auto-fit, minmax(240px, 1fr))",
               gap: "40px",
             }}
           >
             <Step
               number="01"
               title="Tell us what you need"
-              description="Enter your insurance requirements and basic details."
+              description="Enter your insurance requirements manually or upload an existing policy where available."
             />
 
             <Step
               number="02"
-              title="Compare your options"
-              description="Review available coverage and understand what each option includes."
+              title="Review the options"
+              description="Compare factual differences in price, coverage, limits, deductibles and exclusions."
             />
 
             <Step
               number="03"
-              title="Choose your cover"
-              description="Select the insurance option that best fits your needs."
+              title="Continue with a licensed partner"
+              description="Insurance offers, regulated advice and final recommendations are provided by licensed insurance partners."
             />
           </div>
         </div>
@@ -311,8 +375,10 @@ export default function Home() {
 
       {/* AI SECTION */}
       <section
+        id="ai-assistant"
         style={{
           padding: "40px 7% 100px",
+          scrollMarginTop: "80px",
         }}
       >
         <div
@@ -327,6 +393,7 @@ export default function Home() {
             justifyContent: "space-between",
             alignItems: "center",
             gap: "50px",
+            flexWrap: "wrap",
           }}
         >
           <div style={{ maxWidth: "600px" }}>
@@ -347,7 +414,7 @@ export default function Home() {
                 margin: "0 0 18px",
               }}
             >
-              Not sure what insurance you need?
+              Not sure where to start?
             </h2>
 
             <p
@@ -357,34 +424,33 @@ export default function Home() {
                 fontSize: "17px",
               }}
             >
-              Tell our AI assistant what you want to protect. It will help
-              collect the necessary information and guide you toward the right
-              type of insurance.
+              Our upcoming AI assistant will help collect the information
+              required for your insurance request without making regulated
+              insurance recommendations.
             </p>
           </div>
 
-          <button
+          <div
             style={{
               background: "#ffffff",
               color: "#0f172a",
-              border: "none",
               padding: "16px 24px",
               borderRadius: "10px",
               fontWeight: 800,
-              whiteSpace: "nowrap",
-              cursor: "pointer",
             }}
           >
-            Ask AI Assistant →
-          </button>
+            AI Assistant — Coming next
+          </div>
         </div>
       </section>
 
       {/* BLOG */}
       <section
+        id="blog"
         style={{
           padding: "80px 7%",
           background: "#f8fafc",
+          scrollMarginTop: "80px",
         }}
       >
         <div
@@ -393,19 +459,53 @@ export default function Home() {
             margin: "0 auto",
           }}
         >
-          <h2
+          <div
             style={{
-              fontSize: "36px",
+              display: "flex",
+              justifyContent: "space-between",
+              gap: "25px",
+              alignItems: "flex-end",
+              flexWrap: "wrap",
               marginBottom: "35px",
             }}
           >
-            Insurance guides & advice
-          </h2>
+            <div>
+              <div
+                style={{
+                  color: "#0284c7",
+                  fontSize: "13px",
+                  fontWeight: 800,
+                  marginBottom: "8px",
+                }}
+              >
+                LEARN ABOUT INSURANCE
+              </div>
+
+              <h2
+                style={{
+                  fontSize: "36px",
+                  margin: 0,
+                }}
+              >
+                Insurance guides
+              </h2>
+            </div>
+
+            <span
+              style={{
+                color: "#64748b",
+                fontSize: "14px",
+              }}
+            >
+              Full insurance blog coming next.
+            </span>
+          </div>
 
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
+              gridTemplateColumns:
+                "repeat(auto-fit, minmax(260px, 1fr))",
               gap: "22px",
             }}
           >
@@ -416,7 +516,7 @@ export default function Home() {
 
             <BlogCard
               category="MOTOR"
-              title="How to choose the right motor insurance"
+              title="How to understand motor insurance coverage"
             />
 
             <BlogCard
@@ -424,6 +524,34 @@ export default function Home() {
               title="Property insurance explained simply"
             />
           </div>
+        </div>
+      </section>
+
+      {/* AFFILIATE DISCLOSURE */}
+      <section
+        style={{
+          padding: "40px 7%",
+          background: "#ffffff",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "1180px",
+            margin: "0 auto",
+            background: "#fffbeb",
+            border: "1px solid #fde68a",
+            borderRadius: "14px",
+            padding: "22px",
+            color: "#92400e",
+            fontSize: "14px",
+            lineHeight: 1.7,
+          }}
+        >
+          <strong>Important:</strong> The Meta Insurance is a technology and
+          referral platform. We do not currently act as an insurance broker or
+          insurer. Insurance products, regulated advice, eligibility decisions
+          and final recommendations are provided by relevant licensed
+          insurance partners.
         </div>
       </section>
 
@@ -441,40 +569,103 @@ export default function Home() {
             margin: "0 auto",
             display: "flex",
             justifyContent: "space-between",
+            gap: "30px",
+            flexWrap: "wrap",
           }}
         >
-          <strong style={{ color: "white" }}>The Meta Insurance</strong>
+          <div>
+            <strong
+              style={{
+                color: "white",
+                display: "block",
+                marginBottom: "8px",
+              }}
+            >
+              The Meta Insurance
+            </strong>
 
-          <span>Insurance made simpler.</span>
+            <span>Insurance made simpler.</span>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              gap: "20px",
+              flexWrap: "wrap",
+            }}
+          >
+            <FooterLink href="/travel">
+              Travel
+            </FooterLink>
+
+            <FooterLink href="/motor">
+              Motor
+            </FooterLink>
+
+            <FooterLink href="/property">
+              Property
+            </FooterLink>
+
+            <FooterLink href="#blog">
+              Blog
+            </FooterLink>
+          </div>
         </div>
       </footer>
     </main>
   );
 }
 
+function NavLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      style={{
+        color: "#0f172a",
+        textDecoration: "none",
+        fontWeight: 600,
+      }}
+    >
+      {children}
+    </a>
+  );
+}
+
 function InsuranceTab({
   icon,
   title,
+  href,
   active = false,
 }: {
   icon: string;
   title: string;
+  href: string;
   active?: boolean;
 }) {
   return (
-    <button
+    <a
+      href={href}
       style={{
         border: "none",
-        background: active ? "#e0f2fe" : "transparent",
+        background: active
+          ? "#e0f2fe"
+          : "transparent",
         color: "#0f172a",
         padding: "12px 18px",
         borderRadius: "9px",
         fontWeight: 700,
         cursor: "pointer",
+        textDecoration: "none",
       }}
     >
       {icon} {title}
-    </button>
+    </a>
   );
 }
 
@@ -521,10 +712,12 @@ function InsuranceCard({
   icon,
   title,
   description,
+  href,
 }: {
   icon: string;
   title: string;
   description: string;
+  href: string;
 }) {
   return (
     <div
@@ -535,9 +728,23 @@ function InsuranceCard({
         padding: "30px",
       }}
     >
-      <div style={{ fontSize: "35px", marginBottom: "22px" }}>{icon}</div>
+      <div
+        style={{
+          fontSize: "35px",
+          marginBottom: "22px",
+        }}
+      >
+        {icon}
+      </div>
 
-      <h3 style={{ fontSize: "21px", marginBottom: "12px" }}>{title}</h3>
+      <h3
+        style={{
+          fontSize: "21px",
+          marginBottom: "12px",
+        }}
+      >
+        {title}
+      </h3>
 
       <p
         style={{
@@ -549,18 +756,16 @@ function InsuranceCard({
         {description}
       </p>
 
-      <button
+      <a
+        href={href}
         style={{
-          background: "transparent",
-          border: "none",
-          padding: 0,
           color: "#0284c7",
           fontWeight: 800,
-          cursor: "pointer",
+          textDecoration: "none",
         }}
       >
-        Get a quote →
-      </button>
+        Get started →
+      </a>
     </div>
   );
 }
@@ -587,7 +792,9 @@ function Step({
         {number}
       </div>
 
-      <h3 style={{ fontSize: "21px" }}>{title}</h3>
+      <h3 style={{ fontSize: "21px" }}>
+        {title}
+      </h3>
 
       <p
         style={{
@@ -641,10 +848,31 @@ function BlogCard({
         style={{
           marginTop: "25px",
           fontWeight: 700,
+          color: "#64748b",
         }}
       >
-        Read guide →
+        Guide coming soon
       </div>
     </article>
+  );
+}
+
+function FooterLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      style={{
+        color: "#94a3b8",
+        textDecoration: "none",
+      }}
+    >
+      {children}
+    </a>
   );
 }
