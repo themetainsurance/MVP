@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import SiteFooter from "../components/SiteFooter";
+import {
+  createSafeApiError,
+  getSafeApiErrorMessage,
+} from "../lib/safe-api-error";
 
 type InsuranceType = "travel" | "motor" | "property" | null;
 
@@ -435,9 +439,9 @@ export default function AIAssistantPage() {
         !response.ok ||
         !result.success
       ) {
-        throw new Error(
-          result.error ||
-            "Unable to submit request."
+        throw createSafeApiError(
+          result.error,
+          "Unable to submit request."
         );
       }
 
@@ -448,9 +452,10 @@ export default function AIAssistantPage() {
       );
     } catch (error) {
       addAssistantMessage(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong while submitting your request."
+        getSafeApiErrorMessage(
+          error,
+          "Something went wrong while submitting your request."
+        )
       );
     } finally {
       setSubmitting(false);

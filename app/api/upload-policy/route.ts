@@ -29,8 +29,12 @@ export async function POST(request: Request) {
     const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY;
 
     if (!supabaseUrl || !supabaseSecretKey) {
+      console.error("Policy upload request failed.", {
+        code: "server_configuration_missing",
+      });
+
       return errorResponse(
-        "Server configuration is missing.",
+        "Unexpected upload error.",
         500
       );
     }

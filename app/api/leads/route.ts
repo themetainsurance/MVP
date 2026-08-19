@@ -76,8 +76,12 @@ export async function POST(request: Request) {
       process.env.SUPABASE_SECRET_KEY;
 
     if (!supabaseUrl || !supabaseSecretKey) {
+      console.error("Lead API request failed.", {
+        code: "server_configuration_missing",
+      });
+
       return errorResponse(
-        "Server configuration is missing.",
+        "Unexpected server error.",
         500
       );
     }

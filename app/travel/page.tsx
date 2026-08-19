@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import SiteFooter from "../components/SiteFooter";
+import {
+  createSafeApiError,
+  getSafeApiErrorMessage,
+} from "../lib/safe-api-error";
 
 type FormData = {
   countryOfResidence: string;
@@ -142,8 +146,9 @@ export default function TravelInsurancePage() {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        throw new Error(
-          result.error || "Unable to submit your insurance request."
+        throw createSafeApiError(
+          result.error,
+          "Unable to submit your insurance request."
         );
       }
 
@@ -152,9 +157,10 @@ export default function TravelInsurancePage() {
       );
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "Something went wrong. Please try again."
+        getSafeApiErrorMessage(
+          err,
+          "Something went wrong. Please try again."
+        )
       );
     } finally {
       setSubmitting(false);

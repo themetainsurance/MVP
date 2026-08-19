@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import SiteFooter from "../components/SiteFooter";
+import {
+  createSafeApiError,
+  getSafeApiErrorMessage,
+} from "../lib/safe-api-error";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
@@ -129,9 +133,9 @@ export default function MotorInsurancePage() {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        throw new Error(
-          result.error ||
-            "Unable to upload the policy."
+        throw createSafeApiError(
+          result.error,
+          "Unable to upload the policy."
         );
       }
 
@@ -142,9 +146,10 @@ export default function MotorInsurancePage() {
       );
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "Unable to upload the policy."
+        getSafeApiErrorMessage(
+          err,
+          "Unable to upload the policy."
+        )
       );
     } finally {
       setUploading(false);
@@ -238,9 +243,9 @@ export default function MotorInsurancePage() {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        throw new Error(
-          result.error ||
-            "Unable to submit your request."
+        throw createSafeApiError(
+          result.error,
+          "Unable to submit your request."
         );
       }
 
@@ -249,9 +254,10 @@ export default function MotorInsurancePage() {
       );
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "Something went wrong."
+        getSafeApiErrorMessage(
+          err,
+          "Something went wrong."
+        )
       );
     } finally {
       setSubmitting(false);

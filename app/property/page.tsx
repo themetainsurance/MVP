@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import SiteFooter from "../components/SiteFooter";
+import {
+  createSafeApiError,
+  getSafeApiErrorMessage,
+} from "../lib/safe-api-error";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
@@ -130,8 +134,9 @@ export default function PropertyInsurancePage() {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        throw new Error(
-          result.error || "Unable to submit your request."
+        throw createSafeApiError(
+          result.error,
+          "Unable to submit your request."
         );
       }
 
@@ -140,7 +145,10 @@ export default function PropertyInsurancePage() {
       );
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Something went wrong."
+        getSafeApiErrorMessage(
+          err,
+          "Something went wrong."
+        )
       );
     } finally {
       setSubmitting(false);
@@ -853,14 +861,16 @@ function UploadPolicy({
       try {
         result = await response.json();
       } catch {
-        throw new Error(
+        throw createSafeApiError(
+          null,
           "The server returned an invalid response. Please try again."
         );
       }
 
       if (!response.ok || !result.success || !result.path) {
-        throw new Error(
-          result.error || "The property policy could not be uploaded."
+        throw createSafeApiError(
+          result.error,
+          "The property policy could not be uploaded."
         );
       }
 
@@ -871,9 +881,10 @@ function UploadPolicy({
       );
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "Something went wrong while uploading the policy."
+        getSafeApiErrorMessage(
+          err,
+          "Something went wrong while uploading the policy."
+        )
       );
     } finally {
       setUploading(false);
