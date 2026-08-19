@@ -919,14 +919,16 @@ export default function AIAssistantPage() {
             }}
           >
             The Meta Insurance is a
-            technology and referral
-            platform. This assistant
-            collects information and does
+            technology, referral and
+            affiliate platform. This
+            assistant collects information
+            for insurance requests. It does
             not provide regulated insurance
-            advice or recommend insurance
-            products. Final insurance
+            advice or make final insurance
+            recommendations. Final insurance
             offers and advice are provided
-            by licensed insurance partners.
+            by relevant licensed insurance
+            partners.
           </div>
         </div>
       </section>

@@ -223,7 +223,7 @@ export default function PropertyInsurancePage() {
               margin: "0 0 18px",
             }}
           >
-            Protect your property with the right cover.
+            Explore cover options for your property.
           </h1>
 
           <p
@@ -400,9 +400,10 @@ export default function PropertyInsurancePage() {
                 fontSize: "14px",
               }}
             >
-              The Meta Insurance operates as a technology and referral
-              platform. Insurance offers, regulated advice and final
-              recommendations are provided by licensed insurance partners.
+              The Meta Insurance is a technology, referral and affiliate
+              platform. Insurance offers, underwriting, eligibility decisions,
+              regulated advice, policy issuance and final terms are provided by
+              relevant licensed insurance partners.
             </div>
 
             {error && (
@@ -595,7 +596,7 @@ export default function PropertyInsurancePage() {
             style={{
               marginTop: "28px",
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
               gap: "16px",
             }}
           >
@@ -1032,14 +1033,15 @@ function UploadPolicy({
         }}
       >
         <strong style={{ color: "#0f172a" }}>
-          Your document is stored privately.
+          Your document is intended to be stored privately.
         </strong>
 
         <br />
 
-        Uploaded property policies may contain personal information, so
-        documents are stored in private storage rather than being exposed
-        through a public URL.
+        Property policies may contain personal information. Uploads are used to
+        process and compare your insurance request and are not intended to be
+        publicly accessible. Only upload a document you are authorised to
+        provide.
       </div>
 
       <button

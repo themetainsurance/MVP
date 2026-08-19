@@ -549,9 +549,10 @@ export default function TravelInsurancePage() {
               fontSize: "14px",
             }}
           >
-            The Meta Insurance operates as a technology and referral platform.
-            Insurance offers, regulated advice and final recommendations are
-            provided by licensed insurance partners.
+            The Meta Insurance is a technology, referral and affiliate
+            platform. Insurance offers, underwriting, eligibility decisions,
+            regulated advice, policy issuance and final terms are provided by
+            relevant licensed insurance partners.
           </div>
 
           {error && (

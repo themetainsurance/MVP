@@ -336,7 +336,7 @@ export default function MotorInsurancePage() {
               margin: "0 0 18px",
             }}
           >
-            Find the right cover for your vehicle.
+            Explore cover options for your vehicle.
           </h1>
 
           <p
@@ -610,6 +610,27 @@ export default function MotorInsurancePage() {
                   </div>
                 )}
 
+                <div
+                  style={{
+                    marginTop: "18px",
+                    background: "#f1f5f9",
+                    borderRadius: "12px",
+                    padding: "18px",
+                    color: "#475569",
+                    fontSize: "14px",
+                    lineHeight: 1.7,
+                  }}
+                >
+                  <strong style={{ color: "#0f172a" }}>
+                    Your document is intended to be stored privately.
+                  </strong>
+                  <br />
+                  Motor policies may contain personal information. Uploads are
+                  used to process and compare your insurance request and are not
+                  intended to be publicly accessible. Only upload a document
+                  you are authorised to provide.
+                </div>
+
                 <button
                   type="button"
                   disabled={
@@ -742,12 +763,13 @@ export default function MotorInsurancePage() {
                 fontSize: "14px",
               }}
             >
-              The Meta Insurance operates as a
-              technology and referral platform.
-              Insurance offers, regulated advice
-              and final recommendations are
-              provided by licensed insurance
-              partners.
+              The Meta Insurance is a technology,
+              referral and affiliate platform.
+              Insurance offers, underwriting,
+              eligibility decisions, regulated
+              advice, policy issuance and final
+              terms are provided by relevant
+              licensed insurance partners.
             </div>
 
             {error && (

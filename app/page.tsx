@@ -36,7 +36,7 @@ const insuranceTypes = [
     icon: "🏠",
     title: "Property Insurance",
     description:
-      "Protect your home, apartment or property with the right level of cover.",
+      "Explore cover options for your home, apartment or property.",
     href: "/property",
   },
 ];
@@ -116,7 +116,7 @@ export default function Home() {
               fontWeight: 700,
             }}
           >
-            Get insured
+            Explore insurance
           </a>
         </nav>
       </header>
@@ -161,7 +161,7 @@ export default function Home() {
                 letterSpacing: "-2px",
               }}
             >
-              Find the right insurance.
+              Explore insurance options.
               <br />
               Without the complexity.
             </h1>
@@ -576,11 +576,11 @@ export default function Home() {
             lineHeight: 1.7,
           }}
         >
-          <strong>Important:</strong> The Meta Insurance is a technology and
-          referral platform. We do not currently act as an insurance broker or
-          insurer. Insurance products, regulated advice, eligibility decisions
-          and final recommendations are provided by relevant licensed
-          insurance partners.
+          <strong>Important:</strong> The Meta Insurance is a technology,
+          referral and affiliate platform. We do not currently act as an
+          insurer or licensed insurance broker. Insurance offers, underwriting,
+          eligibility decisions, regulated advice, policy issuance and final
+          terms are provided by relevant licensed insurance partners.
         </div>
       </section>
 
