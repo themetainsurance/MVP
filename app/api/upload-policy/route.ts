@@ -1,17 +1,27 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import {
+  MAX_FILE_SIZE_BYTES,
+  validateUploadedFile,
+  validateUploadCategory,
+} from "./validation";
 
 export const runtime = "nodejs";
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const INVALID_FILE_CONTENT_ERROR =
+  "The uploaded file content does not match an allowed PDF, JPG or PNG document.";
 
-const ALLOWED_TYPES = [
-  "application/pdf",
-  "image/jpeg",
-  "image/png",
-];
-
-const ALLOWED_CATEGORIES = ["motor", "property"];
+function errorResponse(error: string, status = 400) {
+  return NextResponse.json(
+    {
+      success: false,
+      error,
+    },
+    {
+      status,
+    }
+  );
+}
 
 export async function POST(request: Request) {
   try {
@@ -19,64 +29,73 @@ export async function POST(request: Request) {
     const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY;
 
     if (!supabaseUrl || !supabaseSecretKey) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Server configuration is missing.",
-        },
-        { status: 500 }
+      return errorResponse(
+        "Server configuration is missing.",
+        500
       );
     }
 
-    const formData = await request.formData();
+    let formData: FormData;
+
+    try {
+      formData = await request.formData();
+    } catch {
+      return errorResponse("Invalid upload data.");
+    }
 
     const file = formData.get("file");
     const categoryValue = formData.get("category");
 
     if (!(file instanceof File)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "No file was provided.",
-        },
-        { status: 400 }
+      return errorResponse("No file was provided.");
+    }
+
+    const category = validateUploadCategory(
+      categoryValue
+    );
+
+    if (!category) {
+      return errorResponse(
+        "Invalid insurance category."
       );
     }
 
-    const category =
-      typeof categoryValue === "string"
-        ? categoryValue.toLowerCase()
-        : "motor";
-
-    if (!ALLOWED_CATEGORIES.includes(category)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Invalid insurance category.",
-        },
-        { status: 400 }
+    if (file.size === 0) {
+      return errorResponse(
+        "The uploaded file is empty."
       );
     }
 
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Only PDF, JPG, JPEG and PNG files are allowed.",
-        },
-        { status: 400 }
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      return errorResponse(
+        "Maximum file size is 10 MB."
       );
     }
 
-    if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Maximum file size is 10 MB.",
-        },
-        { status: 400 }
-      );
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const fileValidation = validateUploadedFile(
+      buffer,
+      file.type
+    );
+
+    if (fileValidation.success === false) {
+      if (fileValidation.reason === "empty") {
+        return errorResponse(
+          "The uploaded file is empty."
+        );
+      }
+
+      if (fileValidation.reason === "too_large") {
+        return errorResponse(
+          "Maximum file size is 10 MB."
+        );
+      }
+
+      return errorResponse(INVALID_FILE_CONTENT_ERROR);
     }
+
+    const detectedFileType = fileValidation.fileType;
 
     const supabase = createClient(
       supabaseUrl,
@@ -89,36 +108,26 @@ export async function POST(request: Request) {
       }
     );
 
-    const extension =
-      file.name.split(".").pop()?.toLowerCase() || "file";
-
-    const safeExtension =
-      extension === "jpeg"
-        ? "jpg"
-        : extension;
-
     const filePath =
-      `${category}/${Date.now()}-${crypto.randomUUID()}.${safeExtension}`;
-
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+      `${category}/${Date.now()}-${crypto.randomUUID()}.${detectedFileType.extension}`;
 
     const { error } = await supabase.storage
       .from("policy-documents")
       .upload(filePath, buffer, {
-        contentType: file.type,
+        contentType: detectedFileType.mimeType,
         upsert: false,
       });
 
     if (error) {
-      console.error("Supabase upload error:", error);
+      console.error("Policy upload failed.", {
+        code: "storage_upload_failed",
+        category,
+        detectedFileType: detectedFileType.kind,
+      });
 
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Unable to upload policy document.",
-        },
-        { status: 500 }
+      return errorResponse(
+        "Unable to upload policy document.",
+        500
       );
     }
 
@@ -127,15 +136,14 @@ export async function POST(request: Request) {
       category,
       path: filePath,
     });
-  } catch (error) {
-    console.error("Upload error:", error);
+  } catch {
+    console.error("Policy upload request failed.", {
+      code: "unexpected_error",
+    });
 
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Unexpected upload error.",
-      },
-      { status: 500 }
+    return errorResponse(
+      "Unexpected upload error.",
+      500
     );
   }
 }
