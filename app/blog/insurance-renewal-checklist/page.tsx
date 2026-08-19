@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import SiteFooter from "../../components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "What to Check Before Renewing Your Insurance | The Meta Insurance",
@@ -469,39 +470,7 @@ export default function InsuranceRenewalGuidePage() {
         </div>
       </article>
 
-      {/* FOOTER */}
-      <footer
-        style={{
-          background: "#020617",
-          color: "#94a3b8",
-          padding: "45px 7%",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1180px",
-            margin: "0 auto",
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "20px",
-            flexWrap: "wrap",
-          }}
-        >
-          <strong style={{ color: "#ffffff" }}>
-            The Meta Insurance
-          </strong>
-
-          <a
-            href="/blog"
-            style={{
-              color: "#94a3b8",
-              textDecoration: "none",
-            }}
-          >
-            More insurance guides →
-          </a>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }

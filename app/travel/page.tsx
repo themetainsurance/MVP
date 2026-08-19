@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import SiteFooter from "../components/SiteFooter";
 
 type FormData = {
   countryOfResidence: string;
@@ -608,6 +609,7 @@ export default function TravelInsurancePage() {
           </button>
         </div>
       </section>
+      <SiteFooter />
     </main>
   );
 }

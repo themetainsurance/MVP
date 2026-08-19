@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import SiteFooter from "../components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Insurance Guides | The Meta Insurance",
@@ -478,35 +479,7 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer
-        style={{
-          padding: "45px 7%",
-          background: "#020617",
-          color: "#94a3b8",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1180px",
-            margin: "0 auto",
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "20px",
-            flexWrap: "wrap",
-          }}
-        >
-          <strong
-            style={{
-              color: "#ffffff",
-            }}
-          >
-            The Meta Insurance
-          </strong>
-
-          <span>Insurance made simpler.</span>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }

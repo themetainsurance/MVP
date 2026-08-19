@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import SiteFooter from "../components/SiteFooter";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
@@ -779,6 +780,7 @@ export default function MotorInsurancePage() {
           </div>
         </div>
       </section>
+      <SiteFooter />
     </main>
   );
 }

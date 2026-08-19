@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import SiteFooter from "./components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "The Meta Insurance | Travel, Motor & Property Insurance",
@@ -583,67 +584,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer
-        style={{
-          padding: "45px 7%",
-          background: "#020617",
-          color: "#94a3b8",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1180px",
-            margin: "0 auto",
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "30px",
-            flexWrap: "wrap",
-          }}
-        >
-          <div>
-            <strong
-              style={{
-                color: "white",
-                display: "block",
-                marginBottom: "8px",
-              }}
-            >
-              The Meta Insurance
-            </strong>
-
-            <span>Insurance made simpler.</span>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              gap: "20px",
-              flexWrap: "wrap",
-            }}
-          >
-            <FooterLink href="/travel">
-              Travel
-            </FooterLink>
-
-            <FooterLink href="/motor">
-              Motor
-            </FooterLink>
-
-            <FooterLink href="/property">
-              Property
-            </FooterLink>
-
-            <FooterLink href="/ai-assistant">
-              AI Assistant
-            </FooterLink>
-
-            <FooterLink href="/blog">
-              Blog
-            </FooterLink>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
@@ -891,26 +832,6 @@ function BlogCard({
       >
         Read guide →
       </div>
-    </a>
-  );
-}
-
-function FooterLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <a
-      href={href}
-      style={{
-        color: "#94a3b8",
-        textDecoration: "none",
-      }}
-    >
-      {children}
     </a>
   );
 }

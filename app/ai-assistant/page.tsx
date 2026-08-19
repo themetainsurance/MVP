@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import SiteFooter from "../components/SiteFooter";
 
 type InsuranceType = "travel" | "motor" | "property" | null;
 
@@ -929,6 +930,7 @@ export default function AIAssistantPage() {
           </div>
         </div>
       </section>
+      <SiteFooter />
     </main>
   );
 }

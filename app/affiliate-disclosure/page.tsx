@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { Metadata } from "next";
+import SiteFooter from "../components/SiteFooter";
 
 const siteName = "The Meta Insurance";
 const siteUrl = "https://www.themetainsurance.com";
@@ -440,35 +441,7 @@ export default function AffiliateDisclosurePage() {
         </div>
       </section>
 
-      <footer style={footerStyle}>
-        <div style={footerInnerStyle}>
-          <div>
-            <strong style={footerBrandStyle}>The Meta Insurance</strong>
-            <span>Technology, information, referral and affiliate platform.</span>
-          </div>
-
-          <div style={footerLinksStyle}>
-            {navigation.map((item) => (
-              <a key={item.href} href={item.href} style={footerLinkStyle}>
-                {item.label}
-              </a>
-            ))}
-            <a href="/privacy" style={footerLinkStyle}>
-              Privacy
-            </a>
-            <a href="/terms" style={footerLinkStyle}>
-              Terms
-            </a>
-            <a
-              href="/affiliate-disclosure"
-              aria-current="page"
-              style={footerActiveLinkStyle}
-            >
-              Affiliate Disclosure
-            </a>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
@@ -830,42 +803,4 @@ const finalNoticeStyle: CSSProperties = {
   color: "#78350f",
   fontSize: "14px",
   lineHeight: 1.75,
-};
-
-const footerStyle: CSSProperties = {
-  padding: "45px 7%",
-  background: "#020617",
-  color: "#94a3b8",
-};
-
-const footerInnerStyle: CSSProperties = {
-  maxWidth: "1180px",
-  margin: "0 auto",
-  display: "flex",
-  justifyContent: "space-between",
-  gap: "30px",
-  flexWrap: "wrap",
-};
-
-const footerBrandStyle: CSSProperties = {
-  display: "block",
-  marginBottom: "8px",
-  color: "#ffffff",
-};
-
-const footerLinksStyle: CSSProperties = {
-  display: "flex",
-  gap: "20px",
-  flexWrap: "wrap",
-};
-
-const footerLinkStyle: CSSProperties = {
-  color: "#94a3b8",
-  textDecoration: "none",
-};
-
-const footerActiveLinkStyle: CSSProperties = {
-  color: "#e0f2fe",
-  textDecoration: "none",
-  fontWeight: 700,
 };
