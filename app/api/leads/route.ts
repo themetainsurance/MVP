@@ -1,31 +1,74 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import {
+  isLeadRequestBodyTooLarge,
+  MAX_REQUEST_BODY_BYTES,
+  validateLeadBody,
+} from "./validation";
 
 export const runtime = "nodejs";
 
-const ALLOWED_INSURANCE_TYPES = [
-  "travel",
-  "motor",
-  "property",
-];
-
-type LeadBody = {
-  insurance_type?: string;
-
-  full_name?: string;
-  email?: string;
-  phone?: string;
-  preferred_contact?: string;
-
-  policy_document_path?: string | null;
-
-  consent?: boolean;
-
-  details?: Record<string, unknown>;
-};
+function errorResponse(error: string, status = 400) {
+  return NextResponse.json(
+    {
+      success: false,
+      error,
+    },
+    {
+      status,
+    }
+  );
+}
 
 export async function POST(request: Request) {
   try {
+    const contentLengthHeader =
+      request.headers.get("content-length");
+    const contentLength = contentLengthHeader
+      ? Number(contentLengthHeader)
+      : null;
+
+    if (
+      contentLength !== null &&
+      Number.isFinite(contentLength) &&
+      contentLength > MAX_REQUEST_BODY_BYTES
+    ) {
+      return errorResponse(
+        "Request body is too large.",
+        413
+      );
+    }
+
+    let rawBody: string;
+
+    try {
+      rawBody = await request.text();
+    } catch {
+      return errorResponse("Invalid request data.");
+    }
+
+    if (isLeadRequestBodyTooLarge(rawBody)) {
+      return errorResponse(
+        "Request body is too large.",
+        413
+      );
+    }
+
+    let body: unknown;
+
+    try {
+      body = JSON.parse(rawBody);
+    } catch {
+      return errorResponse("Invalid request data.");
+    }
+
+    const validationResult = validateLeadBody(body);
+
+    if (validationResult.success === false) {
+      return errorResponse(validationResult.error);
+    }
+
+    const lead = validationResult.data;
     const supabaseUrl =
       process.env.NEXT_PUBLIC_SUPABASE_URL;
 
@@ -33,94 +76,9 @@ export async function POST(request: Request) {
       process.env.SUPABASE_SECRET_KEY;
 
     if (!supabaseUrl || !supabaseSecretKey) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Server configuration is missing.",
-        },
-        {
-          status: 500,
-        }
-      );
-    }
-
-    let body: LeadBody;
-
-    try {
-      body = await request.json();
-    } catch {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Invalid request data.",
-        },
-        {
-          status: 400,
-        }
-      );
-    }
-
-    const insuranceType =
-      body.insurance_type?.toLowerCase();
-
-    if (
-      !insuranceType ||
-      !ALLOWED_INSURANCE_TYPES.includes(
-        insuranceType
-      )
-    ) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Invalid insurance type.",
-        },
-        {
-          status: 400,
-        }
-      );
-    }
-
-    if (
-      !body.full_name ||
-      body.full_name.trim().length < 2
-    ) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Full name is required.",
-        },
-        {
-          status: 400,
-        }
-      );
-    }
-
-    if (
-      !body.email &&
-      !body.phone
-    ) {
-      return NextResponse.json(
-        {
-          success: false,
-          error:
-            "Please provide an email address or phone number.",
-        },
-        {
-          status: 400,
-        }
-      );
-    }
-
-    if (body.consent !== true) {
-      return NextResponse.json(
-        {
-          success: false,
-          error:
-            "Consent is required before submitting the request.",
-        },
-        {
-          status: 400,
-        }
+      return errorResponse(
+        "Server configuration is missing.",
+        500
       );
     }
 
@@ -138,52 +96,27 @@ export async function POST(request: Request) {
     const { data, error } = await supabase
       .from("leads")
       .insert({
-        insurance_type: insuranceType,
-
-        full_name:
-          body.full_name?.trim() || null,
-
-        email:
-          body.email?.trim() || null,
-
-        phone:
-          body.phone?.trim() || null,
-
-        preferred_contact:
-          body.preferred_contact?.trim() ||
-          null,
-
-        policy_document_path:
-          body.policy_document_path || null,
-
-        consent: true,
-
+        ...lead,
         source: "website",
-
-        details:
-          body.details &&
-          typeof body.details === "object"
-            ? body.details
-            : {},
       })
       .select("id, created_at, status")
       .single();
 
     if (error) {
-      console.error(
-        "Supabase lead insert error:",
-        error
-      );
+      const errorCode =
+        typeof error.code === "string" &&
+        /^[A-Za-z0-9_-]{1,32}$/.test(error.code)
+          ? error.code
+          : "unknown";
 
-      return NextResponse.json(
-        {
-          success: false,
-          error:
-            "Unable to submit insurance request.",
-        },
-        {
-          status: 500,
-        }
+      console.error("Lead insert failed.", {
+        code: errorCode,
+        insuranceType: lead.insurance_type,
+      });
+
+      return errorResponse(
+        "Unable to submit insurance request.",
+        500
       );
     }
 
@@ -191,21 +124,14 @@ export async function POST(request: Request) {
       success: true,
       lead: data,
     });
-  } catch (error) {
-    console.error(
-      "Lead API unexpected error:",
-      error
-    );
+  } catch {
+    console.error("Lead API request failed.", {
+      code: "unexpected_error",
+    });
 
-    return NextResponse.json(
-      {
-        success: false,
-        error:
-          "Unexpected server error.",
-      },
-      {
-        status: 500,
-      }
+    return errorResponse(
+      "Unexpected server error.",
+      500
     );
   }
 }
