@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import SiteFooter from "../components/SiteFooter";
+import {
+  getBlogImagePublicUrl,
+  loadPublishedBlogCards,
+} from "../lib/blog-public-data";
+import { LEGACY_BLOG_SLUGS } from "../lib/blog-types";
 
 export const metadata: Metadata = {
   title: "Insurance Guides | The Meta Insurance",
@@ -77,7 +82,12 @@ const guides: Guide[] = [
 },
 ];
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const legacySlugs = new Set<string>(LEGACY_BLOG_SLUGS);
+  const cmsPosts = (await loadPublishedBlogCards()).filter(
+    (post) => !legacySlugs.has(post.slug)
+  );
+
   return (
     <main
       style={{
@@ -250,6 +260,92 @@ export default function BlogPage() {
               gap: "22px",
             }}
           >
+            {cmsPosts.map((post) => {
+              const imageUrl = getBlogImagePublicUrl(post.featured_image_path);
+              const publicationDate = post.published_at
+                ? new Intl.DateTimeFormat("en", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    timeZone: "UTC",
+                  }).format(new Date(post.published_at))
+                : null;
+
+              return (
+                <a
+                  key={post.id}
+                  href={`/blog/${post.slug}`}
+                  style={{
+                    background: "#ffffff",
+                    border: "1px solid #e2e8f0",
+                    borderRadius: "16px",
+                    padding: "30px",
+                    textDecoration: "none",
+                    color: "#0f172a",
+                    display: "block",
+                  }}
+                >
+                  {imageUrl && post.featured_image_alt ? (
+                    <img
+                      src={imageUrl}
+                      alt={post.featured_image_alt}
+                      width={640}
+                      height={336}
+                      loading="lazy"
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        height: "180px",
+                        objectFit: "cover",
+                        borderRadius: "11px",
+                        marginBottom: "22px",
+                        background: "#e2e8f0",
+                      }}
+                    />
+                  ) : null}
+                  <div
+                    style={{
+                      color: "#0284c7",
+                      fontSize: "11px",
+                      fontWeight: 900,
+                      marginBottom: "10px",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {post.category}
+                  </div>
+                  <h2
+                    style={{
+                      fontSize: "21px",
+                      lineHeight: 1.35,
+                      margin: "0 0 14px",
+                      color: "#0f172a",
+                    }}
+                  >
+                    {post.title}
+                  </h2>
+                  {post.excerpt ? (
+                    <p
+                      style={{
+                        color: "#64748b",
+                        lineHeight: 1.65,
+                        marginBottom: "20px",
+                      }}
+                    >
+                      {post.excerpt}
+                    </p>
+                  ) : null}
+                  {publicationDate ? (
+                    <div style={{ color: "#64748b", fontSize: "12px", marginBottom: "12px" }}>
+                      Published {publicationDate}
+                    </div>
+                  ) : null}
+                  <div style={{ color: "#0284c7", fontWeight: 800, fontSize: "14px" }}>
+                    Read guide →
+                  </div>
+                </a>
+              );
+            })}
             {guides.map((guide) =>
               guide.href ? (
                 <a

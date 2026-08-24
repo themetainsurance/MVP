@@ -7,14 +7,17 @@
     "build": "next build",
     "start": "next start",
     "test:admin-auth": "node --test tests/admin-auth-core.test.mjs",
-    "test:admin-dashboard": "node --test tests/admin-dashboard-core.test.mjs"
+    "test:admin-dashboard": "node --test tests/admin-dashboard-core.test.mjs",
+    "test:blog-cms": "node --test tests/blog-cms-core.test.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.4",
     "@supabase/supabase-js": "^2.57.4",
     "next": "^15.5.2",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-markdown": "10.1.0",
+    "remark-gfm": "4.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.17.6",

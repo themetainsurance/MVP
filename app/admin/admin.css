@@ -85,5 +85,14 @@
 .admin-timeline-item { padding: 14px 16px; border-left: 3px solid #7dd3fc; background: #f8fafc; }
 .admin-timeline-item p { margin: 7px 0 0; color: #475569; font-size: 13px; line-height: 1.55; }
 .admin-timeline-meta { color: #64748b; font-size: 11px; }
+.admin-blog-editor { display: grid; gap: 22px; }
+.admin-blog-section { min-width: 0; }
+.admin-blog-body { min-height: 520px !important; font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important; line-height: 1.6; }
+.admin-character-counter { color: #64748b; font-size: 11px; font-weight: 600; text-align: right; }
+.admin-blog-actions { margin-top: 22px; }
+.admin-blog-image-preview { display: block; width: 100%; height: auto; max-height: 480px; margin-bottom: 22px; border-radius: 12px; object-fit: cover; background: #e2e8f0; }
+.admin-blog-new-card { max-width: 760px; }
+.admin-blog-preview { min-width: 0; overflow: hidden; border: 1px solid #cbd5e1; border-radius: 14px; background: #fff; }
+.admin-preview-banner { position: sticky; top: 0; z-index: 5; padding: 12px 18px; color: #fff; background: #7c2d12; font-size: 12px; font-weight: 850; text-align: center; }
 @media (max-width: 1050px) { .admin-grid-4 { grid-template-columns: repeat(2, minmax(0,1fr)); } .admin-split { grid-template-columns: 1fr; } .admin-filter-grid { grid-template-columns: repeat(2, minmax(160px, 1fr)); } }
-@media (max-width: 760px) { .admin-shell { grid-template-columns: 1fr; } .admin-sidebar { min-height: auto; height: auto; position: static; padding: 18px 5%; gap: 16px; } .admin-nav { grid-template-columns: repeat(5, minmax(max-content,1fr)); overflow-x: auto; } .admin-sidebar-footer { margin-top: 0; grid-template-columns: 1fr auto; align-items: center; } .admin-signout { padding: 0 14px; } .admin-main { padding: 26px 5%; } .admin-page-header { align-items: flex-start; flex-direction: column; } .admin-grid-2, .admin-grid-3, .admin-grid-4, .admin-filter-grid, .admin-detail-list { grid-template-columns: 1fr; } .admin-pagination { align-items: flex-start; flex-direction: column; } }
+@media (max-width: 760px) { .admin-shell { grid-template-columns: 1fr; } .admin-sidebar { min-height: auto; height: auto; position: static; padding: 18px 5%; gap: 16px; } .admin-nav { grid-template-columns: repeat(6, minmax(max-content,1fr)); overflow-x: auto; } .admin-sidebar-footer { margin-top: 0; grid-template-columns: 1fr auto; align-items: center; } .admin-signout { padding: 0 14px; } .admin-main { padding: 26px 5%; } .admin-page-header { align-items: flex-start; flex-direction: column; } .admin-grid-2, .admin-grid-3, .admin-grid-4, .admin-filter-grid, .admin-detail-list { grid-template-columns: 1fr; } .admin-pagination { align-items: flex-start; flex-direction: column; } .admin-blog-body { min-height: 420px !important; } }

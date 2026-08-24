@@ -125,6 +125,107 @@ export async function readAdminJsonBody(
   return { success: true, data: parsed as AdminApiBody };
 }
 
+export async function readAdminFormData(
+  request: Request,
+  maxBytes: number
+): Promise<
+  | { success: true; data: FormData }
+  | { success: false; response: NextResponse }
+> {
+  const contentType = request.headers.get("content-type") ?? "";
+  if (!contentType.toLowerCase().startsWith("multipart/form-data;")) {
+    return {
+      success: false,
+      response: adminJsonResponse(
+        { success: false, error: "Invalid upload data." },
+        400
+      ),
+    };
+  }
+
+  const contentLengthValue = request.headers.get("content-length");
+  if (contentLengthValue) {
+    const contentLength = Number(contentLengthValue);
+    if (
+      !Number.isSafeInteger(contentLength) ||
+      contentLength < 0 ||
+      contentLength > maxBytes
+    ) {
+      return {
+        success: false,
+        response: adminJsonResponse(
+          { success: false, error: "Image upload is too large." },
+          413
+        ),
+      };
+    }
+  }
+
+  if (!request.body) {
+    return {
+      success: false,
+      response: adminJsonResponse(
+        { success: false, error: "Invalid upload data." },
+        400
+      ),
+    };
+  }
+
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      totalBytes += value.byteLength;
+      if (totalBytes > maxBytes) {
+        await reader.cancel();
+        return {
+          success: false,
+          response: adminJsonResponse(
+            { success: false, error: "Image upload is too large." },
+            413
+          ),
+        };
+      }
+      chunks.push(value);
+    }
+  } catch {
+    return {
+      success: false,
+      response: adminJsonResponse(
+        { success: false, error: "Invalid upload data." },
+        400
+      ),
+    };
+  }
+
+  const body = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+
+  try {
+    const replay = new Request(request.url, {
+      method: "POST",
+      headers: { "Content-Type": contentType },
+      body,
+    });
+    return { success: true, data: await replay.formData() };
+  } catch {
+    return {
+      success: false,
+      response: adminJsonResponse(
+        { success: false, error: "Invalid upload data." },
+        400
+      ),
+    };
+  }
+}
+
 export function adminOperationFailed(code: string) {
   console.error("Admin operation failed.", { code });
   return adminJsonResponse(

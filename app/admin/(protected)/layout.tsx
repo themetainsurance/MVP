@@ -8,6 +8,7 @@ const navigation = [
   { href: "/admin/partners", label: "Partners" },
   { href: "/admin/handoffs", label: "Handoffs" },
   { href: "/admin/conversions", label: "Conversions" },
+  { href: "/admin/blog", label: "Blog" },
 ];
 
 export default async function ProtectedAdminLayout({

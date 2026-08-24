@@ -1,9 +1,11 @@
 import type { MetadataRoute } from "next";
+import { loadPublishedBlogSitemapEntries } from "./lib/blog-public-data";
+import { LEGACY_BLOG_SLUGS } from "./lib/blog-types";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.themetainsurance.com";
 
-  return [
+  const staticEntries: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       changeFrequency: "weekly",
@@ -80,4 +82,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
   ];
+
+  const legacySlugs = new Set<string>(LEGACY_BLOG_SLUGS);
+  const cmsEntries = (await loadPublishedBlogSitemapEntries())
+    .filter((entry) => !legacySlugs.has(entry.slug))
+    .map((entry) => ({
+      url: `${baseUrl}/blog/${entry.slug}`,
+      lastModified: entry.updated_at,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    }));
+
+  return [...staticEntries, ...cmsEntries];
 }

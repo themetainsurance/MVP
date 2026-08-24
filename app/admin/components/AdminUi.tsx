@@ -72,11 +72,11 @@ export function AdminPageHeader({
 }
 
 export function StatusBadge({ value }: { value: string }) {
-  const tone = ["completed", "accepted", "confirmed", "paid", "active"].includes(
+  const tone = ["completed", "accepted", "confirmed", "paid", "active", "published"].includes(
     value
   )
     ? "success"
-    : ["rejected", "failed", "reversed", "disabled", "inactive"].includes(
+    : ["rejected", "failed", "reversed", "disabled", "inactive", "archived"].includes(
           value
         )
       ? "danger"
