@@ -89,7 +89,7 @@ export default function PrivacyPolicyPage() {
             tools, upload a policy or use AI Assistant Lite.
           </p>
 
-          <p style={updatedStyle}>Last updated: 18 August 2026</p>
+          <p style={updatedStyle}>Last updated: 24 August 2026</p>
         </div>
       </section>
 
@@ -257,6 +257,7 @@ export default function PrivacyPolicyPage() {
                 "enable a partner to contact you using your preferred contact method and continue the requested process;",
                 "store and associate an uploaded policy document with the correct request;",
                 "operate AI Assistant Lite and convert your answers into structured request information;",
+                "measure limited first-party website traffic, form-start activity and referral or campaign attribution so we can understand and improve the platform;",
                 "communicate about a request, respond to questions and handle privacy requests;",
                 "protect the platform, prevent misuse, troubleshoot errors and maintain service reliability; and",
                 "meet legal obligations and establish, exercise or defend legal claims where applicable.",
@@ -303,7 +304,8 @@ export default function PrivacyPolicyPage() {
               We rely on third parties to operate the platform. This includes
               website hosting and deployment providers and Supabase-backed
               database and storage infrastructure used by the current
-              application for request records and policy-document storage.
+              application for request records, policy-document storage and
+              limited first-party operational analytics.
               These providers may process information on our behalf to deliver,
               secure, maintain and support their services.
             </p>
@@ -356,6 +358,16 @@ export default function PrivacyPolicyPage() {
               processes. You may request deletion as described below; the right
               is not absolute and may be limited by applicable law.
             </p>
+
+            <p style={paragraphStyle}>
+              First-party analytics sessions and events are also intended to be
+              governed by a configurable retention policy. A specific analytics
+              retention period has not yet been adopted and must be confirmed
+              through operational and legal review before full commercial
+              launch. Attribution copied to a real lead may be retained with
+              that lead even if the related ephemeral analytics session is
+              later removed.
+            </p>
           </PrivacySection>
 
           <PrivacySection id="international" number="10" title="International data processing">
@@ -403,19 +415,42 @@ export default function PrivacyPolicyPage() {
 
           <PrivacySection id="cookies" number="12" title="Cookies and analytics">
             <p style={paragraphStyle}>
-              The current MVP application code does not set analytics cookies
-              or advertising cookies and does not include an analytics or
-              advertising integration. The site can still rely on strictly
-              necessary technical mechanisms used by hosting, security or
-              network infrastructure to deliver and protect the service where
-              applicable.
+              The current MVP uses limited first-party operational analytics.
+              The application analytics database may record a random ephemeral
+              session identifier, page paths, form-start events, selected UTM
+              campaign parameters and the referring hostname. This information
+              is used to understand platform performance and acquisition or
+              referral attribution. Analytics does not receive insurance form
+              field values, uploaded-document information, customer names,
+              email addresses, phone numbers or AI Assistant message text.
             </p>
 
             <p style={paragraphStyle}>
-              If analytics, advertising technologies or additional cookies are
-              introduced later, this policy should be updated and any notice or
-              consent controls required by applicable law should be implemented
-              before those technologies are activated.
+              The ephemeral identifier is held in browser memory only while the
+              root website experience remains mounted. It is not stored in an
+              analytics cookie or localStorage and is not designed to identify
+              a person, persist across visits or link activity across devices.
+              A full browser refresh may create a new session. If your browser
+              reports Do Not Track as enabled, the application does not send
+              these first-party analytics events.
+            </p>
+
+            <p style={paragraphStyle}>
+              The first-party analytics database intentionally does not store IP
+              addresses or user-agent strings. Hosting, network, security or
+              other infrastructure providers may separately process connection
+              data in their own operational logs under their terms and privacy
+              notices. The current MVP does not add a third-party analytics SDK,
+              advertising pixel, analytics cookie or advertising cookie.
+            </p>
+
+            <p style={paragraphStyle}>
+              If advertising technologies, additional cookies or third-party
+              analytics are considered later, this policy should be updated and
+              any notice or consent controls required by applicable law should
+              be reviewed before those technologies are activated. This MVP
+              implementation does not by itself establish compliance with any
+              particular privacy or electronic-communications law.
             </p>
           </PrivacySection>
 

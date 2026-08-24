@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AnalyticsProvider } from "./components/AnalyticsProvider";
 
 const siteName = "The Meta Insurance";
 const siteUrl = "https://www.themetainsurance.com";
@@ -75,7 +76,7 @@ export default function RootLayout({
           color: "#111827",
         }}
       >
-        {children}
+        <AnalyticsProvider>{children}</AnalyticsProvider>
       </body>
     </html>
   );

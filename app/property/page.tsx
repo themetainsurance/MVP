@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type SyntheticEvent } from "react";
 import SiteFooter from "../components/SiteFooter";
+import { useAnalytics } from "../components/AnalyticsProvider";
 import {
   createSafeApiError,
   getSafeApiErrorMessage,
@@ -36,6 +37,7 @@ type PropertyForm = {
 };
 
 export default function PropertyInsurancePage() {
+  const { getAnalyticsSessionId, trackFormStarted } = useAnalytics();
   const [mode, setMode] = useState<"manual" | "upload">("manual");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [policyPath, setPolicyPath] = useState<string | null>(null);
@@ -64,6 +66,17 @@ export default function PropertyInsurancePage() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+
+  function trackFormInteraction(event: SyntheticEvent) {
+    const target = event.target;
+    if (
+      target instanceof HTMLInputElement ||
+      target instanceof HTMLSelectElement ||
+      target instanceof HTMLTextAreaElement
+    ) {
+      trackFormStarted({ insuranceType: "property", formMode: mode });
+    }
+  }
 
   function updateField(field: keyof PropertyForm, value: string) {
     setForm((current) => ({
@@ -106,6 +119,7 @@ export default function PropertyInsurancePage() {
         },
         body: JSON.stringify({
           insurance_type: "property",
+          analytics_session_id: getAnalyticsSessionId() ?? undefined,
           full_name: form.fullName,
           email: form.email,
           phone: form.phone,
@@ -157,6 +171,8 @@ export default function PropertyInsurancePage() {
 
   return (
     <main
+      onFocusCapture={trackFormInteraction}
+      onChangeCapture={trackFormInteraction}
       style={{
         minHeight: "100vh",
         background: "#f8fafc",

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type SyntheticEvent } from "react";
 import SiteFooter from "../components/SiteFooter";
+import { useAnalytics } from "../components/AnalyticsProvider";
 import {
   createSafeApiError,
   getSafeApiErrorMessage,
@@ -34,6 +35,7 @@ type MotorForm = {
 };
 
 export default function MotorInsurancePage() {
+  const { getAnalyticsSessionId, trackFormStarted } = useAnalytics();
   const [mode, setMode] =
     useState<"manual" | "upload">("manual");
 
@@ -69,6 +71,17 @@ export default function MotorInsurancePage() {
   const [uploadMessage, setUploadMessage] = useState("");
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+
+  function trackFormInteraction(event: SyntheticEvent) {
+    const target = event.target;
+    if (
+      target instanceof HTMLInputElement ||
+      target instanceof HTMLSelectElement ||
+      target instanceof HTMLTextAreaElement
+    ) {
+      trackFormStarted({ insuranceType: "motor", formMode: mode });
+    }
+  }
 
   function updateField(
     field: keyof MotorForm,
@@ -200,6 +213,7 @@ export default function MotorInsurancePage() {
 
         body: JSON.stringify({
           insurance_type: "motor",
+          analytics_session_id: getAnalyticsSessionId() ?? undefined,
 
           full_name: form.fullName,
           email: form.email,
@@ -266,6 +280,8 @@ export default function MotorInsurancePage() {
 
   return (
     <main
+      onFocusCapture={trackFormInteraction}
+      onChangeCapture={trackFormInteraction}
       style={{
         minHeight: "100vh",
         background: "#f8fafc",

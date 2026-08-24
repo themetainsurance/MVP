@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { snapshotLeadAttribution } from "../../lib/analytics-server";
 import {
   isLeadRequestBodyTooLarge,
   MAX_REQUEST_BODY_BYTES,
@@ -68,7 +69,10 @@ export async function POST(request: Request) {
       return errorResponse(validationResult.error);
     }
 
-    const lead = validationResult.data;
+    const {
+      analytics_session_id: analyticsSessionId,
+      ...lead
+    } = validationResult.data;
     const supabaseUrl =
       process.env.NEXT_PUBLIC_SUPABASE_URL;
 
@@ -122,6 +126,16 @@ export async function POST(request: Request) {
         "Unable to submit insurance request.",
         500
       );
+    }
+
+    if (analyticsSessionId) {
+      try {
+        await snapshotLeadAttribution(data.id, analyticsSessionId);
+      } catch {
+        console.error("Lead attribution storage failed.", {
+          code: "lead_attribution_store_failed",
+        });
+      }
     }
 
     return NextResponse.json({

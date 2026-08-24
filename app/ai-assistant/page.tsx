@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import SiteFooter from "../components/SiteFooter";
+import { useAnalytics } from "../components/AnalyticsProvider";
 import {
   createSafeApiError,
   getSafeApiErrorMessage,
@@ -32,6 +33,8 @@ type Answers = {
 };
 
 export default function AIAssistantPage() {
+  const { getAnalyticsSessionId, trackFormStarted } = useAnalytics();
+  const hasTrackedFormStart = useRef(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       sender: "assistant",
@@ -57,6 +60,15 @@ export default function AIAssistantPage() {
 
   const [completed, setCompleted] =
     useState(false);
+
+  function trackAssistantStart(type: InsuranceType) {
+    if (hasTrackedFormStart.current) return;
+    hasTrackedFormStart.current = true;
+    trackFormStarted({
+      insuranceType: type,
+      formMode: "ai_assistant",
+    });
+  }
 
   function addAssistantMessage(text: string) {
     setMessages((current) => [
@@ -115,6 +127,7 @@ export default function AIAssistantPage() {
   }
 
   function startFlow(type: Exclude<InsuranceType, null>) {
+    trackAssistantStart(type);
     setInsuranceType(type);
     setStep(1);
 
@@ -354,6 +367,8 @@ export default function AIAssistantPage() {
       return;
     }
 
+    trackAssistantStart(insuranceType);
+
     setMessages((current) => [
       ...current,
       {
@@ -404,6 +419,9 @@ export default function AIAssistantPage() {
           body: JSON.stringify({
             insurance_type:
               insuranceType,
+
+            analytics_session_id:
+              getAnalyticsSessionId() ?? undefined,
 
             full_name:
               answers.fullName,

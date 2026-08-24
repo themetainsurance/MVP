@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type SyntheticEvent } from "react";
 import SiteFooter from "../components/SiteFooter";
+import { useAnalytics } from "../components/AnalyticsProvider";
 import {
   createSafeApiError,
   getSafeApiErrorMessage,
@@ -21,6 +22,7 @@ type FormData = {
 };
 
 export default function TravelInsurancePage() {
+  const { getAnalyticsSessionId, trackFormStarted } = useAnalytics();
   const [tripType, setTripType] = useState<"single" | "annual">("single");
   const [travelers, setTravelers] = useState(1);
   const [ages, setAges] = useState<string[]>([""]);
@@ -44,6 +46,17 @@ export default function TravelInsurancePage() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+
+  function trackFormInteraction(event: SyntheticEvent) {
+    const target = event.target;
+    if (
+      target instanceof HTMLInputElement ||
+      target instanceof HTMLSelectElement ||
+      target instanceof HTMLTextAreaElement
+    ) {
+      trackFormStarted({ insuranceType: "travel", formMode: "manual" });
+    }
+  }
 
   function updateField(field: keyof FormData, value: string) {
     setFormData((current) => ({
@@ -120,6 +133,7 @@ export default function TravelInsurancePage() {
         },
         body: JSON.stringify({
           insurance_type: "travel",
+          analytics_session_id: getAnalyticsSessionId() ?? undefined,
 
           full_name: formData.fullName,
           email: formData.email,
@@ -169,6 +183,8 @@ export default function TravelInsurancePage() {
 
   return (
     <main
+      onFocusCapture={trackFormInteraction}
+      onChangeCapture={trackFormInteraction}
       style={{
         minHeight: "100vh",
         background: "#f8fafc",

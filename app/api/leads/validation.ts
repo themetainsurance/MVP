@@ -15,6 +15,8 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_PATTERN = /^\+?[0-9 ()-]+$/;
 const POLICY_PATH_PATTERN =
   /^(?:motor|property)\/[A-Za-z0-9][A-Za-z0-9._/-]*$/;
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export type ValidatedLead = {
   insurance_type: "travel" | "motor" | "property";
@@ -25,6 +27,7 @@ export type ValidatedLead = {
   policy_document_path: string | null;
   consent: true;
   details: Record<string, unknown>;
+  analytics_session_id: string | null;
 };
 
 export type LeadValidationResult =
@@ -284,6 +287,20 @@ export function validateLeadBody(
     details = value.details;
   }
 
+  const analyticsSessionId = optionalTrimmedString(
+    value.analytics_session_id
+  );
+
+  if (
+    analyticsSessionId === undefined ||
+    (analyticsSessionId !== null && !UUID_PATTERN.test(analyticsSessionId))
+  ) {
+    return {
+      success: false,
+      error: "Analytics session identifier is invalid.",
+    };
+  }
+
   return {
     success: true,
     data: {
@@ -296,6 +313,7 @@ export function validateLeadBody(
       policy_document_path: policyPath,
       consent: true,
       details,
+      analytics_session_id: analyticsSessionId,
     },
   };
 }
