@@ -5,6 +5,7 @@ import "../admin.css";
 const navigation = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/leads", label: "Leads" },
+  { href: "/admin/comparisons", label: "Comparisons" },
   { href: "/admin/partners", label: "Partners" },
   { href: "/admin/handoffs", label: "Handoffs" },
   { href: "/admin/conversions", label: "Conversions" },

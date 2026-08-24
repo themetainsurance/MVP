@@ -9,7 +9,8 @@
     "test:admin-auth": "node --test tests/admin-auth-core.test.mjs",
     "test:admin-dashboard": "node --test tests/admin-dashboard-core.test.mjs",
     "test:blog-cms": "node --test tests/blog-cms-core.test.mjs",
-    "test:analytics": "node --test tests/analytics-core.test.mjs"
+    "test:analytics": "node --test tests/analytics-core.test.mjs",
+    "test:policy-comparisons": "node --test tests/policy-comparison-core.test.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.4",

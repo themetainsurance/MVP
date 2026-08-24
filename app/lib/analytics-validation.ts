@@ -84,7 +84,7 @@ export function isAnalyticsPath(value: unknown): value is string {
     !value.includes("?") &&
     !value.includes("#") &&
     !CONTROL_CHARACTER_PATTERN.test(value) &&
-    !/^\/(?:admin|api)(?:\/|$)/.test(value)
+    !/^\/(?:admin|api|compare)(?:\/|$)/.test(value)
   );
 }
 

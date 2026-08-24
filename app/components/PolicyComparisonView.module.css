@@ -1,0 +1,32 @@
+.shell { max-width: 1180px; margin: 0 auto; padding: 28px clamp(16px, 4vw, 48px) 56px; color: #0f172a; }
+.intro { margin-bottom: 28px; }
+.eyebrow { margin: 0 0 8px; color: #0369a1; font-size: 12px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+.intro h1 { margin: 0; font-size: clamp(30px, 6vw, 50px); letter-spacing: -.04em; }
+.lead { max-width: 760px; margin: 13px 0 0; color: #475569; line-height: 1.65; }
+.notice { margin: 24px 0; padding: 16px 18px; border: 1px solid #bae6fd; border-radius: 12px; background: #f0f9ff; color: #334155; font-size: 14px; line-height: 1.65; }
+.section { margin-top: 34px; }
+.section h2 { margin: 0 0 15px; font-size: 23px; }
+.tableWrap { overflow-x: auto; border: 1px solid #dbe4ee; border-radius: 14px; background: #fff; }
+.table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px; }
+.table th, .table td { padding: 14px 16px; border-bottom: 1px solid #e8eef5; text-align: left; vertical-align: top; }
+.table th { background: #f8fafc; color: #334155; font-size: 12px; }
+.table tr:last-child td { border-bottom: 0; }
+.field { width: 22%; font-weight: 800; }
+.value { display: block; color: #0f172a; line-height: 1.45; }
+.result { display: inline-flex; margin-top: 7px; padding: 4px 8px; border-radius: 999px; background: #e0f2fe; color: #075985; font-size: 11px; font-weight: 850; }
+.mobileRows { display: none; }
+.card { padding: 16px; border: 1px solid #dbe4ee; border-radius: 12px; background: #fff; }
+.card h3 { margin: 0 0 12px; font-size: 17px; }
+.card dl { display: grid; gap: 12px; margin: 0; }
+.card dt { color: #64748b; font-size: 11px; font-weight: 850; text-transform: uppercase; }
+.card dd { margin: 4px 0 0; }
+.summaryGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 10px; }
+.summary { padding: 14px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; }
+.summary span { color: #64748b; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+.summary strong { display: block; margin-top: 5px; font-size: 22px; }
+.finePrint { margin-top: 34px; color: #64748b; font-size: 13px; line-height: 1.7; }
+@media (max-width: 680px) {
+  .desktopTable { display: none; }
+  .mobileRows { display: grid; gap: 12px; }
+  .shell { padding-top: 22px; }
+}

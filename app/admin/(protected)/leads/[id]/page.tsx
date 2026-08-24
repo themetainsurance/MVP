@@ -40,7 +40,7 @@ export default async function AdminLeadDetailPage({
         eyebrow="LEAD DETAIL"
         title={lead.full_name}
         description={`${formatAdminLabel(lead.insurance_type)} request created ${formatAdminDate(lead.created_at)}.`}
-        actions={<Link className="admin-button admin-button-secondary" href="/admin/leads">Back to leads</Link>}
+        actions={<><Link className="admin-button admin-button-primary" href={`/admin/comparisons/new?lead=${lead.id}`}>New factual comparison</Link><Link className="admin-button admin-button-secondary" href="/admin/leads">Back to leads</Link></>}
       />
 
       <div className="admin-split">
