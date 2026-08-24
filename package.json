@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test:admin-auth": "node --test tests/admin-auth-core.test.mjs"
+    "test:admin-auth": "node --test tests/admin-auth-core.test.mjs",
+    "test:admin-dashboard": "node --test tests/admin-dashboard-core.test.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.4",

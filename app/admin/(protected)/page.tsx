@@ -1,122 +1,133 @@
 import type { Metadata } from "next";
-import type { CSSProperties } from "react";
+import Link from "next/link";
+import {
+  AdminPageHeader,
+  EmptyState,
+  embeddedOne,
+  formatAdminDate,
+  formatAdminLabel,
+  formatCommission,
+  StatusBadge,
+} from "../components/AdminUi";
+import { requireAdmin } from "../../lib/admin-auth";
+import { loadAdminDashboard } from "../../lib/admin-dashboard-data";
 
 export const metadata: Metadata = {
-  title: "Admin",
-  description: "Private administrator area for The Meta Insurance.",
+  title: "Admin dashboard",
+  description: "Private operational dashboard for The Meta Insurance.",
 };
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  await requireAdmin();
+  const data = await loadAdminDashboard();
+
+  const leadStats = [
+    ["Total leads", data.totalLeads],
+    ["New leads", data.newLeads],
+    ["Reviewing", data.reviewingLeads],
+    ["Sent to partner", data.sentToPartnerLeads],
+    ["Completed", data.completedLeads],
+  ] as const;
+  const operations = [
+    ["Active partners", data.activePartners],
+    ["Pending handoffs", data.pendingHandoffs],
+    ["Sent handoffs", data.sentHandoffs],
+    ["Pending conversions", data.pendingConversions],
+    ["Confirmed conversions", data.confirmedConversions],
+    ["Pending commissions", data.pendingCommissions],
+    ["Approved commissions", data.approvedCommissions],
+    ["Paid commissions", data.paidCommissions],
+  ] as const;
+
   return (
-    <main style={pageStyle}>
-      <header style={headerStyle}>
-        <strong style={brandStyle}>The Meta Insurance</strong>
+    <>
+      <AdminPageHeader
+        eyebrow="OPERATIONS"
+        title="Dashboard"
+        description="A current operational view of insurance requests, partner handoffs, conversions and commission lifecycle records."
+      />
 
-        <form action="/api/admin/auth/logout" method="post">
-          <button type="submit" style={signOutButtonStyle}>
-            Sign out
-          </button>
-        </form>
-      </header>
-
-      <section style={contentStyle}>
-        <div style={eyebrowStyle}>PRIVATE ADMINISTRATION</div>
-        <h1 style={titleStyle}>The Meta Insurance Admin</h1>
-        <p style={descriptionStyle}>Admin access verified.</p>
-
-        <div style={placeholderStyle}>
-          <strong style={placeholderTitleStyle}>Secure foundation ready</strong>
-          <p style={placeholderTextStyle}>
-            Operational dashboard features will be added separately. This page
-            currently confirms authenticated, allowlisted administrator access.
-          </p>
+      <section aria-labelledby="lead-summary-title">
+        <div className="admin-section-heading">
+          <h2 id="lead-summary-title">Lead summary</h2>
+          <Link className="admin-text-link" href="/admin/leads">View leads</Link>
+        </div>
+        <div className="admin-grid admin-grid-4">
+          {leadStats.map(([label, value]) => (
+            <div className="admin-stat-card" key={label}>
+              <span>{label}</span><strong>{value}</strong>
+            </div>
+          ))}
         </div>
       </section>
-    </main>
+
+      <section className="admin-section" aria-labelledby="operations-title">
+        <div className="admin-section-heading"><h2 id="operations-title">Partner operations</h2></div>
+        <div className="admin-grid admin-grid-4">
+          {operations.map(([label, value]) => (
+            <div className="admin-stat-card" key={label}>
+              <span>{label}</span><strong>{value}</strong>
+            </div>
+          ))}
+        </div>
+        <p className="admin-help">
+          Commission cards show record counts only. Monetary values are displayed per currency on conversion records and are never added across currencies.
+        </p>
+      </section>
+
+      <section className="admin-section admin-grid admin-grid-3" aria-label="Recent activity">
+        <article className="admin-card">
+          <div className="admin-section-heading"><h2>Recent leads</h2></div>
+          {data.recentLeads.length ? (
+            <div className="admin-timeline">
+              {data.recentLeads.map((lead) => (
+                <div className="admin-timeline-item" key={lead.id}>
+                  <Link className="admin-text-link" href={`/admin/leads/${lead.id}`}>{lead.full_name}</Link>
+                  <p>{formatAdminLabel(lead.insurance_type)} · <StatusBadge value={lead.status} /></p>
+                  <div className="admin-timeline-meta">{formatAdminDate(lead.created_at)}</div>
+                </div>
+              ))}
+            </div>
+          ) : <EmptyState>No recent leads.</EmptyState>}
+        </article>
+
+        <article className="admin-card">
+          <div className="admin-section-heading"><h2>Recent handoffs</h2></div>
+          {data.recentHandoffs.length ? (
+            <div className="admin-timeline">
+              {data.recentHandoffs.map((handoff) => (
+                <div className="admin-timeline-item" key={handoff.id}>
+                  <Link className="admin-text-link" href={`/admin/leads/${handoff.lead_id}`}>
+                    {handoff.partner?.name ?? "Partner handoff"}
+                  </Link>
+                  <p>{formatAdminLabel(handoff.lead?.insurance_type)} · <StatusBadge value={handoff.status} /></p>
+                  <div className="admin-timeline-meta">{formatAdminDate(handoff.created_at)}</div>
+                </div>
+              ))}
+            </div>
+          ) : <EmptyState>No recent handoffs.</EmptyState>}
+        </article>
+
+        <article className="admin-card">
+          <div className="admin-section-heading"><h2>Recent conversions</h2></div>
+          {data.recentConversions.length ? (
+            <div className="admin-timeline">
+              {data.recentConversions.map((conversion) => {
+                const handoff = embeddedOne(conversion.handoff);
+                return (
+                  <div className="admin-timeline-item" key={conversion.id}>
+                    <Link className="admin-text-link" href={`/admin/conversions/${conversion.id}`}>
+                      {handoff?.partner?.name ?? "Conversion"}
+                    </Link>
+                    <p><StatusBadge value={conversion.status} /> · {formatCommission(conversion.commission_amount, conversion.commission_currency)}</p>
+                    <div className="admin-timeline-meta">{formatAdminDate(conversion.created_at)}</div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : <EmptyState>No recent conversions.</EmptyState>}
+        </article>
+      </section>
+    </>
   );
 }
-
-const pageStyle: CSSProperties = {
-  minHeight: "100vh",
-  background: "#f8fafc",
-  color: "#0f172a",
-};
-
-const headerStyle: CSSProperties = {
-  minHeight: "72px",
-  padding: "0 7%",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: "20px",
-  borderBottom: "1px solid #e2e8f0",
-  background: "#ffffff",
-};
-
-const brandStyle: CSSProperties = {
-  fontSize: "20px",
-  fontWeight: 800,
-  letterSpacing: "-0.4px",
-};
-
-const signOutButtonStyle: CSSProperties = {
-  minHeight: "42px",
-  padding: "0 17px",
-  border: "1px solid #cbd5e1",
-  borderRadius: "9px",
-  background: "#ffffff",
-  color: "#334155",
-  cursor: "pointer",
-  fontSize: "14px",
-  fontWeight: 800,
-};
-
-const contentStyle: CSSProperties = {
-  width: "min(900px, 86%)",
-  margin: "0 auto",
-  padding: "clamp(58px, 10vw, 110px) 0",
-};
-
-const eyebrowStyle: CSSProperties = {
-  marginBottom: "14px",
-  color: "#0284c7",
-  fontSize: "12px",
-  fontWeight: 900,
-  letterSpacing: "0.09em",
-};
-
-const titleStyle: CSSProperties = {
-  margin: "0 0 16px",
-  fontSize: "clamp(38px, 7vw, 58px)",
-  lineHeight: 1.08,
-  letterSpacing: "-1.8px",
-};
-
-const descriptionStyle: CSSProperties = {
-  margin: "0 0 40px",
-  color: "#475569",
-  fontSize: "18px",
-  lineHeight: 1.7,
-};
-
-const placeholderStyle: CSSProperties = {
-  padding: "clamp(26px, 5vw, 40px)",
-  border: "1px solid #bae6fd",
-  borderRadius: "16px",
-  background: "#f0f9ff",
-};
-
-const placeholderTitleStyle: CSSProperties = {
-  display: "block",
-  marginBottom: "10px",
-  color: "#0c4a6e",
-  fontSize: "20px",
-};
-
-const placeholderTextStyle: CSSProperties = {
-  maxWidth: "680px",
-  margin: 0,
-  color: "#075985",
-  fontSize: "15px",
-  lineHeight: 1.7,
-};
