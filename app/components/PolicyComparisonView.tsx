@@ -34,8 +34,10 @@ const summaryLabels: Record<ComparisonResultType, string> = {
 
 export default function PolicyComparisonView({
   snapshot,
+  referralCtas,
 }: {
   snapshot: CustomerComparisonSnapshot;
+  referralCtas?: Array<{ href: string; label: string } | null>;
 }) {
   return (
     <article className={styles.shell}>
@@ -97,6 +99,14 @@ export default function PolicyComparisonView({
             })}
           </div>
           {offer.customer_note ? <p className={styles.finePrint}>{offer.customer_note}</p> : null}
+          {referralCtas?.[offerIndex] ? (
+            <div className={styles.referralAction}>
+              <a href={referralCtas[offerIndex]!.href} rel="nofollow sponsored noopener noreferrer">
+                {referralCtas[offerIndex]!.label}
+              </a>
+              <p>The Meta Insurance is a technology and referral platform. Insurance products, pricing, eligibility, regulated advice and final terms are provided by the relevant licensed insurance provider or partner. The Meta Insurance may receive referral or affiliate compensation.</p>
+            </div>
+          ) : null}
         </section>
       ))}
 

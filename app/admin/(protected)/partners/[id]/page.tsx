@@ -11,6 +11,7 @@ import {
 } from "../../../components/AdminUi";
 import { requireAdmin } from "../../../../lib/admin-auth";
 import { loadAdminPartnerDetail } from "../../../../lib/admin-dashboard-data";
+import { loadAdminPartnerReferralDestinations } from "../../../../lib/partner-referral-admin";
 import { isAdminUuid } from "../../../../lib/admin-dashboard-validation";
 import {
   PARTNER_HANDOFF_METHODS,
@@ -31,6 +32,7 @@ export default async function AdminPartnerDetailPage({ params }: { params: Promi
   const data = await loadAdminPartnerDetail(id);
   if (!data) notFound();
   const { partner, capabilities, recentHandoffs, stats } = data;
+  const referralSetup = await loadAdminPartnerReferralDestinations(id);
 
   return (
     <>
@@ -111,6 +113,70 @@ export default async function AdminPartnerDetailPage({ params }: { params: Promi
           </table>
           {!recentHandoffs.length ? <EmptyState>No handoffs found.</EmptyState> : null}
         </div>
+      </section>
+
+      <section className="admin-section" aria-labelledby="referral-destinations-title">
+        <div className="admin-section-heading">
+          <h2 id="referral-destinations-title">Referral destinations</h2>
+          <Link className="admin-text-link" href="/admin/referrals">Referral reporting</Link>
+        </div>
+        {!referralSetup.available ? (
+          <div className="admin-card"><EmptyState>Referral integration setup is not available yet.</EmptyState></div>
+        ) : (
+          <>
+            <div className="admin-card">
+              <h3>Create draft destination</h3>
+              <p className="admin-warning">Store only a public HTTPS destination. Do not enter credentials, tokens, customer data, or URL templates. New destinations always remain draft until explicitly activated.</p>
+              <AdminMutationForm endpoint={`/api/admin/partners/${partner.id}/referral-destinations`} submitLabel="Create draft destination" successMessage="Draft referral destination created.">
+                <label>Insurance type<select name="insurance_type" required defaultValue="travel">{PARTNER_INSURANCE_TYPES.map((value) => <option key={value} value={value}>{formatAdminLabel(value)}</option>)}</select></label>
+                <label>Country code (optional)<input name="country_code" minLength={2} maxLength={3} pattern="[A-Z]{2,3}" placeholder="MK" /></label>
+                <label>Destination URL<input name="destination_url" type="url" required maxLength={2000} placeholder="https://" /></label>
+                <label>Customer link label<input name="customer_link_label" required maxLength={80} defaultValue="Continue to partner" /></label>
+                <label>Tracking parameter (optional)<input name="tracking_parameter_name" maxLength={50} placeholder="subid" /></label>
+                <label>External campaign reference (optional)<input name="external_campaign_reference" maxLength={200} /></label>
+                <label>Internal note (optional)<textarea name="internal_note" maxLength={2000} /></label>
+              </AdminMutationForm>
+            </div>
+
+            <div className="admin-grid admin-section">
+              {referralSetup.data.map((destination) => {
+                let hostname = "Invalid host";
+                try { hostname = new URL(destination.destination_url).hostname; } catch {}
+                return (
+                  <details className="admin-option-card" key={destination.id}>
+                    <summary>
+                      <span><strong>{formatAdminLabel(destination.insurance_type)}</strong> · {hostname} · {destination.country_code ?? "All countries"}</span>
+                      <StatusBadge value={destination.status} />
+                    </summary>
+                    <div className="admin-referral-detail">
+                      <dl className="admin-detail-list">
+                        <div><dt>Customer label</dt><dd>{destination.customer_link_label}</dd></div>
+                        <div><dt>Tracking parameter</dt><dd>{destination.tracking_parameter_name ?? "None"}</dd></div>
+                        <div><dt>Created</dt><dd>{formatAdminDate(destination.created_at)}</dd></div>
+                        <div><dt>Updated</dt><dd>{formatAdminDate(destination.updated_at)}</dd></div>
+                      </dl>
+                      {destination.status !== "active" ? (
+                        <AdminMutationForm className="admin-form admin-section" endpoint={`/api/admin/partners/${partner.id}/referral-destinations/${destination.id}`} method="PATCH" submitLabel="Save destination" successMessage="Referral destination saved.">
+                          <label>Insurance type<select name="insurance_type" required defaultValue={destination.insurance_type}>{PARTNER_INSURANCE_TYPES.map((value) => <option key={value} value={value}>{formatAdminLabel(value)}</option>)}</select></label>
+                          <label>Country code (optional)<input name="country_code" minLength={2} maxLength={3} pattern="[A-Z]{2,3}" defaultValue={destination.country_code ?? ""} /></label>
+                          <label>Destination URL<input name="destination_url" type="url" required maxLength={2000} defaultValue={destination.destination_url} /></label>
+                          <label>Customer link label<input name="customer_link_label" required maxLength={80} defaultValue={destination.customer_link_label} /></label>
+                          <label>Tracking parameter (optional)<input name="tracking_parameter_name" maxLength={50} defaultValue={destination.tracking_parameter_name ?? ""} /></label>
+                          <label>External campaign reference (optional)<input name="external_campaign_reference" maxLength={200} defaultValue={destination.external_campaign_reference ?? ""} /></label>
+                          <label>Internal note (optional)<textarea name="internal_note" maxLength={2000} defaultValue={destination.internal_note ?? ""} /></label>
+                        </AdminMutationForm>
+                      ) : <p className="admin-help">Deactivate this destination before editing its routing fields.</p>}
+                      <AdminMutationForm className="admin-inline-form admin-section" endpoint={`/api/admin/partners/${partner.id}/referral-destinations/${destination.id}/status`} submitLabel={destination.status === "active" ? "Deactivate destination" : "Activate destination"} confirmMessage={destination.status === "active" ? "Deactivate this referral destination? Existing referral links will fail closed." : "Activate this referral destination after reviewing its URL, label, partner status and capability?"}>
+                        <input type="hidden" name="status" value={destination.status === "active" ? "inactive" : "active"} />
+                      </AdminMutationForm>
+                    </div>
+                  </details>
+                );
+              })}
+              {!referralSetup.data.length ? <div className="admin-card"><EmptyState>No referral destinations configured.</EmptyState></div> : null}
+            </div>
+          </>
+        )}
       </section>
     </>
   );

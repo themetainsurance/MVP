@@ -191,6 +191,7 @@ export type CustomerSafeComparisonOption = {
   effective_to: string | null;
   customer_note: string | null;
   facts: InsuranceComparisonFacts;
+  referral_available?: true;
 };
 
 export type CustomerComparisonOfferResult = {
@@ -235,4 +236,3 @@ export type ComparisonHandoffChoice = {
   partner_id: string;
   status: string;
 };
-

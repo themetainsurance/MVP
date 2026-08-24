@@ -104,8 +104,8 @@ test("rejects invalid UUIDs, event names, insurance types and form modes", () =>
   assert.equal(validation.validateAnalyticsEvent(validEvent({ form_mode: "manual" })).success, false);
 });
 
-test("rejects query strings, fragments, admin/API/comparison paths and oversized UTM values", () => {
-  for (const path of ["/travel?email=x", "/travel#form", "/admin", "/admin/leads", "/api/leads", "/compare", "/compare/private-token"]) {
+test("rejects query strings, fragments, admin/API/comparison/referral paths and oversized UTM values", () => {
+  for (const path of ["/travel?email=x", "/travel#form", "/admin", "/admin/leads", "/api/leads", "/compare", "/compare/private-token", "/go", "/go/abc", `/go/${"x".repeat(43)}`]) {
     assert.equal(validation.validateAnalyticsEvent(validEvent({ page_path: path })).success, false, path);
   }
   assert.equal(validation.validateAnalyticsEvent(validEvent({

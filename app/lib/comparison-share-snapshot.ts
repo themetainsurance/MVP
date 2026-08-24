@@ -14,9 +14,10 @@ import type {
 } from "./comparison-types";
 
 function customerSafeOption(
-  option: PolicyComparisonOption
+  option: PolicyComparisonOption,
+  referralOptionIds?: ReadonlySet<string>
 ): CustomerSafeComparisonOption {
-  return {
+  const safe: CustomerSafeComparisonOption = {
     provider_name: option.provider_name,
     product_name: option.product_name,
     effective_from: option.effective_from,
@@ -24,6 +25,8 @@ function customerSafeOption(
     customer_note: option.customer_note,
     facts: JSON.parse(JSON.stringify(option.facts)),
   };
+  if (referralOptionIds?.has(option.id)) safe.referral_available = true;
+  return safe;
 }
 
 function snapshotBytes(snapshot: CustomerComparisonSnapshot) {
@@ -33,7 +36,8 @@ function snapshotBytes(snapshot: CustomerComparisonSnapshot) {
 export function buildCustomerComparisonSnapshot(
   comparison: PolicyComparison,
   options: readonly PolicyComparisonOption[],
-  generatedAt: string
+  generatedAt: string,
+  referralOptionIds?: ReadonlySet<string>
 ): CustomerComparisonSnapshot {
   const generatedDate = new Date(generatedAt);
   if (Number.isNaN(generatedDate.getTime())) {
@@ -62,7 +66,9 @@ export function buildCustomerComparisonSnapshot(
   }
 
   const currentPolicy = customerSafeOption(currentPolicies[0]);
-  const safeOffers = partnerOffers.map(customerSafeOption);
+  const safeOffers = partnerOffers.map((option) =>
+    customerSafeOption(option, referralOptionIds)
+  );
   const rows = buildComparisonRows(
     comparison.insurance_type,
     currentPolicy.facts,

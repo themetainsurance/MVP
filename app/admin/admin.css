@@ -120,5 +120,7 @@
 .admin-share-once { margin-top: 16px; padding: 15px; border: 1px solid #86efac; border-radius: 10px; background: #f0fdf4; }
 .admin-share-once input { display: block; width: 100%; margin-top: 9px; padding: 10px; border: 1px solid #86efac; border-radius: 7px; font: 12px ui-monospace, monospace; }
 .admin-share-once .admin-button { margin-top: 10px; }
+.admin-referral-detail { padding: 0 22px 24px; }
+.admin-referral-detail > .admin-detail-list { margin-bottom: 20px; }
 @media (max-width: 1050px) { .admin-grid-4 { grid-template-columns: repeat(2, minmax(0,1fr)); } .admin-split { grid-template-columns: 1fr; } .admin-filter-grid { grid-template-columns: repeat(2, minmax(160px, 1fr)); } }
 @media (max-width: 760px) { .admin-shell { grid-template-columns: 1fr; } .admin-sidebar { min-height: auto; height: auto; position: static; padding: 18px 5%; gap: 16px; } .admin-nav { grid-template-columns: repeat(8, minmax(max-content,1fr)); overflow-x: auto; } .admin-sidebar-footer { margin-top: 0; grid-template-columns: 1fr auto; align-items: center; } .admin-signout { padding: 0 14px; } .admin-main { padding: 26px 5%; } .admin-page-header { align-items: flex-start; flex-direction: column; } .admin-grid-2, .admin-grid-3, .admin-grid-4, .admin-filter-grid, .admin-detail-list, .admin-facts-grid, .admin-mini-grid { grid-template-columns: 1fr; } .admin-pagination { align-items: flex-start; flex-direction: column; } .admin-blog-body { min-height: 420px !important; } }

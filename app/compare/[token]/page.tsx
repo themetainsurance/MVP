@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { unstable_noStore as noStore } from "next/cache";
 import PolicyComparisonView from "../../components/PolicyComparisonView";
-import { loadPublicComparisonSnapshot } from "../../lib/comparison-public-data";
+import { createPublicComparisonReferralCtas, loadPublicComparisonSnapshot } from "../../lib/comparison-public-data";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
 export default async function PublicComparisonPage({ params }: { params: Promise<{ token: string }> }) {
   noStore();
   const { token } = await params;
-  const snapshot = await loadPublicComparisonSnapshot(token);
-  if (!snapshot) {
+  const publicData = await loadPublicComparisonSnapshot(token);
+  if (!publicData) {
     return (
       <main style={{ minHeight: "70vh", display: "grid", placeItems: "center", padding: "32px" }}>
         <section style={{ maxWidth: 620, textAlign: "center" }}>
@@ -42,5 +42,6 @@ export default async function PublicComparisonPage({ params }: { params: Promise
       </main>
     );
   }
-  return <PolicyComparisonView snapshot={snapshot} />;
+  const referralCtas = await createPublicComparisonReferralCtas(publicData);
+  return <PolicyComparisonView snapshot={publicData.snapshot} referralCtas={referralCtas} />;
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AdminMutationForm from "../../../components/AdminMutationForm";
+import ReferralLinkForm from "../../../components/ReferralLinkForm";
 import {
   AdminPageHeader,
   EmptyState,
@@ -13,6 +14,7 @@ import {
 } from "../../../components/AdminUi";
 import { requireAdmin } from "../../../../lib/admin-auth";
 import { loadAdminLeadDetail } from "../../../../lib/admin-dashboard-data";
+import { loadAdminLeadReferralDestinations } from "../../../../lib/partner-referral-admin";
 import { isAdminUuid } from "../../../../lib/admin-dashboard-validation";
 import { LEAD_STATUSES } from "../../../../lib/lead-status-types";
 import { PARTNER_HANDOFF_METHODS } from "../../../../lib/partner-types";
@@ -33,6 +35,10 @@ export default async function AdminLeadDetailPage({
   const data = await loadAdminLeadDetail(id);
   if (!data) notFound();
   const { lead, history, handoffs, handoffHistory, eligiblePartners } = data;
+  const referralSetup = await loadAdminLeadReferralDestinations(
+    lead.insurance_type,
+    [...new Set(handoffs.map((handoff) => handoff.partner_id))]
+  );
 
   return (
     <>
@@ -139,6 +145,17 @@ export default async function AdminLeadDetailPage({
                   </dl>
 
                   <div className="admin-actions-stack admin-section">
+                    {referralSetup.available ? (() => {
+                      const destination = referralSetup.data.find((item) => item.partner_id === handoff.partner_id);
+                      return destination ? (
+                        <details><summary>Generate referral link</summary>
+                          <div className="admin-section">
+                            <p className="admin-help">This creates an opaque, expiring link only. It does not transmit lead data, mark the handoff sent, create a conversion, or change commission status.</p>
+                            <ReferralLinkForm destinationId={destination.id} leadId={lead.id} handoffId={handoff.id} />
+                          </div>
+                        </details>
+                      ) : null;
+                    })() : <p className="admin-help">Referral integration setup is not available yet.</p>}
                     {handoff.status === "pending" ? (
                       <>
                         <details><summary>Mark sent</summary>
