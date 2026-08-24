@@ -225,6 +225,63 @@ test("migration preserves first touch and safely deduplicates events and form st
   assert.match(sql, /on conflict do nothing/i);
 });
 
+test("follow-up migration fixes analytics ingestion without changing its contract", () => {
+  const migrations = readdirSync(join(repositoryRoot, "supabase", "migrations"));
+  const originalName = migrations.find((name) =>
+    name.endsWith("_create_first_party_analytics.sql")
+  );
+  const fixName = migrations.find((name) =>
+    name.endsWith("_fix_analytics_event_ingestion.sql")
+  );
+  assert.ok(originalName);
+  assert.ok(fixName);
+
+  const originalSql = readFileSync(
+    join(repositoryRoot, "supabase", "migrations", originalName),
+    "utf8"
+  );
+  const fixSql = readFileSync(
+    join(repositoryRoot, "supabase", "migrations", fixName),
+    "utf8"
+  );
+  const originalSignature = originalSql.match(
+    /create function public\.record_first_party_analytics_event\(([\s\S]*?)\)\s*returns boolean/i
+  )?.[1];
+  const fixSignature = fixSql.match(
+    /create or replace function public\.record_first_party_analytics_event\(([\s\S]*?)\)\s*returns boolean/i
+  )?.[1];
+  assert.ok(originalSignature);
+  assert.ok(fixSignature);
+  assert.equal(fixSignature.replace(/\s+/g, " ").trim(), originalSignature.replace(/\s+/g, " ").trim());
+
+  assert.match(fixSql, /^\s*begin;/i);
+  assert.match(fixSql, /commit;\s*$/i);
+  assert.equal((fixSql.match(/create or replace function/gi) ?? []).length, 1);
+  assert.match(fixSql, /greatest\(sessions\.last_seen_at, now\(\)\)/i);
+  assert.doesNotMatch(fixSql, /pg_catalog\.greatest/i);
+  assert.match(fixSql, /returns boolean[\s\S]*language plpgsql[\s\S]*security invoker[\s\S]*set search_path = ''/i);
+
+  const upsert = fixSql.match(/on conflict \(id\) do update[\s\S]*?;/i)?.[0] ?? "";
+  assert.match(upsert, /^on conflict \(id\) do update\s+set last_seen_at = greatest/i);
+  for (const field of [
+    "landing_path", "referrer_host", "utm_source", "utm_medium",
+    "utm_campaign", "utm_term", "utm_content", "first_seen_at",
+  ]) {
+    assert.doesNotMatch(upsert, new RegExp(`${field}\\s*=`));
+  }
+
+  assert.match(fixSql, /insert into public\.analytics_events \(\s*client_event_id,\s*session_id,\s*event_type,\s*page_path,\s*insurance_type,\s*form_mode\s*\)/i);
+  assert.match(fixSql, /on conflict do nothing;\s*\n\s*get diagnostics v_inserted = row_count;\s*\n\s*return v_inserted = 1;/i);
+  assert.match(originalSql, /create unique index analytics_events_form_started_flow_key[\s\S]*where event_type = 'form_started'/i);
+
+  const migrationOnlySql = fixSql.replace(/as \$\$[\s\S]*?\$\$;/i, "");
+  assert.doesNotMatch(migrationOnlySql, /\b(?:insert into|update|delete from|truncate)\b/i);
+  assert.doesNotMatch(fixSql, /\b(?:create|alter|drop)\s+(?:table|index|policy)\b/i);
+  assert.doesNotMatch(fixSql, /\b(?:grant|revoke)\b/i);
+  assert.match(originalSql, /revoke execute on function public\.record_first_party_analytics_event\([\s\S]*?\) from PUBLIC, anon, authenticated, service_role;/i);
+  assert.match(originalSql, /grant execute on function public\.record_first_party_analytics_event\([\s\S]*?\) to service_role;/i);
+});
+
 test("migration keeps operational tables authoritative and counts unique lead stages", () => {
   const migrationName = readdirSync(join(repositoryRoot, "supabase", "migrations"))
     .find((name) => name.endsWith("_create_first_party_analytics.sql"));
