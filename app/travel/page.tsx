@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type SyntheticEvent } from "react";
+import { useEffect, useState, type SyntheticEvent } from "react";
 import SiteFooter from "../components/SiteFooter";
 import { useAnalytics } from "../components/AnalyticsProvider";
 import {
@@ -20,6 +20,37 @@ type FormData = {
   phone: string;
   preferredContact: string;
 };
+
+const QUICK_START_DESTINATION_MAX_LENGTH = 120;
+const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+function readQuickStartDestination(params: URLSearchParams) {
+  const value = (params.get("destination") ?? "").trim();
+
+  if (/[\u0000-\u001f\u007f]/.test(value)) {
+    return "";
+  }
+
+  return value.slice(0, QUICK_START_DESTINATION_MAX_LENGTH);
+}
+
+function readQuickStartDate(
+  params: URLSearchParams,
+  name: "departureDate" | "returnDate"
+) {
+  const value = params.get(name) ?? "";
+
+  if (!ISO_DATE_PATTERN.test(value)) {
+    return "";
+  }
+
+  const date = new Date(`${value}T00:00:00.000Z`);
+
+  return !Number.isNaN(date.getTime()) &&
+    date.toISOString().slice(0, 10) === value
+    ? value
+    : "";
+}
 
 export default function TravelInsurancePage() {
   const { getAnalyticsSessionId, trackFormStarted } = useAnalytics();
@@ -46,6 +77,24 @@ export default function TravelInsurancePage() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const destination = readQuickStartDestination(params);
+    const departureDate = readQuickStartDate(params, "departureDate");
+    const returnDate = readQuickStartDate(params, "returnDate");
+
+    if (!destination && !departureDate && !returnDate) {
+      return;
+    }
+
+    setFormData((current) => ({
+      ...current,
+      ...(destination ? { destination } : {}),
+      ...(departureDate ? { departureDate } : {}),
+      ...(returnDate ? { returnDate } : {}),
+    }));
+  }, []);
 
   function trackFormInteraction(event: SyntheticEvent) {
     const target = event.target;

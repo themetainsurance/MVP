@@ -218,7 +218,9 @@ export default function Home() {
               />
             </div>
 
-            <div
+            <form
+              action="/travel"
+              method="get"
               style={{
                 display: "grid",
                 gridTemplateColumns:
@@ -228,21 +230,24 @@ export default function Home() {
             >
               <SearchField
                 label="Destination"
-                value="Where are you going?"
+                name="destination"
+                placeholder="Where are you going?"
               />
 
               <SearchField
                 label="Start date"
-                value="Select date"
+                name="departureDate"
+                type="date"
               />
 
               <SearchField
                 label="End date"
-                value="Select date"
+                name="returnDate"
+                type="date"
               />
 
-              <a
-                href="/travel"
+              <button
+                type="submit"
                 style={{
                   background: "#0284c7",
                   color: "white",
@@ -259,8 +264,8 @@ export default function Home() {
                 }}
               >
                 Compare
-              </a>
-            </div>
+              </button>
+            </form>
           </div>
         </div>
       </section>
@@ -642,21 +647,27 @@ function InsuranceTab({
 
 function SearchField({
   label,
-  value,
+  name,
+  placeholder,
+  type = "text",
 }: {
   label: string;
-  value: string;
+  name: string;
+  placeholder?: string;
+  type?: "text" | "date";
 }) {
   return (
-    <div
+    <label
       style={{
         border: "1px solid #cbd5e1",
         borderRadius: "10px",
         padding: "12px 15px",
+        display: "block",
       }}
     >
-      <div
+      <span
         style={{
+          display: "block",
           color: "#64748b",
           fontSize: "11px",
           fontWeight: 700,
@@ -664,18 +675,29 @@ function SearchField({
         }}
       >
         {label}
-      </div>
+      </span>
 
-      <div
+      <input
+        type={type}
+        name={name}
+        placeholder={placeholder}
+        required
+        maxLength={type === "text" ? 120 : undefined}
+        autoComplete="off"
         style={{
+          width: "100%",
+          minWidth: 0,
+          padding: 0,
+          border: "none",
+          outline: "none",
+          background: "transparent",
           color: "#0f172a",
           fontWeight: 700,
           fontSize: "14px",
+          fontFamily: "inherit",
         }}
-      >
-        {value}
-      </div>
-    </div>
+      />
+    </label>
   );
 }
 
