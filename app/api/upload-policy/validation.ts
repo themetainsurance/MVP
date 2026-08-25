@@ -1,4 +1,6 @@
 export const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+export const POLICY_UPLOAD_REQUEST_BODY_BYTES = 8 * 1024;
+export const POLICY_UPLOAD_SESSION_MINUTES = 15;
 
 const PDF_SIGNATURE = [0x25, 0x50, 0x44, 0x46, 0x2d];
 const PDF_EOF_MARKER = [0x25, 0x25, 0x45, 0x4f, 0x46];
@@ -17,11 +19,30 @@ const PDF_EOF_SEARCH_BYTES = 4 * 1024;
 
 export type UploadCategory = "motor" | "property";
 
+export type AllowedPolicyMimeType =
+  | "application/pdf"
+  | "image/jpeg"
+  | "image/png";
+
 export type DetectedFileType = {
   kind: "pdf" | "jpeg" | "png";
-  mimeType: "application/pdf" | "image/jpeg" | "image/png";
+  mimeType: AllowedPolicyMimeType;
   extension: "pdf" | "jpg" | "png";
 };
+
+export type UploadInitiationInput = {
+  category: UploadCategory;
+  mimeType: AllowedPolicyMimeType;
+  size: number;
+};
+
+export type UploadFinalizationInput = {
+  uploadSessionId: string;
+};
+
+type InputValidationResult<T> =
+  | { success: true; data: T }
+  | { success: false; error: string };
 
 export type FileValidationResult =
   | {
@@ -72,6 +93,37 @@ function containsBytes(
   return false;
 }
 
+function isPlainObject(
+  value: unknown
+): value is Record<string, unknown> {
+  if (
+    typeof value !== "object" ||
+    value === null ||
+    Array.isArray(value)
+  ) {
+    return false;
+  }
+
+  const prototype = Object.getPrototypeOf(value);
+  return (
+    prototype === Object.prototype || prototype === null
+  );
+}
+
+function hasExactKeys(
+  value: Record<string, unknown>,
+  expectedKeys: string[]
+) {
+  const actualKeys = Object.keys(value).sort();
+  return (
+    actualKeys.length === expectedKeys.length &&
+    expectedKeys
+      .slice()
+      .sort()
+      .every((key, index) => actualKeys[index] === key)
+  );
+}
+
 export function validateUploadCategory(
   value: unknown
 ): UploadCategory | null {
@@ -86,6 +138,91 @@ export function validateUploadCategory(
   }
 
   return null;
+}
+
+export function validateDeclaredPolicyMimeType(
+  value: unknown
+): AllowedPolicyMimeType | null {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const mimeType = value.trim().toLowerCase();
+  if (
+    mimeType === "application/pdf" ||
+    mimeType === "image/jpeg" ||
+    mimeType === "image/png"
+  ) {
+    return mimeType;
+  }
+
+  return null;
+}
+
+export function validateUploadInitiationBody(
+  value: unknown
+): InputValidationResult<UploadInitiationInput> {
+  if (
+    !isPlainObject(value) ||
+    !hasExactKeys(value, ["category", "mime_type", "size"])
+  ) {
+    return { success: false, error: "Invalid upload data." };
+  }
+
+  const category = validateUploadCategory(value.category);
+  if (!category) {
+    return {
+      success: false,
+      error: "Invalid insurance category.",
+    };
+  }
+
+  const mimeType = validateDeclaredPolicyMimeType(
+    value.mime_type
+  );
+  if (!mimeType) {
+    return { success: false, error: "Unsupported file type." };
+  }
+
+  if (
+    typeof value.size !== "number" ||
+    !Number.isSafeInteger(value.size) ||
+    value.size <= 0
+  ) {
+    return { success: false, error: "Invalid upload data." };
+  }
+
+  if (value.size > MAX_FILE_SIZE_BYTES) {
+    return {
+      success: false,
+      error: "The selected file is larger than 10 MB.",
+    };
+  }
+
+  return {
+    success: true,
+    data: { category, mimeType, size: value.size },
+  };
+}
+
+export function validateUploadFinalizationBody(
+  value: unknown
+): InputValidationResult<UploadFinalizationInput> {
+  if (
+    !isPlainObject(value) ||
+    !hasExactKeys(value, ["upload_session_id"]) ||
+    typeof value.upload_session_id !== "string" ||
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      value.upload_session_id
+    )
+  ) {
+    return { success: false, error: "Invalid upload data." };
+  }
+
+  return {
+    success: true,
+    data: { uploadSessionId: value.upload_session_id },
+  };
 }
 
 export function detectFileType(

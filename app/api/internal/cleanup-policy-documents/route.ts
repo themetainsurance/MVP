@@ -6,6 +6,7 @@ import {
   PolicyDocumentCleanupError,
   type PolicyDocumentCleanupSummary,
   resolvePolicyOrphanGraceHours,
+  resolvePolicyUploadTempGraceHours,
 } from "../../../lib/policy-document-cleanup";
 
 export const runtime = "nodejs";
@@ -17,6 +18,10 @@ const EMPTY_SUMMARY: PolicyDocumentCleanupSummary = {
   protectedByGracePeriod: 0,
   deleted: 0,
   failed: 0,
+  temporaryScanned: 0,
+  temporaryDeleted: 0,
+  temporaryFailed: 0,
+  temporaryCleanupAvailable: true,
 };
 
 function errorResponse(
@@ -116,11 +121,16 @@ export async function GET(request: Request) {
       graceHours: resolvePolicyOrphanGraceHours(
         process.env.POLICY_ORPHAN_GRACE_HOURS
       ),
+      temporaryGraceHours: resolvePolicyUploadTempGraceHours(
+        process.env.POLICY_UPLOAD_TEMP_GRACE_HOURS
+      ),
     });
 
     console.info("Policy document cleanup completed.", {
       deleted: summary.deleted,
       failed: summary.failed,
+      temporaryDeleted: summary.temporaryDeleted,
+      temporaryFailed: summary.temporaryFailed,
     });
 
     return NextResponse.json({
@@ -138,6 +148,8 @@ export async function GET(request: Request) {
       code: cleanupError?.code ?? "unexpected_error",
       deleted: summary.deleted,
       failed: summary.failed,
+      temporaryDeleted: summary.temporaryDeleted,
+      temporaryFailed: summary.temporaryFailed,
     });
 
     return errorResponse(

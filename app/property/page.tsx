@@ -7,6 +7,10 @@ import {
   createSafeApiError,
   getSafeApiErrorMessage,
 } from "../lib/safe-api-error";
+import {
+  policyUploadStageMessage,
+  uploadPolicyDocumentDirectly,
+} from "../lib/policy-upload-client";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
@@ -815,10 +819,12 @@ function UploadPolicy({
 }) {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
+  const [uploadStage, setUploadStage] = useState("");
   const [error, setError] = useState("");
 
   function handleFile(file: File | null) {
     setMessage("");
+    setUploadStage("");
     setError("");
     setPolicyPath(null);
 
@@ -853,45 +859,15 @@ function UploadPolicy({
       setUploading(true);
       setMessage("");
       setError("");
-
-      const formData = new FormData();
-
-      formData.append("file", selectedFile);
-
-      // IMPORTANT:
-      // This tells our shared API to store the document
-      // inside policy-documents/property/
-      formData.append("category", "property");
-
-      const response = await fetch("/api/upload-policy", {
-        method: "POST",
-        body: formData,
+      const path = await uploadPolicyDocumentDirectly({
+        file: selectedFile,
+        category: "property",
+        onStage(stage) {
+          setUploadStage(policyUploadStageMessage(stage));
+        },
       });
 
-      let result: {
-        success?: boolean;
-        category?: string;
-        path?: string;
-        error?: string;
-      };
-
-      try {
-        result = await response.json();
-      } catch {
-        throw createSafeApiError(
-          null,
-          "The server returned an invalid response. Please try again."
-        );
-      }
-
-      if (!response.ok || !result.success || !result.path) {
-        throw createSafeApiError(
-          result.error,
-          "The property policy could not be uploaded."
-        );
-      }
-
-      setPolicyPath(result.path);
+      setPolicyPath(path);
 
       setMessage(
         "Property policy uploaded successfully. Your document is ready to be submitted for comparison."
@@ -900,11 +876,12 @@ function UploadPolicy({
       setError(
         getSafeApiErrorMessage(
           err,
-          "Something went wrong while uploading the policy."
+          "Document upload failed. Please try again."
         )
       );
     } finally {
       setUploading(false);
+      setUploadStage("");
     }
   }
 
@@ -1074,13 +1051,13 @@ function UploadPolicy({
 
       <button
         type="button"
-        disabled={!selectedFile || uploading}
+        disabled={!selectedFile || uploading || Boolean(policyPath)}
         onClick={uploadPolicy}
         style={{
           width: "100%",
           marginTop: "24px",
           background:
-            selectedFile && !uploading
+            selectedFile && !uploading && !policyPath
               ? "#16a34a"
               : "#cbd5e1",
           color: "#ffffff",
@@ -1090,13 +1067,13 @@ function UploadPolicy({
           fontSize: "16px",
           fontWeight: 800,
           cursor:
-            selectedFile && !uploading
+            selectedFile && !uploading && !policyPath
               ? "pointer"
               : "not-allowed",
         }}
       >
         {uploading
-          ? "Uploading property policy..."
+          ? uploadStage || "Preparing secure upload..."
           : policyPath
           ? "Property policy uploaded ✓"
           : "Upload property policy"}

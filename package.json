@@ -11,7 +11,8 @@
     "test:blog-cms": "node --test tests/blog-cms-core.test.mjs",
     "test:analytics": "node --test tests/analytics-core.test.mjs",
     "test:policy-comparisons": "node --test tests/policy-comparison-core.test.mjs",
-    "test:partner-referrals": "node --test tests/partner-referral-core.test.mjs"
+    "test:partner-referrals": "node --test tests/partner-referral-core.test.mjs",
+    "test:policy-upload": "node --test tests/policy-upload-core.test.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.4",

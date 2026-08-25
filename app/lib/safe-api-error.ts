@@ -24,6 +24,14 @@ const SAFE_API_ERROR_MESSAGES = new Set([
   "The uploaded file content does not match an allowed PDF, JPG or PNG document.",
   "Unable to upload policy document.",
   "Unexpected upload error.",
+  "Unsupported file type.",
+  "The selected file is larger than 10 MB.",
+  "The uploaded file could not be validated.",
+  "Upload expired. Please try again.",
+  "Document validation is already in progress.",
+  "Document upload failed. Please try again.",
+  "Secure upload setup is temporarily unavailable.",
+  "Secure direct policy upload is required.",
 ]);
 
 class SafeApiError extends Error {}

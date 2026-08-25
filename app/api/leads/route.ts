@@ -106,6 +106,34 @@ export async function POST(request: Request) {
       }
     );
 
+    if (lead.policy_document_path) {
+      const { data: uploadSession, error: uploadSessionError } =
+        await supabase
+          .from("policy_upload_sessions")
+          .select("id")
+          .eq("final_path", lead.policy_document_path)
+          .eq("category", lead.insurance_type)
+          .eq("status", "finalized")
+          .maybeSingle();
+
+      if (uploadSessionError) {
+        console.error("Lead policy document validation failed.", {
+          code: "policy_upload_session_validation_failed",
+          insuranceType: lead.insurance_type,
+        });
+        return errorResponse(
+          "Secure upload setup is temporarily unavailable.",
+          503
+        );
+      }
+
+      if (!uploadSession) {
+        return errorResponse(
+          "Policy document path is invalid."
+        );
+      }
+    }
+
     const { data, error } = await supabase
       .from("leads")
       .insert({

@@ -7,6 +7,10 @@ import {
   createSafeApiError,
   getSafeApiErrorMessage,
 } from "../lib/safe-api-error";
+import {
+  policyUploadStageMessage,
+  uploadPolicyDocumentDirectly,
+} from "../lib/policy-upload-client";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
@@ -69,6 +73,7 @@ export default function MotorInsurancePage() {
   const [submitting, setSubmitting] = useState(false);
 
   const [uploadMessage, setUploadMessage] = useState("");
+  const [uploadStage, setUploadStage] = useState("");
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
@@ -96,6 +101,7 @@ export default function MotorInsurancePage() {
   function handleFile(file: File | null) {
     setError("");
     setUploadMessage("");
+    setUploadStage("");
     setPolicyPath(null);
 
     if (!file) {
@@ -129,30 +135,15 @@ export default function MotorInsurancePage() {
       setUploading(true);
       setError("");
       setUploadMessage("");
+      const path = await uploadPolicyDocumentDirectly({
+        file: selectedFile,
+        category: "motor",
+        onStage(stage) {
+          setUploadStage(policyUploadStageMessage(stage));
+        },
+      });
 
-      const formData = new FormData();
-
-      formData.append("file", selectedFile);
-      formData.append("category", "motor");
-
-      const response = await fetch(
-        "/api/upload-policy",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw createSafeApiError(
-          result.error,
-          "Unable to upload the policy."
-        );
-      }
-
-      setPolicyPath(result.path);
+      setPolicyPath(path);
 
       setUploadMessage(
         "Policy uploaded successfully."
@@ -161,11 +152,12 @@ export default function MotorInsurancePage() {
       setError(
         getSafeApiErrorMessage(
           err,
-          "Unable to upload the policy."
+          "Document upload failed. Please try again."
         )
       );
     } finally {
       setUploading(false);
+      setUploadStage("");
     }
   }
 
@@ -656,19 +648,19 @@ export default function MotorInsurancePage() {
                 <button
                   type="button"
                   disabled={
-                    !selectedFile || uploading
+                    !selectedFile || uploading || Boolean(policyPath)
                   }
                   onClick={uploadPolicy}
                   style={{
                     ...primaryButton,
                     background:
-                      !selectedFile || uploading
+                      !selectedFile || uploading || policyPath
                         ? "#cbd5e1"
                         : "#0284c7",
                   }}
                 >
                   {uploading
-                    ? "Uploading..."
+                    ? uploadStage || "Preparing secure upload..."
                     : policyPath
                     ? "Policy uploaded ✓"
                     : "Upload policy"}

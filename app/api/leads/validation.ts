@@ -14,7 +14,7 @@ const PREFERRED_CONTACT_METHODS = new Map([
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_PATTERN = /^\+?[0-9 ()-]+$/;
 const POLICY_PATH_PATTERN =
-  /^(?:motor|property)\/[A-Za-z0-9][A-Za-z0-9._/-]*$/;
+  /^(?:motor|property)\/[0-9a-f]{32}\.(?:pdf|jpg|png)$/;
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -247,6 +247,8 @@ export function validateLeadBody(
       policyPath.includes("\\") ||
       /^https?:\/\//i.test(policyPath) ||
       !POLICY_PATH_PATTERN.test(policyPath) ||
+      insuranceType === "travel" ||
+      !policyPath.startsWith(`${insuranceType}/`) ||
       hasUnsafeSegment
     ) {
       return {
