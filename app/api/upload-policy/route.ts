@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { isSameOriginRequest } from "../../lib/request-security";
 import {
   MAX_FILE_SIZE_BYTES,
   validateUploadedFile,
@@ -25,6 +26,10 @@ function errorResponse(error: string, status = 400) {
 
 export async function POST(request: Request) {
   try {
+    if (!isSameOriginRequest(request)) {
+      return errorResponse("Invalid upload data.", 403);
+    }
+
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY;
 

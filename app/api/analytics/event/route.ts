@@ -5,6 +5,7 @@ import {
   isAnalyticsRequestBodyTooLarge,
   validateAnalyticsEvent,
 } from "../../../lib/analytics-validation";
+import { isSameOriginRequest } from "../../../lib/request-security";
 
 export const runtime = "nodejs";
 
@@ -24,18 +25,8 @@ function successResponse() {
   });
 }
 
-function isSameOrigin(request: Request) {
-  const origin = request.headers.get("origin");
-  if (!origin) return false;
-  try {
-    return origin === new URL(request.url).origin;
-  } catch {
-    return false;
-  }
-}
-
 export async function POST(request: Request) {
-  if (!isSameOrigin(request)) {
+  if (!isSameOriginRequest(request)) {
     console.warn("Analytics event rejected.", {
       code: "analytics_event_invalid",
     });

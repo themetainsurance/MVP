@@ -175,6 +175,7 @@ export default function PropertyInsurancePage() {
       onChangeCapture={trackFormInteraction}
       style={{
         minHeight: "100vh",
+        overflowX: "hidden",
         background: "#f8fafc",
         color: "#0f172a",
         fontFamily: "Arial, Helvetica, sans-serif",

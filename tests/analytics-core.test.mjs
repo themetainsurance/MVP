@@ -10,6 +10,7 @@ import { after, test } from "node:test";
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const analyticsBuild = mkdtempSync(join(tmpdir(), "tmi-analytics-core-"));
 const leadBuild = mkdtempSync(join(tmpdir(), "tmi-analytics-leads-"));
+const configBuild = mkdtempSync(join(tmpdir(), "tmi-next-config-"));
 const compiler = join(repositoryRoot, "node_modules", "typescript", "bin", "tsc");
 
 execFileSync(process.execPath, [
@@ -23,6 +24,7 @@ execFileSync(process.execPath, [
   join(repositoryRoot, "app", "lib", "partner-types.ts"),
   join(repositoryRoot, "app", "lib", "analytics-types.ts"),
   join(repositoryRoot, "app", "lib", "analytics-validation.ts"),
+  join(repositoryRoot, "app", "lib", "request-security.ts"),
 ], { stdio: "pipe" });
 
 execFileSync(process.execPath, [
@@ -36,14 +38,28 @@ execFileSync(process.execPath, [
   join(repositoryRoot, "app", "api", "leads", "validation.ts"),
 ], { stdio: "pipe" });
 
+execFileSync(process.execPath, [
+  compiler,
+  "--target", "ES2022",
+  "--module", "commonjs",
+  "--moduleResolution", "node",
+  "--skipLibCheck",
+  "--esModuleInterop",
+  "--outDir", configBuild,
+  join(repositoryRoot, "next.config.ts"),
+], { stdio: "pipe" });
+
 const require = createRequire(import.meta.url);
 const types = require(join(analyticsBuild, "analytics-types.js"));
 const validation = require(join(analyticsBuild, "analytics-validation.js"));
+const requestSecurity = require(join(analyticsBuild, "request-security.js"));
 const leadValidation = require(join(leadBuild, "validation.js"));
+const nextConfig = require(join(configBuild, "next.config.js")).default;
 
 after(() => {
   rmSync(analyticsBuild, { recursive: true, force: true });
   rmSync(leadBuild, { recursive: true, force: true });
+  rmSync(configBuild, { recursive: true, force: true });
 });
 
 const sessionId = "00000000-0000-4000-8000-000000000001";
@@ -327,12 +343,61 @@ test("analytics tables are server-only with RLS, least privilege and no delete g
 
 test("the public endpoint is same-origin, bounded and non-critical", () => {
   const route = readFileSync(join(repositoryRoot, "app", "api", "analytics", "event", "route.ts"), "utf8");
-  assert.match(route, /origin === new URL\(request\.url\)\.origin/);
+  assert.match(route, /isSameOriginRequest\(request\)/);
   assert.match(route, /ANALYTICS_REQUEST_BODY_BYTES/);
   assert.match(route, /status: 204/);
   assert.match(route, /analytics_event_invalid/);
   assert.match(route, /analytics_event_store_failed/);
   assert.doesNotMatch(route, /console\.(?:log|error|warn)\([^\n]*(?:session|utm|referrer|page_path)/i);
+});
+
+test("same-origin validation protects every public submission endpoint", () => {
+  const sameOriginRequest = new Request("https://www.themetainsurance.com/api/leads", {
+    headers: { origin: "https://www.themetainsurance.com" },
+  });
+  const crossOriginRequest = new Request("https://www.themetainsurance.com/api/leads", {
+    headers: { origin: "https://attacker.example" },
+  });
+  const missingOriginRequest = new Request("https://www.themetainsurance.com/api/leads");
+
+  assert.equal(requestSecurity.isSameOriginRequest(sameOriginRequest), true);
+  assert.equal(requestSecurity.isSameOriginRequest(crossOriginRequest), false);
+  assert.equal(requestSecurity.isSameOriginRequest(missingOriginRequest), false);
+
+  for (const routePath of [
+    join(repositoryRoot, "app", "api", "leads", "route.ts"),
+    join(repositoryRoot, "app", "api", "upload-policy", "route.ts"),
+  ]) {
+    const route = readFileSync(routePath, "utf8");
+    assert.match(route, /isSameOriginRequest\(request\)/);
+    assert.match(route, /403/);
+  }
+});
+
+test("baseline browser security headers cover every route", async () => {
+  assert.equal(nextConfig.poweredByHeader, false);
+  assert.deepEqual(await nextConfig.headers(), [
+    {
+      source: "/:path*",
+      headers: [
+        { key: "X-Content-Type-Options", value: "nosniff" },
+        { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        { key: "X-Frame-Options", value: "SAMEORIGIN" },
+        {
+          key: "Permissions-Policy",
+          value: "camera=(), microphone=(), geolocation=()",
+        },
+      ],
+    },
+    {
+      source: "/compare/:path*",
+      headers: [{ key: "Referrer-Policy", value: "no-referrer" }],
+    },
+    {
+      source: "/go/:path*",
+      headers: [{ key: "Referrer-Policy", value: "no-referrer" }],
+    },
+  ]);
 });
 
 test("admin analytics is protected, aggregate-only and pre-migration safe", () => {

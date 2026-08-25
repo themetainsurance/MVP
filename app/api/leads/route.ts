@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { snapshotLeadAttribution } from "../../lib/analytics-server";
+import { isSameOriginRequest } from "../../lib/request-security";
 import {
   isLeadRequestBodyTooLarge,
   MAX_REQUEST_BODY_BYTES,
@@ -23,6 +24,10 @@ function errorResponse(error: string, status = 400) {
 
 export async function POST(request: Request) {
   try {
+    if (!isSameOriginRequest(request)) {
+      return errorResponse("Invalid request data.", 403);
+    }
+
     const contentLengthHeader =
       request.headers.get("content-length");
     const contentLength = contentLengthHeader
