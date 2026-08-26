@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import BrandLogo from "./BrandLogo";
 
 const exploreLinks = [
   { href: "/", label: "Home" },
@@ -22,7 +23,7 @@ export default function SiteFooter() {
       <div style={footerInnerStyle}>
         <div style={brandColumnStyle}>
           <strong style={brandStyle}>
-            The Meta Insurance
+            <BrandLogo />
           </strong>
           <p style={platformStatementStyle}>
             The Meta Insurance is an independent insurance discovery and referral platform.

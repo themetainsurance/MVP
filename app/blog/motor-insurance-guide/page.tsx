@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import BrandLogo from "../../components/BrandLogo";
 import SiteFooter from "../../components/SiteFooter";
 
 export const metadata: Metadata = {
@@ -58,7 +59,7 @@ export default function MotorInsuranceGuidePage() {
             fontWeight: 800,
           }}
         >
-          The Meta Insurance
+          <BrandLogo />
         </a>
 
         <nav

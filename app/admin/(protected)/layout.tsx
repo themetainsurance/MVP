@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BrandLogo from "../../components/BrandLogo";
 import { requireAdmin } from "../../lib/admin-auth";
 import "../admin.css";
 
@@ -24,7 +25,7 @@ export default async function ProtectedAdminLayout({
       <aside className="admin-sidebar">
         <div>
           <Link className="admin-brand" href="/admin">
-            The Meta Insurance
+            <BrandLogo />
           </Link>
           <div className="admin-private-label">PRIVATE ADMINISTRATION</div>
         </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import { redirect } from "next/navigation";
+import BrandLogo from "../../components/BrandLogo";
 import { getCurrentAdmin } from "../../lib/admin-auth";
 import AdminLoginForm from "./AdminLoginForm";
 
@@ -20,7 +21,7 @@ export default async function AdminLoginPage() {
     <main style={pageStyle}>
       <section style={panelStyle} aria-labelledby="admin-login-title">
         <a href="/" style={brandStyle}>
-          The Meta Insurance
+          <BrandLogo />
         </a>
 
         <div style={eyebrowStyle}>PRIVATE ADMINISTRATION</div>

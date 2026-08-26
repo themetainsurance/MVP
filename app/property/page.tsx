@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type SyntheticEvent } from "react";
+import BrandLogo from "../components/BrandLogo";
 import SiteFooter from "../components/SiteFooter";
 import { useAnalytics } from "../components/AnalyticsProvider";
 import {
@@ -205,7 +206,7 @@ export default function PropertyInsurancePage() {
             fontWeight: 800,
           }}
         >
-          The Meta Insurance
+          <BrandLogo />
         </a>
 
         <a

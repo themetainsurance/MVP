@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import BrandLogo from "../components/BrandLogo";
 import SiteFooter from "../components/SiteFooter";
 import {
   getBlogImagePublicUrl,
@@ -119,7 +120,7 @@ export default async function BlogPage() {
             fontWeight: 800,
           }}
         >
-          The Meta Insurance
+          <BrandLogo />
         </a>
 
         <nav

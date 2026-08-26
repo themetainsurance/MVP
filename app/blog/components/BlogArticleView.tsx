@@ -1,4 +1,5 @@
 import type { BlogPost } from "../../lib/blog-types";
+import BrandLogo from "../../components/BrandLogo";
 import BlogMarkdown from "./BlogMarkdown";
 import styles from "../blog-cms.module.css";
 
@@ -33,7 +34,7 @@ export default function BlogArticleView({
     <div className={styles.articlePage}>
       <header className={styles.siteHeader}>
         <a className={styles.brand} href={preview ? `/admin/blog/${post.id}` : "/"}>
-          The Meta Insurance
+          <BrandLogo />
         </a>
         <nav className={styles.siteNav} aria-label="Article navigation">
           {preview ? (

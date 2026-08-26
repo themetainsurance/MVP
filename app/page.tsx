@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import BrandLogo from "./components/BrandLogo";
 import SiteFooter from "./components/SiteFooter";
 
 export const metadata: Metadata = {
@@ -75,7 +76,7 @@ export default function Home() {
             color: "#0f172a",
           }}
         >
-          The Meta Insurance
+          <BrandLogo />
         </a>
 
         <nav

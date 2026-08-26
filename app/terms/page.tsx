@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { Metadata } from "next";
+import BrandLogo from "../components/BrandLogo";
 import SiteFooter from "../components/SiteFooter";
 
 const siteName = "The Meta Insurance";
@@ -67,7 +68,7 @@ export default function TermsAndConditionsPage() {
     <main style={pageStyle}>
       <header style={headerStyle}>
         <a href="/" style={brandStyle}>
-          The Meta Insurance
+          <BrandLogo />
         </a>
 
         <nav aria-label="Primary navigation" style={navStyle}>
