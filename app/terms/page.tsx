@@ -145,19 +145,19 @@ export default function TermsAndConditionsPage() {
 
           <TermsSection id="role" number="02" title="Platform role">
             <p style={paragraphStyle}>
-              The Meta Insurance is a technology, information, referral and
-              affiliate platform. It provides general insurance information,
-              guided information-collection tools and factual comparison
-              functionality intended to help users organise and submit an
-              insurance request to relevant licensed insurance partners.
+              The Meta Insurance is an independent insurance discovery and
+              referral platform. It provides educational content, guided
+              information-collection tools, factual comparison functionality
+              and referral links to relevant licensed insurance partners.
             </p>
 
             <Callout>
               <strong>The Meta Insurance does not currently act as an insurer,
               licensed insurance broker or insurance underwriter.</strong> It
-              does not underwrite risk, bind insurance cover, issue policies or
-              make final recommendations. Relevant licensed insurance partners
-              handle those regulated and contractual activities.
+              does not underwrite, bind, issue or sell insurance, determine
+              eligibility or pricing, or provide regulated insurance advice.
+              Relevant licensed insurance partners handle those regulated and
+              contractual activities.
             </Callout>
           </TermsSection>
 

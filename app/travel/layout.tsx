@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Travel Insurance | The Meta Insurance",
   description:
-    "Submit your travel insurance requirements, including destination, travel dates, travellers and coverage preferences, to relevant licensed insurance partners.",
+    "Enter your travel details to request insurance options from relevant licensed insurance providers or partners.",
 
   alternates: {
     canonical: "/travel",
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Travel Insurance | The Meta Insurance",
     description:
-      "Submit your travel insurance requirements, including destination, travel dates, travellers and coverage preferences, to relevant licensed insurance partners.",
+      "Enter your travel details to request insurance options from relevant licensed insurance providers or partners.",
     url: "/travel",
     type: "website",
   },
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "Travel Insurance | The Meta Insurance",
     description:
-      "Submit your travel insurance requirements to relevant licensed insurance partners.",
+      "Request travel insurance information from relevant licensed insurance providers or partners.",
   },
 };
 

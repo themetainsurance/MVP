@@ -308,7 +308,7 @@ export default function TravelInsurancePage() {
               margin: "0 0 18px",
             }}
           >
-            Protect your trip before you travel.
+            Explore travel insurance options.
           </h1>
 
           <p
@@ -319,9 +319,8 @@ export default function TravelInsurancePage() {
               lineHeight: 1.6,
             }}
           >
-            Tell us where you are travelling, when you are going and who is
-            travelling. Your request can then be forwarded to licensed
-            insurance partners.
+            Enter your travel details to request insurance options from
+            relevant licensed insurance providers or partners.
           </p>
         </div>
       </section>
@@ -351,7 +350,7 @@ export default function TravelInsurancePage() {
               marginBottom: "32px",
             }}
           >
-            Enter your travel details to request insurance offers.
+            Enter your travel details to request insurance options.
           </p>
 
           <SectionTitle>Trip type</SectionTitle>
@@ -620,10 +619,11 @@ export default function TravelInsurancePage() {
               fontSize: "14px",
             }}
           >
-            The Meta Insurance is a technology, referral and affiliate
-            platform. Insurance offers, underwriting, eligibility decisions,
-            regulated advice, policy issuance and final terms are provided by
-            relevant licensed insurance partners.
+            The Meta Insurance is an independent insurance discovery and
+            referral platform. We do not underwrite, bind, issue or sell
+            insurance, determine eligibility or pricing, or provide regulated
+            insurance advice. Relevant licensed insurance partners determine
+            final terms and coverage availability.
           </div>
 
           {error && (
@@ -677,7 +677,7 @@ export default function TravelInsurancePage() {
           >
             {submitting
               ? "Submitting request..."
-              : "Request travel insurance offers →"}
+              : "Request travel insurance options →"}
           </button>
         </div>
       </section>

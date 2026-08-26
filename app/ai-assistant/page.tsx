@@ -39,7 +39,7 @@ export default function AIAssistantPage() {
     {
       sender: "assistant",
       text:
-        "Hi! I can help collect the information needed for an insurance request. Tell me what you want to insure: a trip, a vehicle, or a property.",
+        "Hi! I can help organise information and prepare an insurance request. Tell me what you want to insure: a trip, a vehicle, or a property.",
     },
   ]);
 
@@ -575,7 +575,7 @@ export default function AIAssistantPage() {
                 "0 0 12px",
             }}
           >
-            Tell us what you need to insure
+            Prepare your insurance request
           </h1>
 
           <p
@@ -585,10 +585,9 @@ export default function AIAssistantPage() {
               lineHeight: 1.6,
             }}
           >
-            Answer a few simple questions and
-            we'll collect the information
-            required for your insurance
-            request.
+            The AI Assistant helps you organise information, understand
+            insurance categories and prepare a request. It does not recommend
+            products or determine eligibility, pricing or coverage.
           </p>
         </div>
 
@@ -941,17 +940,17 @@ export default function AIAssistantPage() {
               lineHeight: 1.6,
             }}
           >
-            The Meta Insurance is a
-            technology, referral and
-            affiliate platform. This
-            assistant collects information
-            for insurance requests. It does
-            not provide regulated insurance
-            advice or make final insurance
-            recommendations. Final insurance
-            offers and advice are provided
-            by relevant licensed insurance
-            partners.
+            The Meta Insurance is an
+            independent insurance discovery
+            and referral platform. This
+            assistant helps collect and
+            organise information for insurance
+            requests. It does not provide
+            insurance advice, recommend specific
+            products, or determine eligibility,
+            pricing or coverage. Final terms are
+            determined by relevant licensed
+            insurance partners.
           </div>
         </div>
       </section>

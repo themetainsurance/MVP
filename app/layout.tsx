@@ -4,7 +4,7 @@ import { AnalyticsProvider } from "./components/AnalyticsProvider";
 const siteName = "The Meta Insurance";
 const siteUrl = "https://www.themetainsurance.com";
 const siteDescription =
-  "Compare travel, motor and property insurance, understand coverage differences and submit your insurance request to relevant licensed insurance partners.";
+  "Compare insurance information for travel, motor and property cover. The Meta Insurance provides educational content and referral tools to licensed insurance providers.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

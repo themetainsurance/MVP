@@ -502,8 +502,9 @@ export default async function BlogPage() {
           <strong>Important:</strong> The information in our guides is provided
           for general educational purposes and does not constitute regulated
           insurance advice or a recommendation to purchase a particular
-          insurance product. Insurance offers, eligibility decisions and
-          regulated advice are provided by licensed insurance partners.
+          insurance product. The Meta Insurance is an independent insurance
+          discovery and referral platform. Licensed insurance partners
+          determine eligibility, pricing, coverage and final terms.
         </div>
       </section>
 

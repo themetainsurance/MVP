@@ -94,10 +94,10 @@ export default function BlogArticleView({
           <div className={styles.educationalNotice} role="note">
             <strong>Important:</strong> This article is for general educational
             purposes and does not constitute regulated insurance advice or a
-            recommendation to purchase a particular product. Insurance offers,
-            eligibility decisions, final terms and regulated advice are provided
-            by relevant licensed insurance partners. The Meta Insurance is a
-            technology, referral and affiliate platform.
+            recommendation to purchase a particular product. The Meta Insurance
+            is an independent insurance discovery and referral platform.
+            Licensed insurance partners determine eligibility, pricing,
+            coverage, regulated advice and final terms.
           </div>
         </div>
       </article>

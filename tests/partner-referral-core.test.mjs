@@ -153,7 +153,7 @@ test("referral UI makes no automatic handoff, conversion, commission or ranking 
   const leadPage = readFileSync(join(root, "app", "admin", "(protected)", "leads", "[id]", "page.tsx"), "utf8");
   const view = readFileSync(join(root, "app", "components", "PolicyComparisonView.tsx"), "utf8");
   assert.match(leadPage, /does not transmit lead data/);
-  assert.match(view, /technology and referral platform/);
+  assert.match(view, /independent insurance discovery and referral platform/);
   assert.match(view, /regulated advice and final terms are provided/i);
   assert.doesNotMatch(view, /best offer|recommended|winner|choose this policy/i);
 });

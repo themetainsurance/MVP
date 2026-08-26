@@ -4,14 +4,14 @@ import SiteFooter from "./components/SiteFooter";
 export const metadata: Metadata = {
   title: "The Meta Insurance | Travel, Motor & Property Insurance",
   description:
-    "Compare travel, motor and property insurance, understand coverage differences and submit your insurance request to relevant licensed insurance partners.",
+    "Compare insurance information for travel, motor and property cover. The Meta Insurance provides educational content and referral tools to licensed insurance providers.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "The Meta Insurance | Travel, Motor & Property Insurance",
     description:
-      "Compare travel, motor and property insurance, understand coverage differences and submit your insurance request to relevant licensed insurance partners.",
+      "Compare insurance information for travel, motor and property cover. The Meta Insurance provides educational content and referral tools to licensed insurance providers.",
     url: "/",
     type: "website",
   },
@@ -29,14 +29,14 @@ const insuranceTypes = [
     icon: "🚗",
     title: "Motor Insurance",
     description:
-      "Find motor insurance based on your vehicle and coverage requirements.",
+      "Explore motor insurance information based on your vehicle and coverage requirements.",
     href: "/motor",
   },
   {
     icon: "🏠",
     title: "Property Insurance",
     description:
-      "Explore cover options for your home, apartment or property.",
+      "Review property insurance coverage information for your home, apartment or property.",
     href: "/property",
   },
 ];
@@ -174,8 +174,8 @@ export default function Home() {
                 maxWidth: "650px",
               }}
             >
-              Compare insurance options, understand your coverage and submit
-              your request to relevant licensed insurance partners.
+              Compare insurance information, understand key coverage details
+              and submit your request to relevant licensed insurance partners.
             </p>
           </div>
 
@@ -391,7 +391,7 @@ export default function Home() {
             <Step
               number="03"
               title="Continue with a licensed partner"
-              description="Insurance offers, regulated advice and final recommendations are provided by licensed insurance partners."
+              description="Licensed insurance partners determine eligibility, underwriting, pricing, policy terms, coverage availability and issuance."
             />
           </div>
         </div>
@@ -448,10 +448,9 @@ export default function Home() {
                 fontSize: "17px",
               }}
             >
-              Use our assistant to answer a few simple questions instead of
-              completing the full insurance form manually. It will collect the
-              information needed to submit your request to relevant licensed
-              insurance partners.
+              Use our assistant to organise information and prepare an
+              insurance request. It does not recommend products or determine
+              eligibility, pricing or coverage.
             </p>
           </div>
 
@@ -581,10 +580,10 @@ export default function Home() {
             lineHeight: 1.7,
           }}
         >
-          <strong>Important:</strong> The Meta Insurance is a technology,
-          referral and affiliate platform. We do not currently act as an
-          insurer or licensed insurance broker. Insurance offers, underwriting,
-          eligibility decisions, regulated advice, policy issuance and final
+          <strong>Important:</strong> The Meta Insurance is an independent
+          insurance discovery and referral platform. We do not underwrite,
+          bind, issue or sell insurance, determine eligibility or pricing, or
+          provide regulated insurance advice. Final decisions and contractual
           terms are provided by relevant licensed insurance partners.
         </div>
       </section>

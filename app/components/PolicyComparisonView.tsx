@@ -48,7 +48,7 @@ export default function PolicyComparisonView({
       </header>
 
       <div className={styles.notice}>
-        This is a factual summary of information entered from the current policy and partner offers. It does not tell you which policy to choose and is not regulated insurance advice. Price differences do not indicate whether a policy is suitable for you. Check the complete policy wording, exclusions, eligibility and final terms supplied by the relevant licensed insurance partner.
+        This is a factual summary of information entered from the current policy and provider options. It does not rank products, recommend a policy or provide regulated insurance advice. Price differences do not indicate whether a policy is suitable for you. Check the complete policy wording, exclusions, eligibility and final terms supplied by the relevant licensed insurance partner.
       </div>
 
       {snapshot.offers.map((offer, offerIndex) => (
@@ -104,14 +104,14 @@ export default function PolicyComparisonView({
               <a href={referralCtas[offerIndex]!.href} rel="nofollow sponsored noopener noreferrer">
                 {referralCtas[offerIndex]!.label}
               </a>
-              <p>The Meta Insurance is a technology and referral platform. Insurance products, pricing, eligibility, regulated advice and final terms are provided by the relevant licensed insurance provider or partner. The Meta Insurance may receive referral or affiliate compensation.</p>
+              <p>The Meta Insurance is an independent insurance discovery and referral platform. Insurance products, pricing, eligibility, regulated advice and final terms are provided by the relevant licensed insurance provider or partner. The Meta Insurance may receive referral or affiliate compensation.</p>
             </div>
           ) : null}
         </section>
       ))}
 
       <footer className={styles.finePrint}>
-        The Meta Insurance is a technology, referral and affiliate platform. It is not currently an insurer or licensed insurance broker and may receive a referral or affiliate commission. Insurance products, eligibility decisions, regulated advice and final terms are provided by relevant licensed insurance partners.
+        The Meta Insurance is an independent insurance discovery and referral platform. It is not an insurer or licensed insurance broker and may receive referral or affiliate compensation. Licensed insurance partners determine eligibility, pricing, underwriting, coverage availability, policy issuance and final terms.
       </footer>
     </article>
   );

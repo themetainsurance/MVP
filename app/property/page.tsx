@@ -252,7 +252,7 @@ export default function PropertyInsurancePage() {
               margin: "0 0 18px",
             }}
           >
-            Explore cover options for your property.
+            Explore property insurance options.
           </h1>
 
           <p
@@ -263,9 +263,9 @@ export default function PropertyInsurancePage() {
               lineHeight: 1.6,
             }}
           >
-            Enter your property information manually or upload your current
-            policy to request a factual comparison of price, limits, coverage
-            and exclusions from licensed insurance partners.
+            Review property insurance information and request options from
+            relevant licensed insurance providers or partners. You can also
+            upload your current policy for a factual comparison.
           </p>
         </div>
       </section>
@@ -429,10 +429,11 @@ export default function PropertyInsurancePage() {
                 fontSize: "14px",
               }}
             >
-              The Meta Insurance is a technology, referral and affiliate
-              platform. Insurance offers, underwriting, eligibility decisions,
-              regulated advice, policy issuance and final terms are provided by
-              relevant licensed insurance partners.
+              The Meta Insurance is an independent insurance discovery and
+              referral platform. We do not underwrite, bind, issue or sell
+              insurance, determine eligibility or pricing, or provide regulated
+              insurance advice. Relevant licensed insurance partners determine
+              final terms and coverage availability.
             </div>
 
             {error && (
@@ -486,7 +487,7 @@ export default function PropertyInsurancePage() {
             >
               {submitting
                 ? "Submitting request..."
-                : "Request property insurance offers →"}
+                : "Request property insurance options →"}
             </button>
           </div>
         </div>
@@ -501,14 +502,14 @@ export default function PropertyInsurancePage() {
         >
           <InfoCard
             icon="🏡"
-            title="Compare property cover"
-            text="Compare your existing building and contents cover with offers supplied by licensed insurance partners."
+            title="Compare property information"
+            text="Compare factual differences in premiums, limits, deductibles and selected coverage features."
           />
 
           <InfoCard
             icon="➕"
-            title="See additional protection"
-            text="Compare higher insured values, earthquake, flood, liability and alternative accommodation cover."
+            title="Review coverage features"
+            text="Review insured values, earthquake, flood, liability and alternative accommodation cover."
           />
 
           <InfoCard
@@ -675,9 +676,8 @@ export default function PropertyInsurancePage() {
                   marginBottom: 0,
                 }}
               >
-                Final terms, eligibility, recommendations and regulated
-                insurance advice are provided by the licensed insurance
-                partner.
+                Final terms, eligibility, pricing and coverage availability are
+                determined by the licensed insurance provider.
               </p>
             </div>
           </div>
@@ -708,7 +708,7 @@ function ManualPropertyForm({
           lineHeight: 1.6,
         }}
       >
-        Enter the basic details required to request property insurance offers.
+        Enter the basic details required to request property insurance options.
       </p>
 
       <div
@@ -898,8 +898,8 @@ function UploadPolicy({
           marginBottom: "28px",
         }}
       >
-        Upload your existing policy and request a factual comparison with
-        property insurance offers supplied by licensed insurance partners.
+        Upload your current policy to help organise the information you want to
+        compare with options supplied by licensed insurance partners.
       </p>
 
       <label

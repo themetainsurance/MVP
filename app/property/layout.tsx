@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Property Insurance | The Meta Insurance",
   description:
-    "Enter your property details or upload an existing property insurance policy and submit your request to relevant licensed insurance partners.",
+    "Review property insurance information or upload an existing policy to request options from relevant licensed insurance providers or partners.",
 
   alternates: {
     canonical: "/property",
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Property Insurance | The Meta Insurance",
     description:
-      "Enter your property details or upload an existing property insurance policy and submit your request to relevant licensed insurance partners.",
+      "Review property insurance information or upload an existing policy to request options from relevant licensed insurance providers or partners.",
     url: "/property",
     type: "website",
   },
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "Property Insurance | The Meta Insurance",
     description:
-      "Submit your property insurance requirements to relevant licensed insurance partners.",
+      "Request property insurance information from relevant licensed insurance providers or partners.",
   },
 };
 

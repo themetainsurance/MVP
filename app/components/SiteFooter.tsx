@@ -25,7 +25,7 @@ export default function SiteFooter() {
             The Meta Insurance
           </strong>
           <p style={platformStatementStyle}>
-            The Meta Insurance is a technology, referral and affiliate platform.
+            The Meta Insurance is an independent insurance discovery and referral platform.
           </p>
         </div>
 

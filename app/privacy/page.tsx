@@ -127,13 +127,12 @@ export default function PrivacyPolicyPage() {
             </p>
 
             <Callout>
-              <strong>The Meta Insurance is a technology, referral and affiliate
-              platform.</strong> It is not currently an insurer or a licensed
-              insurance broker. The platform does not provide regulated
-              insurance advice or final recommendations. Insurance products,
-              eligibility decisions, regulated advice, final recommendations
-              and final terms are provided by relevant licensed insurance
-              partners.
+              <strong>The Meta Insurance is an independent insurance discovery
+              and referral platform.</strong> It is not an insurer or licensed
+              insurance broker and does not underwrite, bind, issue or sell
+              insurance. Insurance products, eligibility, pricing, underwriting,
+              regulated advice and final terms are determined by relevant
+              licensed insurance partners.
             </Callout>
 
             <p style={paragraphStyle}>
@@ -507,10 +506,10 @@ export default function PrivacyPolicyPage() {
             </p>
 
             <Callout tone="blue">
-              This repository does not currently identify a dedicated privacy
-              email address, postal address or separate legal entity name, so
-              this draft does not invent one. Verified privacy contact details
-              and the responsible legal entity must be added before full
+              The current website provides a general contact email but does not
+              identify a dedicated privacy email address, postal address or
+              separate legal entity name. The responsible legal entity and any
+              dedicated privacy contact details must be confirmed before full
               commercial launch.
             </Callout>
           </PrivacySection>

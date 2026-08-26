@@ -350,7 +350,7 @@ export default function MotorInsurancePage() {
               margin: "0 0 18px",
             }}
           >
-            Explore cover options for your vehicle.
+            Explore motor insurance options.
           </h1>
 
           <p
@@ -361,10 +361,9 @@ export default function MotorInsurancePage() {
               lineHeight: 1.6,
             }}
           >
-            Enter your vehicle information
-            manually or upload your existing
-            policy and request a comparison
-            from licensed insurance partners.
+            Enter your vehicle information or upload your current policy to
+            organise the information you want to compare and request options
+            from relevant licensed insurance partners.
           </p>
         </div>
       </section>
@@ -560,8 +559,8 @@ export default function MotorInsurancePage() {
                     lineHeight: 1.6,
                   }}
                 >
-                  Upload your existing policy in
-                  PDF or image format.
+                  Upload your current policy to help organise the information
+                  you want to compare.
                 </p>
 
                 <label
@@ -777,13 +776,14 @@ export default function MotorInsurancePage() {
                 fontSize: "14px",
               }}
             >
-              The Meta Insurance is a technology,
-              referral and affiliate platform.
-              Insurance offers, underwriting,
-              eligibility decisions, regulated
-              advice, policy issuance and final
-              terms are provided by relevant
-              licensed insurance partners.
+              The Meta Insurance is an independent
+              insurance discovery and referral
+              platform. We do not underwrite, bind,
+              issue or sell insurance, determine
+              eligibility or pricing, or provide
+              regulated insurance advice. Relevant
+              licensed insurance partners determine
+              final terms and coverage availability.
             </div>
 
             {error && (
@@ -811,7 +811,7 @@ export default function MotorInsurancePage() {
             >
               {submitting
                 ? "Submitting request..."
-                : "Request motor insurance offers →"}
+                : "Request motor insurance options →"}
             </button>
           </div>
         </div>

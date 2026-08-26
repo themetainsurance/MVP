@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Motor Insurance | The Meta Insurance",
   description:
-    "Enter your vehicle details or upload an existing motor insurance policy and submit your request to relevant licensed insurance partners.",
+    "Review motor insurance information or upload an existing policy to request options from relevant licensed insurance providers or partners.",
 
   alternates: {
     canonical: "/motor",
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Motor Insurance | The Meta Insurance",
     description:
-      "Enter your vehicle details or upload an existing motor insurance policy and submit your request to relevant licensed insurance partners.",
+      "Review motor insurance information or upload an existing policy to request options from relevant licensed insurance providers or partners.",
     url: "/motor",
     type: "website",
   },
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "Motor Insurance | The Meta Insurance",
     description:
-      "Submit your motor insurance requirements to relevant licensed insurance partners.",
+      "Request motor insurance information from relevant licensed insurance providers or partners.",
   },
 };
 

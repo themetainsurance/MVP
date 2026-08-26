@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "AI Insurance Assistant | The Meta Insurance",
   description:
-    "Use The Meta Insurance assistant to provide the information needed for a Travel, Motor or Property insurance request.",
+    "Use The Meta Insurance assistant to organise information, understand insurance categories and prepare a Travel, Motor or Property insurance request.",
 
   alternates: {
     canonical: "/ai-assistant",
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AI Insurance Assistant | The Meta Insurance",
     description:
-      "Provide your Travel, Motor or Property insurance requirements through The Meta Insurance assistant.",
+      "Organise information and prepare a Travel, Motor or Property insurance request with The Meta Insurance assistant.",
     url: "/ai-assistant",
     type: "website",
   },
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "AI Insurance Assistant | The Meta Insurance",
     description:
-      "Provide the information needed for a Travel, Motor or Property insurance request.",
+      "Organise information and prepare a Travel, Motor or Property insurance request.",
   },
 };
 

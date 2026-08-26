@@ -7,7 +7,7 @@ const contactEmail = "contact@themetainsurance.com";
 const emailHref = `mailto:${contactEmail}`;
 const pageTitle = "Contact | The Meta Insurance";
 const pageDescription =
-  "Contact The Meta Insurance for general enquiries, insurance request support, privacy requests, technical questions and partnership enquiries.";
+  "Contact The Meta Insurance about the platform, privacy, partnerships, referrals or an existing insurance request.";
 
 export const metadata: Metadata = {
   title: pageTitle,
@@ -109,12 +109,11 @@ export default function ContactPage() {
         <div style={wideContainerStyle}>
           <div style={eyebrowStyle}>CONTACT</div>
 
-          <h1 style={heroTitleStyle}>How can we help?</h1>
+          <h1 style={heroTitleStyle}>Contact The Meta Insurance</h1>
 
           <p style={heroTextStyle}>
-            Contact The Meta Insurance about an existing request, a technical
-            issue, privacy, policy uploads, partnerships or general platform
-            feedback.
+            For questions about The Meta Insurance platform, partnerships,
+            referrals, privacy or an existing request, contact us here.
           </p>
         </div>
       </section>
@@ -314,12 +313,11 @@ export default function ContactPage() {
 
           <ContactSection id="legal" number="08" title="Platform role and related legal pages">
             <Callout tone="blue">
-              <strong>The Meta Insurance is a technology, referral and affiliate
-              platform and does not currently act as an insurer or licensed
-              insurance broker.</strong> Insurance offers, eligibility decisions,
-              underwriting, regulated advice, policy issuance and final
-              insurance terms are provided by relevant licensed insurance
-              partners.
+              <strong>The Meta Insurance is an independent insurance discovery
+              and referral platform, not an insurer or licensed insurance
+              broker.</strong> We do not service active policies or claims.
+              Eligibility, underwriting, pricing, policy issuance and final
+              terms are handled by relevant licensed insurance partners.
             </Callout>
 
             <div style={legalLinksGridStyle}>

@@ -102,11 +102,11 @@ export default function AffiliateDisclosurePage() {
               with those partners.
             </strong>
             <p style={coreDetailStyle}>
-              The Meta Insurance operates as a technology, information,
-              referral and affiliate platform. It is not currently an insurer
-              or a licensed insurance broker and does not provide regulated
-              insurance advice, underwrite risk, bind insurance coverage or make
-              final insurance recommendations.
+              The Meta Insurance is an independent, advertising-supported
+              insurance discovery and referral platform. It is not an insurer
+              or licensed insurance broker and does not provide regulated
+              insurance advice, underwrite risk, bind coverage, issue policies
+              or sell insurance.
             </p>
           </aside>
 
@@ -138,18 +138,17 @@ export default function AffiliateDisclosurePage() {
               The Meta Insurance may work with licensed insurance companies,
               brokers, intermediaries or other authorised insurance partners
               through referral, affiliate, lead-generation or other commercial
-              arrangements. The platform may collect and organise insurance
-              request information, display available factual information and
-              refer a user to a participating partner that may be able to handle
-              the request.
+              arrangements. The platform provides educational content, factual
+              comparison tools and referral links, and may collect and organise
+              request information for a participating partner.
             </p>
 
             <Callout>
-              The Meta Insurance does not currently act as the insurer, licensed
-              insurance broker or underwriter. It does not bind coverage, issue
-              policies or provide a final insurance recommendation. A relevant
-              licensed insurance partner is responsible for regulated and
-              contractual insurance activities.
+              The Meta Insurance does not act as an insurer, licensed insurance
+              broker, underwriter or policy issuer. It does not determine final
+              pricing, eligibility, underwriting or coverage acceptance. A
+              relevant licensed insurance partner is responsible for regulated
+              and contractual insurance activities.
             </Callout>
           </DisclosureSection>
 
@@ -250,6 +249,12 @@ export default function AffiliateDisclosurePage() {
           </DisclosureSection>
 
           <DisclosureSection id="placements" number="06" title="Rankings, featured placements and sponsored positions">
+            <p style={paragraphStyle}>
+              Compensation may affect whether, how or where participating
+              partners or products appear on the platform. Not every provider
+              or insurance product available in the market is included.
+            </p>
+
             <p style={paragraphStyle}>
               The current MVP does not present insurance products as ranked
               solely by commission and does not claim to use a sophisticated
@@ -405,11 +410,10 @@ export default function AffiliateDisclosurePage() {
 
           <DisclosureSection id="contact" number="14" title="Contact and related legal pages">
             <p style={paragraphStyle}>
-              Contact details for questions about this disclosure will be
-              provided through the platform&apos;s Contact page once that page is
-              published. The repository does not currently establish a contact
-              email, postal address or separate legal entity name, so this draft
-              does not invent one.
+              Questions about this disclosure, partnerships or referrals can be
+              sent through the platform&apos;s Contact page. The repository does not
+              currently establish a postal address or separate legal entity
+              name, so this draft does not invent one.
             </p>
 
             <div style={legalLinksGridStyle}>
