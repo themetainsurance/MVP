@@ -23,7 +23,7 @@ export default function SiteFooter() {
       <div style={footerInnerStyle}>
         <div style={brandColumnStyle}>
           <strong style={brandStyle}>
-            <BrandLogo />
+            <BrandLogo inverse />
           </strong>
           <p style={platformStatementStyle}>
             The Meta Insurance is an independent insurance discovery and referral platform.

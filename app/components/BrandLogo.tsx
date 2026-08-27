@@ -1,15 +1,22 @@
+import Image from "next/image";
 import styles from "./BrandLogo.module.css";
 
-export default function BrandLogo() {
+type BrandLogoProps = {
+  inverse?: boolean;
+};
+
+export default function BrandLogo({ inverse = false }: BrandLogoProps) {
   return (
     <span className={styles.logo}>
-      <span className={styles.visuallyHidden}>The Meta Insurance</span>
-      <span className={styles.topLine} aria-hidden="true">
-        the
-      </span>
-      <span className={styles.bottomLine} aria-hidden="true">
-        metAInsurance
-      </span>
+      <Image
+        src="/brand/the-meta-insurance-logo.png"
+        alt="The Meta Insurance"
+        width={2172}
+        height={724}
+        sizes="(max-width: 600px) 155px, 188px"
+        className={`${styles.image} ${inverse ? styles.inverse : ""}`}
+        priority
+      />
     </span>
   );
 }
