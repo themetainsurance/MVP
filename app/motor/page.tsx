@@ -816,11 +816,201 @@ export default function MotorInsurancePage() {
             </button>
           </div>
         </div>
+
+        <MotorComparison />
       </section>
       <SiteFooter />
     </main>
   );
 }
+
+const motorComparisonRows = [
+  ["Annual premium", "€420", "€420", "Same price"],
+  ["Third-party liability", "€1,000,000", "€2,000,000", "+ €1,000,000"],
+  ["Collision deductible", "€500", "€350", "€150 lower"],
+  ["Theft protection", "Not included", "Included", "+ Added"],
+  ["Roadside assistance", "Basic", "Europe-wide", "+ Upgraded"],
+  ["Legal protection", "Not included", "Included", "+ Added"],
+] as const;
+
+function MotorComparison() {
+  const comparisonSteps = [
+    {
+      icon: "🚗",
+      title: "Compare vehicle information",
+      text: "Compare factual differences in premiums, deductibles, liability limits and selected motor coverage features.",
+    },
+    {
+      icon: "➕",
+      title: "Review coverage features",
+      text: "Review third-party liability, collision, theft, roadside assistance, legal protection and other available benefits.",
+    },
+    {
+      icon: "⚖️",
+      title: "See the differences",
+      text: "Premiums, limits, deductibles, exclusions and coverage differences are displayed clearly side by side.",
+    },
+  ];
+
+  return (
+    <>
+      <div
+        style={{
+          marginTop: "40px",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+          gap: "20px",
+        }}
+      >
+        {comparisonSteps.map((step) => (
+          <article
+            key={step.title}
+            style={{
+              background: "#ffffff",
+              border: "1px solid #e2e8f0",
+              borderRadius: "14px",
+              padding: "24px",
+            }}
+          >
+            <div aria-hidden="true" style={{ fontSize: "28px" }}>
+              {step.icon}
+            </div>
+            <h3>{step.title}</h3>
+            <p style={{ color: "#64748b", lineHeight: 1.6, marginBottom: 0 }}>
+              {step.text}
+            </p>
+          </article>
+        ))}
+      </div>
+
+      <section
+        aria-labelledby="motor-comparison-title"
+        style={{
+          marginTop: "55px",
+          background: "#ffffff",
+          border: "1px solid #e2e8f0",
+          borderRadius: "18px",
+          padding: "clamp(20px, 4vw, 32px)",
+        }}
+      >
+        <div
+          style={{
+            color: "#0284c7",
+            fontSize: "12px",
+            fontWeight: 900,
+            marginBottom: "10px",
+          }}
+        >
+          EXAMPLE COMPARISON
+        </div>
+        <h2 id="motor-comparison-title" style={{ marginTop: 0, fontSize: "28px" }}>
+          Current motor policy vs new offer
+        </h2>
+        <p style={{ color: "#64748b", lineHeight: 1.6, marginBottom: "28px" }}>
+          Customers can see factual differences between their current policy
+          and an offer from a licensed insurance partner.
+        </p>
+
+        <div
+          role="region"
+          aria-label="Example motor insurance comparison"
+          tabIndex={0}
+          style={{ overflowX: "auto" }}
+        >
+          <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "680px" }}>
+            <thead>
+              <tr>
+                {["Coverage", "Current policy", "New offer", "Difference"].map((heading) => (
+                  <th
+                    key={heading}
+                    scope="col"
+                    style={{
+                      textAlign: "left",
+                      padding: "14px",
+                      borderBottom: "2px solid #e2e8f0",
+                      color: "#475569",
+                      fontSize: "13px",
+                    }}
+                  >
+                    {heading}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {motorComparisonRows.map(([name, current, offer, difference]) => (
+                <tr key={name}>
+                  <th scope="row" style={comparisonNameCellStyle}>{name}</th>
+                  <td style={{ ...comparisonCellStyle, color: "#64748b" }}>{current}</td>
+                  <td style={{ ...comparisonCellStyle, color: "#0f172a", fontWeight: 700 }}>{offer}</td>
+                  <td style={{ ...comparisonCellStyle, color: "#0284c7", fontWeight: 800 }}>{difference}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <p style={{ color: "#64748b", fontSize: "13px", lineHeight: 1.6, margin: "16px 0 0" }}>
+          All figures shown above are illustrative examples, not real or
+          personalised insurance quotes.
+        </p>
+
+        <div
+          style={{
+            marginTop: "28px",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+            gap: "16px",
+          }}
+        >
+          <div style={{ background: "#eff6ff", border: "1px solid #bae6fd", padding: "20px", borderRadius: "12px" }}>
+            <strong style={{ color: "#075985" }}>+ Example additional cover</strong>
+            <ul style={{ color: "#075985", lineHeight: 1.8, paddingLeft: "20px" }}>
+              <li>Higher third-party liability limit</li>
+              <li>Lower collision deductible</li>
+              <li>Theft protection added</li>
+              <li>Europe-wide roadside assistance</li>
+              <li>Legal protection added</li>
+            </ul>
+          </div>
+
+          <aside style={{ background: "#fff7ed", border: "1px solid #fed7aa", padding: "20px", borderRadius: "12px" }}>
+            <strong style={{ color: "#9a3412" }}>Important</strong>
+            <p style={importantTextStyle}>
+              This comparison is an illustrative example only and does not
+              constitute an insurance quote, recommendation or guarantee of
+              coverage. Final terms, eligibility, pricing, deductibles and
+              coverage availability are determined solely by the relevant
+              licensed insurance provider.
+            </p>
+            <p style={importantTextStyle}>
+              The Meta Insurance is an independent insurance discovery and
+              referral platform. We do not underwrite, bind, issue or sell
+              insurance, determine eligibility or pricing, or provide regulated
+              insurance advice.
+            </p>
+          </aside>
+        </div>
+      </section>
+    </>
+  );
+}
+
+const comparisonCellStyle = {
+  padding: "15px 14px",
+  borderBottom: "1px solid #e2e8f0",
+};
+
+const comparisonNameCellStyle = {
+  ...comparisonCellStyle,
+  textAlign: "left" as const,
+};
+
+const importantTextStyle = {
+  color: "#9a3412",
+  lineHeight: 1.7,
+  marginBottom: 0,
+};
 
 function ModeButton({
   active,
