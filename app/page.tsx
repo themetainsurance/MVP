@@ -41,7 +41,7 @@ const insuranceTypes = [
     href: "/property",
   },
   {
-    icon: "✚",
+    icon: "♥",
     title: "Health Insurance",
     description:
       "Review health insurance information including deductibles, provider networks and selected benefits.",
@@ -226,7 +226,7 @@ export default function Home() {
               />
 
               <InsuranceTab
-                icon="✚"
+                icon="♥"
                 title="Health"
                 href="/health"
               />

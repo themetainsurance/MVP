@@ -2,6 +2,7 @@
 
 import { useState, type SyntheticEvent } from "react";
 import BrandLogo from "../components/BrandLogo";
+import HealthInsuranceIcon from "../components/HealthInsuranceIcon";
 import SiteFooter from "../components/SiteFooter";
 import { useAnalytics } from "../components/AnalyticsProvider";
 import { createSafeApiError, getSafeApiErrorMessage } from "../lib/safe-api-error";
@@ -137,17 +138,26 @@ export default function HealthInsurancePage() {
 
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <div className={styles.eyebrow}>HEALTH INSURANCE</div>
-          <h1>Explore health insurance options.</h1>
-          <p>Enter general plan information or upload your current policy to organise the details you want to compare and request options from relevant licensed insurance partners.</p>
+          <div className={styles.heroCopy}>
+            <div className={styles.eyebrow}>HEALTH INSURANCE</div>
+            <h1>Explore health insurance options.</h1>
+            <p>Enter general plan information or upload your current policy to organise the details you want to compare and request options from relevant licensed insurance partners.</p>
+          </div>
+          <div className={styles.heroVisual} aria-hidden="true">
+            <span className={styles.heroOrbit} />
+            <span className={styles.heroOrbitSecondary} />
+            <div className={styles.heroIconShell}>
+              <HealthInsuranceIcon className={styles.heroIcon} />
+            </div>
+          </div>
         </div>
       </section>
 
       <section className={styles.content}>
         <div className={styles.panel}>
           <div className={styles.tabs}>
-            <button type="button" className={`${styles.tab} ${mode === "manual" ? styles.tabActive : ""}`} onClick={() => setMode("manual")}>✚ Enter coverage details</button>
-            <button type="button" className={`${styles.tab} ${mode === "upload" ? styles.tabActive : ""}`} onClick={() => setMode("upload")}>📄 Upload current policy</button>
+            <button type="button" className={`${styles.tab} ${mode === "manual" ? styles.tabActive : ""}`} onClick={() => setMode("manual")}><HealthInsuranceIcon className={styles.tabIcon} /> Enter coverage details</button>
+            <button type="button" className={`${styles.tab} ${mode === "upload" ? styles.tabActive : ""}`} onClick={() => setMode("upload")}><span aria-hidden="true">📄</span> Upload current policy</button>
           </div>
 
           <div className={styles.form}>

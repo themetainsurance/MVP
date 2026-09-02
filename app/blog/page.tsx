@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import BrandLogo from "../components/BrandLogo";
+import HealthInsuranceIcon from "../components/HealthInsuranceIcon";
 import SiteFooter from "../components/SiteFooter";
 import {
   getBlogImagePublicUrl,
   loadPublishedBlogCards,
 } from "../lib/blog-public-data";
 import { LEGACY_BLOG_SLUGS } from "../lib/blog-types";
+import styles from "./blog-cms.module.css";
 
 export const metadata: Metadata = {
   title: "Insurance Guides | The Meta Insurance",
@@ -281,6 +283,7 @@ export default async function BlogPage() {
                 <a
                   key={post.id}
                   href={`/blog/${post.slug}`}
+                  className={styles.guideCard}
                   style={{
                     background: "#ffffff",
                     border: "1px solid #e2e8f0",
@@ -308,6 +311,10 @@ export default async function BlogPage() {
                         background: "#e2e8f0",
                       }}
                     />
+                  ) : post.category === "health" ? (
+                    <div className={styles.healthCardIcon} aria-hidden="true">
+                      <HealthInsuranceIcon />
+                    </div>
                   ) : null}
                   <div
                     style={{
@@ -357,6 +364,7 @@ export default async function BlogPage() {
                 <a
                   key={guide.title}
                   href={guide.href}
+                  className={styles.guideCard}
                   style={{
                     background: "#ffffff",
                     border: "1px solid #e2e8f0",
@@ -567,6 +575,10 @@ export default async function BlogPage() {
 
             <a href="/property" style={buttonStyle}>
               🏠 Property
+            </a>
+
+            <a href="/health" style={buttonStyle}>
+              <HealthInsuranceIcon className={styles.ctaHealthIcon} /> Health
             </a>
 
             <a
