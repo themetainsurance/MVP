@@ -67,6 +67,16 @@ test("validates and generates stable ASCII slugs", () => {
   assert.equal(validation.generateBlogSlug("  Café & Travel Insurance 2026  "), "cafe-travel-insurance-2026");
 });
 
+test("supports health as a CMS blog category", () => {
+  assert.equal(types.BLOG_CATEGORIES.includes("health"), true);
+  assert.equal(validation.validateBlogCreateInput({
+    title: "Health insurance guide",
+    slug: "health-insurance-guide",
+    category: "health",
+    author_name: "The Meta Insurance Editorial Team",
+  }).success, true);
+});
+
 test("allows only the specified blog lifecycle transitions", () => {
   assert.equal(validation.canTransitionBlogStatus("draft", "published"), true);
   assert.equal(validation.canTransitionBlogStatus("draft", "archived"), true);

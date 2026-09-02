@@ -10,7 +10,7 @@ import { LEGACY_BLOG_SLUGS } from "../lib/blog-types";
 export const metadata: Metadata = {
   title: "Insurance Guides | The Meta Insurance",
   description:
-    "Simple insurance guides about travel, motor and property insurance, policy comparison, coverage limits, deductibles, exclusions and renewals.",
+    "Simple insurance guides about travel, motor, property and health insurance, policy comparison, coverage limits, deductibles, exclusions and renewals.",
 
   alternates: {
     canonical: "/blog",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Insurance Guides | The Meta Insurance",
     description:
-      "Simple insurance guides about travel, motor and property insurance, policy comparison, coverage limits, deductibles, exclusions and renewals.",
+      "Simple insurance guides about travel, motor, property and health insurance, policy comparison, coverage limits, deductibles, exclusions and renewals.",
     url: "/blog",
     type: "website",
   },
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "Insurance Guides | The Meta Insurance",
     description:
-      "Simple guides explaining travel, motor and property insurance, comparisons and renewals.",
+      "Simple guides explaining travel, motor, property and health insurance, comparisons and renewals.",
   },
 };
 
@@ -145,6 +145,10 @@ export default async function BlogPage() {
             Property
           </a>
 
+          <a href="/health" style={navStyle}>
+            Health
+          </a>
+
           <a href="/ai-assistant" style={navStyle}>
             AI Assistant
           </a>
@@ -208,8 +212,9 @@ export default async function BlogPage() {
               margin: 0,
             }}
           >
-            Learn how insurance coverage, premiums, deductibles, limits and
-            exclusions work before submitting an insurance request.
+            Learn how travel, motor, property and health insurance coverage,
+            premiums, deductibles, limits and exclusions work before
+            submitting an insurance request.
           </p>
         </div>
       </section>

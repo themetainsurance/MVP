@@ -10,6 +10,7 @@ export const BLOG_CATEGORIES = [
   "travel",
   "motor",
   "property",
+  "health",
   "general",
 ] as const;
 
