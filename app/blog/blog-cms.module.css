@@ -115,20 +115,32 @@
   transform: translateY(-5px);
 }
 
-.healthCardIcon {
+.categoryCardIcon {
   display: grid;
   width: 64px;
   height: 64px;
   margin-bottom: 22px;
   place-items: center;
-  border: 1px solid #99f6e4;
+  border: 1px solid #bae6fd;
   border-radius: 18px;
-  color: #0f766e;
-  background: linear-gradient(145deg, #ecfdf5, #ccfbf1);
-  box-shadow: 0 12px 28px rgba(15, 118, 110, .12);
+  color: #0369a1;
+  background: linear-gradient(145deg, #f0f9ff, #e0f2fe);
+  box-shadow: 0 12px 28px rgba(2, 132, 199, .12);
 }
 
-.healthCardIcon svg {
+.categoryCardIcon[data-icon-kind="property"] {
+  border-color: #bbf7d0;
+  color: #15803d;
+  background: linear-gradient(145deg, #f0fdf4, #dcfce7);
+}
+
+.categoryCardIcon[data-icon-kind="health"] {
+  border-color: #99f6e4;
+  color: #0f766e;
+  background: linear-gradient(145deg, #ecfdf5, #ccfbf1);
+}
+
+.categoryCardIcon svg {
   width: 42px;
   height: 42px;
 }

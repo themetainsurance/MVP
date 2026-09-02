@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import BrandLogo from "../components/BrandLogo";
-import HealthInsuranceIcon from "../components/HealthInsuranceIcon";
+import PremiumInsuranceIcon, {
+  type PremiumInsuranceIconKind,
+} from "../components/PremiumInsuranceIcon";
 import SiteFooter from "../components/SiteFooter";
 import {
   getBlogImagePublicUrl,
@@ -36,7 +38,8 @@ export const metadata: Metadata = {
 
 type Guide = {
   category: string;
-  icon: string;
+  icon?: string;
+  iconKind?: PremiumInsuranceIconKind;
   title: string;
   description: string;
   href?: string;
@@ -45,7 +48,7 @@ type Guide = {
 const guides: Guide[] = [
   {
     category: "TRAVEL",
-    icon: "✈️",
+    iconKind: "travel",
     title: "What Does Travel Insurance Cover?",
     description:
       "Understand common travel insurance coverage including medical expenses, cancellations, baggage and delays.",
@@ -53,7 +56,7 @@ const guides: Guide[] = [
   },
   {
     category: "MOTOR",
-    icon: "🚗",
+    iconKind: "motor",
     title: "How to Understand Motor Insurance Coverage",
     description:
       "Learn about common motor insurance coverage, deductibles, liability, vehicle damage and optional protection.",
@@ -61,7 +64,7 @@ const guides: Guide[] = [
   },
   {
     category: "PROPERTY",
-    icon: "🏠",
+    iconKind: "property",
     title: "Property Insurance Explained Simply",
     description:
       "A simple introduction to building cover, contents insurance, liability, deductibles and common exclusions.",
@@ -93,6 +96,7 @@ export default async function BlogPage() {
 
   return (
     <main
+      className="tmi-page"
       style={{
         minHeight: "100vh",
         background: "#ffffff",
@@ -102,6 +106,7 @@ export default async function BlogPage() {
     >
       {/* HEADER */}
       <header
+        className="tmi-site-header"
         style={{
           minHeight: "72px",
           padding: "0 7%",
@@ -270,6 +275,9 @@ export default async function BlogPage() {
           >
             {cmsPosts.map((post) => {
               const imageUrl = getBlogImagePublicUrl(post.featured_image_path);
+              const categoryIconKind = ["travel", "motor", "property", "health"].includes(post.category)
+                ? (post.category as PremiumInsuranceIconKind)
+                : null;
               const publicationDate = post.published_at
                 ? new Intl.DateTimeFormat("en", {
                     year: "numeric",
@@ -311,9 +319,9 @@ export default async function BlogPage() {
                         background: "#e2e8f0",
                       }}
                     />
-                  ) : post.category === "health" ? (
-                    <div className={styles.healthCardIcon} aria-hidden="true">
-                      <HealthInsuranceIcon />
+                  ) : categoryIconKind ? (
+                    <div className={styles.categoryCardIcon} data-icon-kind={categoryIconKind} aria-hidden="true">
+                      <PremiumInsuranceIcon kind={categoryIconKind} />
                     </div>
                   ) : null}
                   <div
@@ -377,12 +385,14 @@ export default async function BlogPage() {
                   }}
                 >
                   <div
+                    className={guide.iconKind ? styles.categoryCardIcon : undefined}
+                    data-icon-kind={guide.iconKind}
                     style={{
                       fontSize: "34px",
                       marginBottom: "20px",
                     }}
                   >
-                    {guide.icon}
+                    {guide.iconKind ? <PremiumInsuranceIcon kind={guide.iconKind} /> : guide.icon}
                   </div>
 
                   <div
@@ -566,19 +576,19 @@ export default async function BlogPage() {
             }}
           >
             <a href="/travel" style={buttonStyle}>
-              ✈️ Travel
+              <PremiumInsuranceIcon kind="travel" className={styles.ctaHealthIcon} /> Travel
             </a>
 
             <a href="/motor" style={buttonStyle}>
-              🚗 Motor
+              <PremiumInsuranceIcon kind="motor" className={styles.ctaHealthIcon} /> Motor
             </a>
 
             <a href="/property" style={buttonStyle}>
-              🏠 Property
+              <PremiumInsuranceIcon kind="property" className={styles.ctaHealthIcon} /> Property
             </a>
 
             <a href="/health" style={buttonStyle}>
-              <HealthInsuranceIcon className={styles.ctaHealthIcon} /> Health
+              <PremiumInsuranceIcon kind="health" className={styles.ctaHealthIcon} /> Health
             </a>
 
             <a
@@ -588,7 +598,7 @@ export default async function BlogPage() {
                 background: "#0f172a",
               }}
             >
-              Ask AI Assistant →
+              <PremiumInsuranceIcon kind="assistant" className={styles.ctaHealthIcon} /> Ask AI Assistant →
             </a>
           </div>
         </div>

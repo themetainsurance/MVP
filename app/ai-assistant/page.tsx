@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import BrandLogo from "../components/BrandLogo";
+import PremiumInsuranceIcon from "../components/PremiumInsuranceIcon";
 import SiteFooter from "../components/SiteFooter";
 import { useAnalytics } from "../components/AnalyticsProvider";
 import {
@@ -543,6 +544,7 @@ export default function AIAssistantPage() {
 
   return (
     <main
+      className="tmi-page"
       style={{
         minHeight: "100vh",
         background: "#f1f5f9",
@@ -552,6 +554,7 @@ export default function AIAssistantPage() {
       }}
     >
       <header
+        className="tmi-site-header"
         style={{
           height: "72px",
           padding: "0 7%",
@@ -589,6 +592,7 @@ export default function AIAssistantPage() {
       </header>
 
       <section
+        className="tmi-assistant-section"
         style={{
           maxWidth: "900px",
           margin: "0 auto",
@@ -596,11 +600,15 @@ export default function AIAssistantPage() {
         }}
       >
         <div
+          className="tmi-assistant-intro"
           style={{
             textAlign: "center",
             marginBottom: "35px",
           }}
         >
+          <div className="tmi-assistant-icon-shell" aria-hidden="true">
+            <PremiumInsuranceIcon kind="assistant" />
+          </div>
           <div
             style={{
               color: "#0284c7",
@@ -636,6 +644,7 @@ export default function AIAssistantPage() {
         </div>
 
         <div
+          className="tmi-assistant-card"
           style={{
             background: "#ffffff",
             borderRadius: "20px",
@@ -672,6 +681,7 @@ export default function AIAssistantPage() {
             </div>
 
             <button
+              className="tmi-interactive"
               type="button"
               onClick={resetChat}
               style={{
@@ -700,6 +710,7 @@ export default function AIAssistantPage() {
             {messages.map(
               (message, index) => (
                 <div
+                  className="tmi-chat-row"
                   key={index}
                   style={{
                     display: "flex",
@@ -713,6 +724,7 @@ export default function AIAssistantPage() {
                   }}
                 >
                   <div
+                    className="tmi-chat-bubble"
                     style={{
                       maxWidth: "75%",
                       background:
@@ -767,7 +779,7 @@ export default function AIAssistantPage() {
                     )
                   }
                 >
-                  ✈️ Travel
+                  <PremiumInsuranceIcon kind="travel" /> Travel
                 </QuickButton>
 
                 <QuickButton
@@ -777,7 +789,7 @@ export default function AIAssistantPage() {
                     )
                   }
                 >
-                  🚗 Motor
+                  <PremiumInsuranceIcon kind="motor" /> Motor
                 </QuickButton>
 
                 <QuickButton
@@ -787,7 +799,7 @@ export default function AIAssistantPage() {
                     )
                   }
                 >
-                  🏠 Property
+                  <PremiumInsuranceIcon kind="property" /> Property
                 </QuickButton>
 
                 <QuickButton
@@ -797,7 +809,7 @@ export default function AIAssistantPage() {
                     )
                   }
                 >
-                  ✚ Health
+                  <PremiumInsuranceIcon kind="health" /> Health
                 </QuickButton>
               </div>
             )}
@@ -811,6 +823,7 @@ export default function AIAssistantPage() {
               }}
             >
               <input
+                className="tmi-input"
                 value={input}
                 onChange={(event) =>
                   setInput(
@@ -837,6 +850,7 @@ export default function AIAssistantPage() {
               />
 
               <button
+                className="tmi-primary-button"
                 type="button"
                 onClick={sendMessage}
                 style={{
@@ -961,6 +975,7 @@ export default function AIAssistantPage() {
                 </label>
 
                 <button
+                  className="tmi-primary-button"
                   type="button"
                   disabled={
                     !consent ||
@@ -1038,6 +1053,7 @@ function QuickButton({
 }) {
   return (
     <button
+      className="tmi-quick-button tmi-interactive"
       type="button"
       onClick={onClick}
       style={{

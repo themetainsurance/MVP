@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type SyntheticEvent } from "react";
 import BrandLogo from "../components/BrandLogo";
+import PremiumInsuranceIcon from "../components/PremiumInsuranceIcon";
 import SiteFooter from "../components/SiteFooter";
 import { useAnalytics } from "../components/AnalyticsProvider";
 import {
@@ -233,6 +234,7 @@ export default function TravelInsurancePage() {
 
   return (
     <main
+      className="tmi-page"
       onFocusCapture={trackFormInteraction}
       onChangeCapture={trackFormInteraction}
       style={{
@@ -243,6 +245,7 @@ export default function TravelInsurancePage() {
       }}
     >
       <header
+        className="tmi-site-header"
         style={{
           height: "72px",
           padding: "0 7%",
@@ -278,6 +281,7 @@ export default function TravelInsurancePage() {
       </header>
 
       <section
+        className="tmi-category-hero"
         style={{
           background:
             "linear-gradient(135deg, #172554 0%, #1d4ed8 55%, #2563eb 100%)",
@@ -286,47 +290,57 @@ export default function TravelInsurancePage() {
         }}
       >
         <div
+          className="tmi-category-hero-inner"
           style={{
             maxWidth: "1100px",
             margin: "0 auto",
           }}
         >
-          <div
-            style={{
-              color: "#bfdbfe",
-              fontSize: "13px",
-              fontWeight: 800,
-              marginBottom: "14px",
-            }}
-          >
-            TRAVEL INSURANCE
+          <div className="tmi-category-hero-copy">
+            <div
+              style={{
+                color: "#bfdbfe",
+                fontSize: "13px",
+                fontWeight: 800,
+                marginBottom: "14px",
+              }}
+            >
+              TRAVEL INSURANCE
+            </div>
+
+            <h1
+              style={{
+                fontSize: "48px",
+                lineHeight: 1.1,
+                margin: "0 0 18px",
+              }}
+            >
+              Explore travel insurance options.
+            </h1>
+
+            <p
+              style={{
+                maxWidth: "700px",
+                color: "#dbeafe",
+                fontSize: "18px",
+                lineHeight: 1.6,
+              }}
+            >
+              Enter your travel details to request insurance options from
+              relevant licensed insurance providers or partners.
+            </p>
           </div>
-
-          <h1
-            style={{
-              fontSize: "48px",
-              lineHeight: 1.1,
-              margin: "0 0 18px",
-            }}
-          >
-            Explore travel insurance options.
-          </h1>
-
-          <p
-            style={{
-              maxWidth: "700px",
-              color: "#dbeafe",
-              fontSize: "18px",
-              lineHeight: 1.6,
-            }}
-          >
-            Enter your travel details to request insurance options from
-            relevant licensed insurance providers or partners.
-          </p>
+          <div className="tmi-category-visual" aria-hidden="true">
+            <span className="tmi-icon-orbit" />
+            <div className="tmi-category-icon-shell">
+              <PremiumInsuranceIcon kind="travel" className="tmi-category-icon" />
+            </div>
+          </div>
         </div>
       </section>
 
       <section
+        className="tmi-overlap-section"
         style={{
           maxWidth: "1100px",
           margin: "-70px auto 0",
@@ -334,6 +348,7 @@ export default function TravelInsurancePage() {
         }}
       >
         <div
+          className="tmi-surface"
           style={{
             background: "#ffffff",
             borderRadius: "22px",
@@ -368,7 +383,7 @@ export default function TravelInsurancePage() {
               active={tripType === "single"}
               onClick={() => setTripType("single")}
             >
-              ✈️ Single trip
+              <PremiumInsuranceIcon kind="travel" className="tmi-inline-icon" /> Single trip
             </ChoiceButton>
 
             <ChoiceButton
@@ -505,6 +520,7 @@ export default function TravelInsurancePage() {
               "Rental car excess",
             ].map((item) => (
               <label
+                className="tmi-choice"
                 key={item}
                 style={{
                   display: "flex",
@@ -660,6 +676,7 @@ export default function TravelInsurancePage() {
           )}
 
           <button
+            className="tmi-primary-button"
             type="button"
             disabled={submitting}
             onClick={submitLead}
@@ -703,6 +720,7 @@ function Field({
       <SectionTitle>{label}</SectionTitle>
 
       <input
+        className="tmi-input"
         value={value}
         placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
@@ -726,6 +744,7 @@ function DateField({
       <SectionTitle>{label}</SectionTitle>
 
       <input
+        className="tmi-input"
         type="date"
         value={value}
         onChange={(event) => onChange(event.target.value)}
@@ -751,6 +770,7 @@ function SelectField({
       <SectionTitle>{label}</SectionTitle>
 
       <select
+        className="tmi-input"
         value={value}
         onChange={(event) => onChange(event.target.value)}
         style={inputStyle}
@@ -796,6 +816,7 @@ function ChoiceButton({
 }) {
   return (
     <button
+      className="tmi-interactive"
       type="button"
       onClick={onClick}
       style={{
@@ -823,6 +844,7 @@ function CounterButton({
 }) {
   return (
     <button
+      className="tmi-interactive"
       type="button"
       onClick={onClick}
       style={{

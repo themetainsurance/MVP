@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import BrandLogo from "./components/BrandLogo";
+import PremiumInsuranceIcon, {
+  type PremiumInsuranceIconKind,
+} from "./components/PremiumInsuranceIcon";
 import SiteFooter from "./components/SiteFooter";
 
 export const metadata: Metadata = {
@@ -20,28 +23,28 @@ export const metadata: Metadata = {
 
 const insuranceTypes = [
   {
-    icon: "✈️",
+    icon: "travel" as const,
     title: "Travel Insurance",
     description:
       "Compare travel insurance for single trips, multiple trips and worldwide cover.",
     href: "/travel",
   },
   {
-    icon: "🚗",
+    icon: "motor" as const,
     title: "Motor Insurance",
     description:
       "Explore motor insurance information based on your vehicle and coverage requirements.",
     href: "/motor",
   },
   {
-    icon: "🏠",
+    icon: "property" as const,
     title: "Property Insurance",
     description:
       "Review property insurance coverage information for your home, apartment or property.",
     href: "/property",
   },
   {
-    icon: "♥",
+    icon: "health" as const,
     title: "Health Insurance",
     description:
       "Review health insurance information including deductibles, provider networks and selected benefits.",
@@ -52,6 +55,7 @@ const insuranceTypes = [
 export default function Home() {
   return (
     <main
+      className="tmi-page"
       style={{
         minHeight: "100vh",
         background: "#ffffff",
@@ -61,6 +65,7 @@ export default function Home() {
     >
       {/* HEADER */}
       <header
+        className="tmi-site-header"
         style={{
           minHeight: "72px",
           padding: "0 7%",
@@ -207,26 +212,26 @@ export default function Home() {
               }}
             >
               <InsuranceTab
-                icon="✈️"
+                icon="travel"
                 title="Travel"
                 href="/travel"
                 active
               />
 
               <InsuranceTab
-                icon="🚗"
+                icon="motor"
                 title="Motor"
                 href="/motor"
               />
 
               <InsuranceTab
-                icon="🏠"
+                icon="property"
                 title="Property"
                 href="/property"
               />
 
               <InsuranceTab
-                icon="♥"
+                icon="health"
                 title="Health"
                 href="/health"
               />
@@ -616,6 +621,7 @@ function NavLink({
 }) {
   return (
     <a
+      className="tmi-tab-link tmi-interactive"
       href={href}
       style={{
         color: "#0f172a",
@@ -634,13 +640,14 @@ function InsuranceTab({
   href,
   active = false,
 }: {
-  icon: string;
+  icon: PremiumInsuranceIconKind;
   title: string;
   href: string;
   active?: boolean;
 }) {
   return (
     <a
+      className="tmi-tab-link tmi-interactive"
       href={href}
       style={{
         border: "none",
@@ -653,7 +660,7 @@ function InsuranceTab({
         textDecoration: "none",
       }}
     >
-      {icon} {title}
+      <PremiumInsuranceIcon kind={icon} className="tmi-inline-icon" /> {title}
     </a>
   );
 }
@@ -671,6 +678,7 @@ function SearchField({
 }) {
   return (
     <label
+      className="tmi-input-shell"
       style={{
         border: "1px solid #cbd5e1",
         borderRadius: "10px",
@@ -691,6 +699,7 @@ function SearchField({
       </span>
 
       <input
+        className="tmi-input"
         type={type}
         name={name}
         placeholder={placeholder}
@@ -720,13 +729,14 @@ function InsuranceCard({
   description,
   href,
 }: {
-  icon: string;
+  icon: PremiumInsuranceIconKind;
   title: string;
   description: string;
   href: string;
 }) {
   return (
     <div
+      className="tmi-card tmi-hover-lift"
       style={{
         background: "#ffffff",
         border: "1px solid #e2e8f0",
@@ -734,13 +744,8 @@ function InsuranceCard({
         padding: "30px",
       }}
     >
-      <div
-        style={{
-          fontSize: "35px",
-          marginBottom: "22px",
-        }}
-      >
-        {icon}
+      <div className="tmi-premium-icon-shell" data-icon-kind={icon}>
+        <PremiumInsuranceIcon kind={icon} />
       </div>
 
       <h3
@@ -825,6 +830,7 @@ function BlogCard({
 }) {
   return (
     <a
+      className="tmi-card tmi-hover-lift"
       href={href}
       style={{
         background: "white",

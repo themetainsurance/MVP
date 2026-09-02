@@ -2,6 +2,7 @@
 
 import { useState, type SyntheticEvent } from "react";
 import BrandLogo from "../components/BrandLogo";
+import PremiumInsuranceIcon from "../components/PremiumInsuranceIcon";
 import SiteFooter from "../components/SiteFooter";
 import { useAnalytics } from "../components/AnalyticsProvider";
 import {
@@ -176,6 +177,7 @@ export default function PropertyInsurancePage() {
 
   return (
     <main
+      className="tmi-page"
       onFocusCapture={trackFormInteraction}
       onChangeCapture={trackFormInteraction}
       style={{
@@ -187,6 +189,7 @@ export default function PropertyInsurancePage() {
       }}
     >
       <header
+        className="tmi-site-header"
         style={{
           height: "72px",
           padding: "0 7%",
@@ -222,6 +225,7 @@ export default function PropertyInsurancePage() {
       </header>
 
       <section
+        className="tmi-category-hero"
         style={{
           background:
             "linear-gradient(135deg, #14532d 0%, #15803d 55%, #16a34a 100%)",
@@ -230,11 +234,13 @@ export default function PropertyInsurancePage() {
         }}
       >
         <div
+          className="tmi-category-hero-inner"
           style={{
             maxWidth: "1100px",
             margin: "0 auto",
           }}
         >
+          <div className="tmi-category-hero-copy">
           <div
             style={{
               color: "#bbf7d0",
@@ -268,10 +274,18 @@ export default function PropertyInsurancePage() {
             relevant licensed insurance providers or partners. You can also
             upload your current policy for a factual comparison.
           </p>
+          </div>
+          <div className="tmi-category-visual" aria-hidden="true">
+            <span className="tmi-icon-orbit" />
+            <div className="tmi-category-icon-shell">
+              <PremiumInsuranceIcon kind="property" className="tmi-category-icon" />
+            </div>
+          </div>
         </div>
       </section>
 
       <section
+        className="tmi-overlap-section"
         style={{
           maxWidth: "1100px",
           margin: "-70px auto 0",
@@ -279,6 +293,7 @@ export default function PropertyInsurancePage() {
         }}
       >
         <div
+          className="tmi-surface"
           style={{
             background: "#ffffff",
             borderRadius: "22px",
@@ -294,6 +309,7 @@ export default function PropertyInsurancePage() {
             }}
           >
             <button
+              className="tmi-interactive"
               type="button"
               onClick={() => setMode("manual")}
               style={{
@@ -306,10 +322,11 @@ export default function PropertyInsurancePage() {
                 fontSize: "16px",
               }}
             >
-              🏠 Enter property details
+              <PremiumInsuranceIcon kind="property" className="tmi-inline-icon" /> Enter property details
             </button>
 
             <button
+              className="tmi-interactive"
               type="button"
               onClick={() => setMode("upload")}
               style={{
@@ -387,6 +404,7 @@ export default function PropertyInsurancePage() {
             </div>
 
             <label
+              className="tmi-choice"
               style={{
                 display: "flex",
                 alignItems: "flex-start",
@@ -470,6 +488,7 @@ export default function PropertyInsurancePage() {
             )}
 
             <button
+              className="tmi-primary-button"
               type="button"
               disabled={submitting}
               onClick={submitLead}
@@ -1131,6 +1150,7 @@ function Field({
       </div>
 
       <input
+        className="tmi-input"
         value={value}
         placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
@@ -1172,6 +1192,7 @@ function SelectField({
       </div>
 
       <select
+        className="tmi-input"
         value={value}
         onChange={(event) => onChange(event.target.value)}
         style={{
@@ -1208,6 +1229,7 @@ function InfoCard({
 }) {
   return (
     <div
+      className="tmi-card tmi-hover-lift"
       style={{
         background: "#ffffff",
         border: "1px solid #e2e8f0",

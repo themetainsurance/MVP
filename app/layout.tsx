@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AnalyticsProvider } from "./components/AnalyticsProvider";
+import "./globals.css";
 
 const siteName = "The Meta Insurance";
 const siteUrl = "https://www.themetainsurance.com";
@@ -70,6 +71,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
+        className="tmi-body"
         style={{
           margin: 0,
           fontFamily: "Arial, Helvetica, sans-serif",

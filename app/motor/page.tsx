@@ -2,6 +2,7 @@
 
 import { useState, type SyntheticEvent } from "react";
 import BrandLogo from "../components/BrandLogo";
+import PremiumInsuranceIcon from "../components/PremiumInsuranceIcon";
 import SiteFooter from "../components/SiteFooter";
 import { useAnalytics } from "../components/AnalyticsProvider";
 import {
@@ -273,6 +274,7 @@ export default function MotorInsurancePage() {
 
   return (
     <main
+      className="tmi-page"
       onFocusCapture={trackFormInteraction}
       onChangeCapture={trackFormInteraction}
       style={{
@@ -284,6 +286,7 @@ export default function MotorInsurancePage() {
       }}
     >
       <header
+        className="tmi-site-header"
         style={{
           height: "72px",
           padding: "0 7%",
@@ -320,6 +323,7 @@ export default function MotorInsurancePage() {
       </header>
 
       <section
+        className="tmi-category-hero"
         style={{
           background:
             "linear-gradient(135deg, #082f49 0%, #075985 55%, #0369a1 100%)",
@@ -328,11 +332,13 @@ export default function MotorInsurancePage() {
         }}
       >
         <div
+          className="tmi-category-hero-inner"
           style={{
             maxWidth: "1100px",
             margin: "0 auto",
           }}
         >
+          <div className="tmi-category-hero-copy">
           <div
             style={{
               color: "#bae6fd",
@@ -366,10 +372,18 @@ export default function MotorInsurancePage() {
             organise the information you want to compare and request options
             from relevant licensed insurance partners.
           </p>
+          </div>
+          <div className="tmi-category-visual" aria-hidden="true">
+            <span className="tmi-icon-orbit" />
+            <div className="tmi-category-icon-shell">
+              <PremiumInsuranceIcon kind="motor" className="tmi-category-icon" />
+            </div>
+          </div>
         </div>
       </section>
 
       <section
+        className="tmi-overlap-section"
         style={{
           maxWidth: "1100px",
           margin: "-70px auto 0",
@@ -377,6 +391,7 @@ export default function MotorInsurancePage() {
         }}
       >
         <div
+          className="tmi-surface"
           style={{
             background: "#ffffff",
             borderRadius: "22px",
@@ -399,7 +414,7 @@ export default function MotorInsurancePage() {
                 setMode("manual")
               }
             >
-              🚗 Enter vehicle details
+              <PremiumInsuranceIcon kind="motor" className="tmi-inline-icon" /> Enter vehicle details
             </ModeButton>
 
             <ModeButton
@@ -565,6 +580,7 @@ export default function MotorInsurancePage() {
                 </p>
 
                 <label
+                  className="tmi-choice"
                   style={{
                     display: "block",
                     border:
@@ -646,6 +662,7 @@ export default function MotorInsurancePage() {
                 </div>
 
                 <button
+                  className="tmi-primary-button"
                   type="button"
                   disabled={
                     !selectedFile || uploading || Boolean(policyPath)
@@ -800,6 +817,7 @@ export default function MotorInsurancePage() {
             )}
 
             <button
+              className="tmi-primary-button"
               type="button"
               disabled={submitting}
               onClick={submitLead}
@@ -864,6 +882,7 @@ function MotorComparison() {
       >
         {comparisonSteps.map((step) => (
           <article
+            className="tmi-card tmi-hover-lift"
             key={step.title}
             style={{
               background: "#ffffff",
@@ -884,6 +903,7 @@ function MotorComparison() {
       </div>
 
       <section
+        className="tmi-surface"
         aria-labelledby="motor-comparison-title"
         style={{
           marginTop: "55px",
@@ -1023,6 +1043,7 @@ function ModeButton({
 }) {
   return (
     <button
+      className="tmi-interactive"
       type="button"
       onClick={onClick}
       style={{
@@ -1059,6 +1080,7 @@ function Field({
       </div>
 
       <input
+        className="tmi-input"
         value={value}
         placeholder={placeholder}
         onChange={(event) =>
@@ -1088,6 +1110,7 @@ function SelectField({
       </div>
 
       <select
+        className="tmi-input"
         value={value}
         onChange={(event) =>
           onChange(event.target.value)
