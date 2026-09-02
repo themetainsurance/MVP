@@ -9,7 +9,7 @@ export type PolicyUploadStage =
   | "validating"
   | "complete";
 
-type PolicyUploadCategory = "motor" | "property";
+type PolicyUploadCategory = "motor" | "property" | "health";
 
 type JsonResponse = {
   success?: unknown;

@@ -3,16 +3,16 @@ import BrandLogo from "./components/BrandLogo";
 import SiteFooter from "./components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "The Meta Insurance | Travel, Motor & Property Insurance",
+  title: "The Meta Insurance | Travel, Motor, Property & Health Insurance",
   description:
-    "Compare insurance information for travel, motor and property cover. The Meta Insurance provides educational content and referral tools to licensed insurance providers.",
+    "Compare insurance information for travel, motor, property and health cover. The Meta Insurance provides educational content and referral tools to licensed insurance providers.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "The Meta Insurance | Travel, Motor & Property Insurance",
+    title: "The Meta Insurance | Travel, Motor, Property & Health Insurance",
     description:
-      "Compare insurance information for travel, motor and property cover. The Meta Insurance provides educational content and referral tools to licensed insurance providers.",
+      "Compare insurance information for travel, motor, property and health cover. The Meta Insurance provides educational content and referral tools to licensed insurance providers.",
     url: "/",
     type: "website",
   },
@@ -39,6 +39,13 @@ const insuranceTypes = [
     description:
       "Review property insurance coverage information for your home, apartment or property.",
     href: "/property",
+  },
+  {
+    icon: "✚",
+    title: "Health Insurance",
+    description:
+      "Review health insurance information including deductibles, provider networks and selected benefits.",
+    href: "/health",
   },
 ];
 
@@ -216,6 +223,12 @@ export default function Home() {
                 icon="🏠"
                 title="Property"
                 href="/property"
+              />
+
+              <InsuranceTab
+                icon="✚"
+                title="Health"
+                href="/health"
               />
             </div>
 

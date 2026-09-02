@@ -79,6 +79,7 @@ function insuranceTypeForPath(pathname: string): AnalyticsInsuranceType | null {
   if (pathname === "/travel" || pathname.startsWith("/travel/")) return "travel";
   if (pathname === "/motor" || pathname.startsWith("/motor/")) return "motor";
   if (pathname === "/property" || pathname.startsWith("/property/")) return "property";
+  if (pathname === "/health" || pathname.startsWith("/health/")) return "health";
   return null;
 }
 

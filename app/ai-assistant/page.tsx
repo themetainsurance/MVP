@@ -9,7 +9,7 @@ import {
   getSafeApiErrorMessage,
 } from "../lib/safe-api-error";
 
-type InsuranceType = "travel" | "motor" | "property" | null;
+type InsuranceType = "travel" | "motor" | "property" | "health" | null;
 
 type Message = {
   sender: "user" | "assistant";
@@ -28,6 +28,9 @@ type Answers = {
   propertyLocation?: string;
   propertyValue?: string;
 
+  healthPlanType?: string;
+  healthCoverageArea?: string;
+
   fullName?: string;
   email?: string;
   phone?: string;
@@ -40,7 +43,7 @@ export default function AIAssistantPage() {
     {
       sender: "assistant",
       text:
-        "Hi! I can help organise information and prepare an insurance request. Tell me what you want to insure: a trip, a vehicle, or a property.",
+        "Hi! I can help organise information and prepare an insurance request. Tell me what you need: Travel, Motor, Property or Health insurance.",
     },
   ]);
 
@@ -112,6 +115,16 @@ export default function AIAssistantPage() {
     }
 
     if (
+      value.includes("health") ||
+      value.includes("medical insurance") ||
+      value.includes("healthcare") ||
+      value.includes("здравствено") ||
+      value.includes("здравје")
+    ) {
+      return "health";
+    }
+
+    if (
       value.includes("property") ||
       value.includes("home") ||
       value.includes("house") ||
@@ -149,6 +162,12 @@ export default function AIAssistantPage() {
         "Great. What type of property would you like to insure? For example: apartment, house or commercial property."
       );
     }
+
+    if (type === "health") {
+      addAssistantMessage(
+        "Great. What type of health plan are you looking for? For example: individual, family, international or short-term cover. Please do not provide medical records or diagnosis details."
+      );
+    }
   }
 
   function processAnswer(
@@ -160,7 +179,7 @@ export default function AIAssistantPage() {
 
       if (!detected) {
         addAssistantMessage(
-          "I couldn't determine the insurance type. Please tell me whether you need Travel, Motor or Property insurance."
+          "I couldn't determine the insurance type. Please tell me whether you need Travel, Motor, Property or Health insurance."
         );
         return;
       }
@@ -181,6 +200,11 @@ export default function AIAssistantPage() {
 
     if (insuranceType === "property") {
       processProperty(text);
+      return;
+    }
+
+    if (insuranceType === "health") {
+      processHealth(text);
     }
   }
 
@@ -297,6 +321,25 @@ export default function AIAssistantPage() {
 
       askForName();
 
+      return;
+    }
+
+    processContactSteps(text);
+  }
+
+  function processHealth(text: string) {
+    if (step === 1) {
+      setAnswers((current) => ({ ...current, healthPlanType: text }));
+      setStep(2);
+      addAssistantMessage(
+        "What geographic coverage area do you need? For example: domestic, Europe or worldwide."
+      );
+      return;
+    }
+
+    if (step === 2) {
+      setAnswers((current) => ({ ...current, healthCoverageArea: text }));
+      askForName();
       return;
     }
 
@@ -486,7 +529,7 @@ export default function AIAssistantPage() {
       {
         sender: "assistant",
         text:
-          "Hi! Tell me what you want to insure: a trip, a vehicle, or a property.",
+          "Hi! Tell me what you need: Travel, Motor, Property or Health insurance.",
       },
     ]);
 
@@ -746,6 +789,16 @@ export default function AIAssistantPage() {
                 >
                   🏠 Property
                 </QuickButton>
+
+                <QuickButton
+                  onClick={() =>
+                    startFlow(
+                      "health"
+                    )
+                  }
+                >
+                  ✚ Health
+                </QuickButton>
               </div>
             )}
 
@@ -843,6 +896,22 @@ export default function AIAssistantPage() {
                     Have an existing property
                     policy? You can upload it
                     here →
+                  </a>
+                )}
+
+                {insuranceType ===
+                  "health" && (
+                  <a
+                    href="/health"
+                    style={{
+                      display: "block",
+                      marginBottom: "16px",
+                      color: "#0284c7",
+                      fontWeight: 700,
+                    }}
+                  >
+                    Have an existing health policy? You can upload the policy
+                    or benefit schedule here →
                   </a>
                 )}
 

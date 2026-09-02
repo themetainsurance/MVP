@@ -34,6 +34,7 @@ const navigation = [
   { href: "/travel", label: "Travel" },
   { href: "/motor", label: "Motor" },
   { href: "/property", label: "Property" },
+  { href: "/health", label: "Health" },
   { href: "/ai-assistant", label: "AI Assistant" },
   { href: "/blog", label: "Blog" },
 ];
@@ -123,7 +124,7 @@ export default function PrivacyPolicyPage() {
             <p style={paragraphStyle}>
               This Privacy Policy applies to personal information handled
               through the website at <a href={siteUrl} style={inlineLinkStyle}>{siteUrl}</a>,
-              including its travel, motor and property insurance request forms,
+              including its travel, motor, property and health insurance request forms,
               policy upload tools and AI Assistant Lite.
             </p>
 
@@ -176,6 +177,14 @@ export default function PrivacyPolicyPage() {
                 current insurer, current annual premium, deductible and
                 coverage type.
               </DataCard>
+
+              <DataCard title="Health insurance requests">
+                Request method, general plan type, country of residence,
+                requested coverage area, applicant age range, number of people
+                to cover, current insurer, current premium and deductible, and
+                general coverage priorities. The public form does not request
+                diagnoses, treatment records or detailed medical history.
+              </DataCard>
             </div>
 
             <p style={paragraphStyle}>
@@ -195,14 +204,15 @@ export default function PrivacyPolicyPage() {
             </p>
           </PrivacySection>
 
-          <PrivacySection id="documents" number="03" title="Uploaded Motor and Property policy documents">
+          <PrivacySection id="documents" number="03" title="Uploaded Motor, Property and Health policy documents">
             <p style={paragraphStyle}>
-              You may upload an existing Motor or Property insurance policy in
+              You may upload an existing Motor, Property or Health insurance policy in
               PDF, JPG, JPEG or PNG format. An uploaded policy can contain
               personal information and insurance details beyond the form fields
               listed above, including names, addresses, policy numbers, vehicle
-              or property information, coverage, premium and claims-related
-              information included in the document.
+              property or health-plan information, coverage, premium and other
+              information included in the document. Do not upload medical
+              records, claim files, treatment documents or diagnosis details.
             </p>
 
             <Callout tone="blue">
@@ -224,7 +234,7 @@ export default function PrivacyPolicyPage() {
           <PrivacySection id="assistant" number="04" title="AI Assistant Lite data collection">
             <p style={paragraphStyle}>
               AI Assistant Lite uses a guided conversation to collect structured
-              information for a Travel, Motor or Property insurance request.
+              information for a Travel, Motor, Property or Health insurance request.
               Depending on the request, this can include destination and travel
               dates, traveller count, vehicle make, model and year, property
               type, location and approximate value, and your contact details.

@@ -115,7 +115,21 @@ export type ComparisonFieldKey =
   | "alternative_accommodation"
   | "valuables"
   | "loss_of_rent"
-  | "occupancy_or_use_conditions";
+  | "occupancy_or_use_conditions"
+  | "hospitalisation"
+  | "outpatient_care"
+  | "emergency_care"
+  | "specialist_care"
+  | "prescription_drugs"
+  | "mental_health"
+  | "maternity"
+  | "dental"
+  | "vision"
+  | "provider_network"
+  | "annual_out_of_pocket_maximum"
+  | "waiting_periods"
+  | "pre_existing_condition_terms"
+  | "geographic_cover";
 
 export type InsuranceComparisonFacts =
   Partial<Record<ComparisonFieldKey, ComparisonFact>>;

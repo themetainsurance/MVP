@@ -58,7 +58,7 @@ const enquiryCategories = [
   },
   {
     title: "Policy document questions",
-    description: "Questions about Motor or Property policy document uploads.",
+    description: "Questions about Motor, Property or Health policy document uploads.",
   },
   {
     title: "Affiliate and partnership enquiries",
@@ -185,7 +185,7 @@ export default function ContactPage() {
               items={[
                 "your full name;",
                 "the email address used for the request;",
-                "the insurance type: Travel, Motor or Property; and",
+                "the insurance type: Travel, Motor, Property or Health; and",
                 "the approximate date the request was submitted.",
               ]}
             />
@@ -225,7 +225,7 @@ export default function ContactPage() {
               Do not email unnecessary sensitive policy documents or identity
               documents unless they are specifically requested for a legitimate
               purpose. Email is not the preferred route for sending an existing
-              Motor or Property policy through the platform.
+              Motor, Property or Health policy through the platform.
             </SecurityNotice>
 
             <p style={paragraphStyle}>

@@ -5,6 +5,7 @@ const ALLOWED_INSURANCE_TYPES = new Set([
   "travel",
   "motor",
   "property",
+  "health",
 ]);
 const PREFERRED_CONTACT_METHODS = new Map([
   ["email", "Email"],
@@ -14,12 +15,12 @@ const PREFERRED_CONTACT_METHODS = new Map([
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_PATTERN = /^\+?[0-9 ()-]+$/;
 const POLICY_PATH_PATTERN =
-  /^(?:motor|property)\/[0-9a-f]{32}\.(?:pdf|jpg|png)$/;
+  /^(?:motor|property|health)\/[0-9a-f]{32}\.(?:pdf|jpg|png)$/;
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export type ValidatedLead = {
-  insurance_type: "travel" | "motor" | "property";
+  insurance_type: "travel" | "motor" | "property" | "health";
   full_name: string;
   email: string | null;
   phone: string | null;

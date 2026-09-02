@@ -6,6 +6,7 @@ const exploreLinks = [
   { href: "/travel", label: "Travel" },
   { href: "/motor", label: "Motor" },
   { href: "/property", label: "Property" },
+  { href: "/health", label: "Health" },
   { href: "/ai-assistant", label: "AI Assistant" },
   { href: "/blog", label: "Blog" },
 ];

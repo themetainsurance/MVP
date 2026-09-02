@@ -115,7 +115,7 @@ test("accepts the two exact public analytics event shapes", () => {
 test("rejects invalid UUIDs, event names, insurance types and form modes", () => {
   assert.equal(validation.validateAnalyticsEvent(validEvent({ session_id: "not-a-uuid" })).success, false);
   assert.equal(validation.validateAnalyticsEvent(validEvent({ event_type: "lead_created" })).success, false);
-  assert.equal(validation.validateAnalyticsEvent(validEvent({ insurance_type: "health" })).success, false);
+  assert.equal(validation.validateAnalyticsEvent(validEvent({ insurance_type: "pet" })).success, false);
   assert.equal(validation.validateAnalyticsEvent(validEvent({ event_type: "form_started", form_mode: "chat" })).success, false);
   assert.equal(validation.validateAnalyticsEvent(validEvent({ form_mode: "manual" })).success, false);
 });
@@ -173,7 +173,7 @@ test("honors browser Do Not Track without changing form logic", () => {
   const provider = readFileSync(join(repositoryRoot, "app", "components", "AnalyticsProvider.tsx"), "utf8");
   assert.match(provider, /navigator\.doNotTrack/);
   assert.match(provider, /if \([\s\S]*doNotTrackIsActive\(\)/);
-  for (const page of ["travel", "motor", "property", "ai-assistant"]) {
+  for (const page of ["travel", "motor", "property", "health", "ai-assistant"]) {
     const source = readFileSync(join(repositoryRoot, "app", page, "page.tsx"), "utf8");
     assert.match(source, /fetch\(\s*"\/api\/leads"/);
   }
@@ -193,7 +193,7 @@ test("instruments page views and every real lead-generating flow", () => {
   assert.match(provider, /lastPageViewRef\.current === pathname/);
   assert.doesNotMatch(provider, /searchParams.*page_view/);
 
-  for (const page of ["travel", "motor", "property", "ai-assistant"]) {
+  for (const page of ["travel", "motor", "property", "health", "ai-assistant"]) {
     const source = readFileSync(join(repositoryRoot, "app", page, "page.tsx"), "utf8");
     assert.match(source, /trackFormStarted/);
     assert.match(source, /analytics_session_id/);

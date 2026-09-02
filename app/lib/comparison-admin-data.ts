@@ -63,7 +63,7 @@ export async function loadAdminComparisonLeadChoices() {
   const { data, error } = await client
     .from("leads")
     .select("id, created_at, insurance_type, status, policy_document_path")
-    .in("insurance_type", ["travel", "motor", "property"])
+    .in("insurance_type", ["travel", "motor", "property", "health"])
     .order("created_at", { ascending: false })
     .limit(300);
   if (error) {

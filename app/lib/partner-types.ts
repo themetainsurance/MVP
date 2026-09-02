@@ -26,6 +26,7 @@ export const PARTNER_INSURANCE_TYPES = [
   "travel",
   "motor",
   "property",
+  "health",
 ] as const;
 
 export type PartnerInsuranceType =

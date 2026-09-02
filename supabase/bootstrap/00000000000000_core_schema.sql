@@ -19,7 +19,7 @@ create table if not exists public.leads (
   consent boolean not null,
   details jsonb not null default '{}'::jsonb,
   constraint leads_core_insurance_type_check
-    check (insurance_type in ('travel', 'motor', 'property')),
+    check (insurance_type in ('travel', 'motor', 'property', 'health')),
   constraint leads_core_status_check
     check (
       status in (

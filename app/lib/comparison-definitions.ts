@@ -74,10 +74,28 @@ const property: ComparisonFieldDefinition[] = [
   { key: "occupancy_or_use_conditions", label: "Occupancy / use conditions", section: "Conditions", kind: "text", behavior: "text", sortOrder: 220 },
 ];
 
+const health: ComparisonFieldDefinition[] = [
+  ...common,
+  { key: "annual_out_of_pocket_maximum", label: "Annual out-of-pocket maximum", section: "Price", kind: "money", behavior: "limit", sortOrder: 30 },
+  { key: "hospitalisation", label: "Hospitalisation", section: "Core cover", kind: "coverage", behavior: "coverage", sortOrder: 100 },
+  { key: "outpatient_care", label: "Outpatient care", section: "Core cover", kind: "coverage", behavior: "coverage", sortOrder: 110 },
+  { key: "emergency_care", label: "Emergency care", section: "Core cover", kind: "coverage", behavior: "coverage", sortOrder: 120 },
+  { key: "specialist_care", label: "Specialist care", section: "Core cover", kind: "coverage", behavior: "coverage", sortOrder: 130 },
+  { key: "prescription_drugs", label: "Prescription drugs", section: "Core cover", kind: "coverage", behavior: "coverage", sortOrder: 140 },
+  { key: "mental_health", label: "Mental health", section: "Additional cover", kind: "coverage", behavior: "coverage", sortOrder: 150 },
+  { key: "maternity", label: "Maternity", section: "Additional cover", kind: "coverage", behavior: "coverage", sortOrder: 160 },
+  { key: "dental", label: "Dental", section: "Additional cover", kind: "coverage", behavior: "coverage", sortOrder: 170 },
+  { key: "vision", label: "Vision", section: "Additional cover", kind: "coverage", behavior: "coverage", sortOrder: 180 },
+  { key: "provider_network", label: "Provider network", section: "Conditions", kind: "text", behavior: "text", sortOrder: 190 },
+  { key: "waiting_periods", label: "Waiting periods", section: "Conditions", kind: "text", behavior: "text", sortOrder: 200 },
+  { key: "pre_existing_condition_terms", label: "Pre-existing condition terms", section: "Conditions", kind: "text", behavior: "text", sortOrder: 210 },
+  { key: "geographic_cover", label: "Geographic cover", section: "Conditions", kind: "text", behavior: "text", sortOrder: 220 },
+];
+
 export const COMPARISON_DEFINITIONS: Record<
   PartnerInsuranceType,
   readonly ComparisonFieldDefinition[]
-> = { travel, motor, property };
+> = { travel, motor, property, health };
 
 export function getComparisonDefinitions(
   insuranceType: PartnerInsuranceType

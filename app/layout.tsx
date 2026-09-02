@@ -4,12 +4,12 @@ import { AnalyticsProvider } from "./components/AnalyticsProvider";
 const siteName = "The Meta Insurance";
 const siteUrl = "https://www.themetainsurance.com";
 const siteDescription =
-  "Compare insurance information for travel, motor and property cover. The Meta Insurance provides educational content and referral tools to licensed insurance providers.";
+  "Compare insurance information for travel, motor, property and health cover. The Meta Insurance provides educational content and referral tools to licensed insurance providers.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
 
-  title: "The Meta Insurance | Travel, Motor & Property Insurance",
+  title: "The Meta Insurance | Travel, Motor, Property & Health Insurance",
 
   description: siteDescription,
 
@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     "travel insurance",
     "motor insurance",
     "property insurance",
+    "health insurance",
     "compare insurance",
     "insurance coverage",
     "insurance guides",
@@ -50,13 +51,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     siteName,
     url: "/",
-    title: "The Meta Insurance | Travel, Motor & Property Insurance",
+    title: "The Meta Insurance | Travel, Motor, Property & Health Insurance",
     description: siteDescription,
   },
 
   twitter: {
     card: "summary",
-    title: "The Meta Insurance | Travel, Motor & Property Insurance",
+    title: "The Meta Insurance | Travel, Motor, Property & Health Insurance",
     description: siteDescription,
   },
 };

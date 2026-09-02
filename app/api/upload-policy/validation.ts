@@ -17,7 +17,7 @@ const PNG_SIGNATURE = [
 ];
 const PDF_EOF_SEARCH_BYTES = 4 * 1024;
 
-export type UploadCategory = "motor" | "property";
+export type UploadCategory = "motor" | "property" | "health";
 
 export type AllowedPolicyMimeType =
   | "application/pdf"
@@ -133,7 +133,11 @@ export function validateUploadCategory(
 
   const category = value.trim().toLowerCase();
 
-  if (category === "motor" || category === "property") {
+  if (
+    category === "motor" ||
+    category === "property" ||
+    category === "health"
+  ) {
     return category;
   }
 

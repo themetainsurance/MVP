@@ -71,7 +71,8 @@ test("validates partner creation and rejects invalid domain values", () => {
 
 test("validates capability country and insurance constraints", () => {
   assert.equal(validation.validateCapabilityInput({ insurance_type: "travel", country_code: "MK", status: "active" }).success, true);
-  assert.equal(validation.validateCapabilityInput({ insurance_type: "health", country_code: "MK", status: "active" }).success, false);
+  assert.equal(validation.validateCapabilityInput({ insurance_type: "health", country_code: "MK", status: "active" }).success, true);
+  assert.equal(validation.validateCapabilityInput({ insurance_type: "pet", country_code: "MK", status: "active" }).success, false);
   assert.equal(validation.validateCapabilityInput({ insurance_type: "travel", country_code: "mk", status: "active" }).success, false);
   assert.equal(validation.validateCapabilityInput({ insurance_type: "travel", country_code: "MKEU", status: "active" }).success, false);
 });

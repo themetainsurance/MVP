@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 const POLICY_DOCUMENT_BUCKET = "policy-documents";
-const POLICY_DOCUMENT_PREFIXES = ["motor", "property"] as const;
+const POLICY_DOCUMENT_PREFIXES = ["motor", "property", "health"] as const;
 const LINKED_PATH_PAGE_SIZE = 1000;
 const STORAGE_LIST_PAGE_SIZE = 100;
 const STORAGE_REMOVE_BATCH_SIZE = 100;
@@ -168,7 +168,7 @@ async function cleanupTemporaryPolicyUploads(
         row.upload_session_id
       ) ||
       typeof row.temporary_path !== "string" ||
-      !/^_pending\/(?:motor|property)\/[0-9a-f]{32}$/.test(
+      !/^_pending\/(?:motor|property|health)\/[0-9a-f]{32}$/.test(
         row.temporary_path
       )
     ) {

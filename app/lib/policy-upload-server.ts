@@ -126,7 +126,7 @@ function parseClaimedSession(
     !declaredMimeType ||
     declaredSize === null ||
     typeof row.temporary_path !== "string" ||
-    !/^_pending\/(?:motor|property)\/[0-9a-f]{32}$/.test(
+    !/^_pending\/(?:motor|property|health)\/[0-9a-f]{32}$/.test(
       row.temporary_path
     ) ||
     !row.temporary_path.startsWith(`_pending/${category}/`) ||
@@ -155,7 +155,7 @@ function isSafeFinalizedPath(
 ): value is string {
   return (
     typeof value === "string" &&
-    /^(?:motor|property)\/[0-9a-f]{32}\.(?:pdf|jpg|png)$/.test(
+    /^(?:motor|property|health)\/[0-9a-f]{32}\.(?:pdf|jpg|png)$/.test(
       value
     )
   );

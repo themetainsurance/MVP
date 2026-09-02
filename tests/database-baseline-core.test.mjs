@@ -18,8 +18,13 @@ const bootstrap = readFileSync(
 );
 const reconciliationName =
   "20260825152544_reconcile_core_database_baseline.sql";
+const healthMigrationName = "20260901133000_add_health_insurance.sql";
 const reconciliation = readFileSync(
   join(migrationsDirectory, reconciliationName),
+  "utf8"
+);
+const healthMigration = readFileSync(
+  join(migrationsDirectory, healthMigrationName),
   "utf8"
 );
 const runbook = readFileSync(
@@ -91,7 +96,8 @@ function tablePattern(prefix, table, suffix = "") {
 }
 
 test("keeps the immutable migrations and supplies the missing pre-migration lead prerequisite", () => {
-  assert.equal(migrationNames.at(-1), reconciliationName);
+  assert.ok(migrationNames.includes(reconciliationName));
+  assert.equal(migrationNames.at(-1), healthMigrationName);
   assert.match(bootstrap, /create table if not exists public\.leads/i);
   assert.doesNotMatch(
     readFileSync(join(migrationsDirectory, migrationNames[0]), "utf8"),
@@ -125,11 +131,15 @@ test("defines the exact minimum lead column contract and defaults", () => {
 });
 
 test("limits lead insurance types, statuses, and details shape", () => {
+  assert.match(
+    bootstrap,
+    /insurance_type in \('travel', 'motor', 'property', 'health'\)/i
+  );
+  assert.match(
+    healthMigration,
+    /insurance_type in \('travel', 'motor', 'property', 'health'\)/i
+  );
   for (const sql of [bootstrap, reconciliation]) {
-    assert.match(
-      sql,
-      /insurance_type in \('travel', 'motor', 'property'\)/i
-    );
     for (const status of [
       "new",
       "reviewing",
@@ -250,7 +260,7 @@ test("keeps every application function invoker-scoped with an empty search path"
   ) ?? [];
   const invokers = migrationSql.match(/security invoker/gi) ?? [];
   const emptySearchPaths = migrationSql.match(/set search_path = ''/gi) ?? [];
-  assert.equal(definitions.length, 60);
+  assert.equal(definitions.length, 61);
   assert.equal(invokers.length, definitions.length);
   assert.equal(emptySearchPaths.length, definitions.length);
   assert.doesNotMatch(migrationSql, /security definer/i);
@@ -259,12 +269,13 @@ test("keeps every application function invoker-scoped with an empty search path"
 test("retains strict finalized lead paths and rejects temporary upload paths", () => {
   assert.ok(
     leadValidation.includes(
-      "/^(?:motor|property)\\/[0-9a-f]{32}\\.(?:pdf|jpg|png)$/;"
+      "/^(?:motor|property|health)\\/[0-9a-f]{32}\\.(?:pdf|jpg|png)$/;"
     )
   );
-  const finalizedPath = /^(?:motor|property)\/[0-9a-f]{32}\.(?:pdf|jpg|png)$/;
+  const finalizedPath = /^(?:motor|property|health)\/[0-9a-f]{32}\.(?:pdf|jpg|png)$/;
   assert.equal(finalizedPath.test("_pending/motor/example.pdf"), false);
   assert.equal(finalizedPath.test(`motor/${"a".repeat(32)}.pdf`), true);
+  assert.equal(finalizedPath.test(`health/${"a".repeat(32)}.pdf`), true);
   assert.match(leadValidation, /insuranceType === "travel"/);
 });
 

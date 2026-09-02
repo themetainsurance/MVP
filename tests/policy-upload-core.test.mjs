@@ -193,18 +193,18 @@ function createFinalizationHarness({
   return { calls, dependencies, session };
 }
 
-test("initiate accepts only strict Motor/Property metadata", () => {
-  for (const mime_type of [
+test("initiate accepts only strict Motor/Property/Health metadata", () => {
+  for (const category of ["motor", "property", "health"]) for (const mime_type of [
     "application/pdf",
     "image/jpeg",
     "image/png",
   ]) {
     const result = validation.validateUploadInitiationBody({
-      category: "motor",
+      category,
       mime_type,
       size: 1,
     });
-    assert.equal(result.success, true, mime_type);
+    assert.equal(result.success, true, `${category}:${mime_type}`);
   }
 
   for (const body of [
@@ -488,7 +488,7 @@ test("a retry can finish a move whose destination already exists", async () => {
   assert.equal(harness.calls.complete.length, 1);
 });
 
-test("Motor and Property bytes go only to Supabase signed upload", () => {
+test("Motor, Property and Health bytes go only to Supabase signed upload", () => {
   const client = readFileSync(
     join(root, "app", "lib", "policy-upload-client.ts"),
     "utf8"
@@ -522,7 +522,8 @@ test("Motor and Property bytes go only to Supabase signed upload", () => {
   assert.match(client, /body: JSON\.stringify\(\{[\s\S]*?upload_session_id:/);
   assert.doesNotMatch(client, /FormData|SUPABASE_SECRET_KEY|service[_ -]?role|analytics/i);
 
-  for (const page of [motor, property]) {
+  const health = readFileSync(join(root, "app", "health", "page.tsx"), "utf8");
+  for (const page of [motor, property, health]) {
     assert.match(page, /uploadPolicyDocumentDirectly/);
     assert.doesNotMatch(page, /FormData|fetch\(\s*["']\/api\/upload-policy["']/);
     assert.match(page, /10 \* 1024 \* 1024/);

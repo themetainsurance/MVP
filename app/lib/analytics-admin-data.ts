@@ -20,7 +20,7 @@ export type AdminAnalyticsSummary = {
 };
 
 export type AdminAnalyticsInsuranceRow = {
-  insuranceType: "travel" | "motor" | "property";
+  insuranceType: "travel" | "motor" | "property" | "health";
   formStarts: number;
   leads: number;
   handedOffLeads: number;

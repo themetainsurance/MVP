@@ -34,6 +34,7 @@ const navigation = [
   { href: "/travel", label: "Travel" },
   { href: "/motor", label: "Motor" },
   { href: "/property", label: "Property" },
+  { href: "/health", label: "Health" },
   { href: "/ai-assistant", label: "AI Assistant" },
   { href: "/blog", label: "Blog" },
 ];
@@ -314,9 +315,9 @@ export default function TermsAndConditionsPage() {
           <TermsSection id="assistant" number="09" title="AI Assistant Lite">
             <p style={paragraphStyle}>
               AI Assistant Lite follows a guided question flow to collect
-              structured information for Travel, Motor or Property insurance
+              structured information for Travel, Motor, Property or Health insurance
               requests. It may ask about the item to be insured, travel plans,
-              vehicle or property details and contact information, then prepare
+              vehicle, property or general health-plan details and contact information, then prepare
               those answers for submission after the consent step.
             </p>
 

@@ -18,7 +18,7 @@ export default async function AdminComparisonsPage({ searchParams }: { searchPar
     <AdminPageHeader eyebrow="FACTUAL WORKFLOW" title="Policy comparisons" description="Create and share factual side-by-side summaries without scores, rankings or suitability conclusions." actions={<Link className="admin-button admin-button-primary" href="/admin/comparisons/new">New comparison</Link>} />
     <form className="admin-filter-grid" method="get">
       <label>Status<select name="status" defaultValue={filters.status ?? "all"}><option value="all">All</option><option value="draft">Draft</option><option value="ready">Ready</option><option value="archived">Archived</option></select></label>
-      <label>Insurance<select name="insurance_type" defaultValue={filters.insuranceType ?? "all"}><option value="all">All</option><option value="travel">Travel</option><option value="motor">Motor</option><option value="property">Property</option></select></label>
+      <label>Insurance<select name="insurance_type" defaultValue={filters.insuranceType ?? "all"}><option value="all">All</option><option value="travel">Travel</option><option value="motor">Motor</option><option value="property">Property</option><option value="health">Health</option></select></label>
       <label>Title search<input name="search" maxLength={100} defaultValue={filters.search ?? ""} /></label>
       <button className="admin-button admin-button-secondary">Filter</button>
     </form>
